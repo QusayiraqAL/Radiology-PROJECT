@@ -17,7 +17,13 @@ BAR = 0.91
 
 def collect():
     rows = []
-    for path in sorted(glob.glob(os.path.join(MODEL_DIR, "**", "*metrics*.json"), recursive=True)):
+    # The MARBERT specialty router keeps its eval in router_meta.json, not a *_metrics.json.
+    # It is the router ar_service.py ACTUALLY serves whenever `transformers` imports, so an
+    # audit that only globs *metrics*.json reports the superseded linear router's score and
+    # understates the live system. Pick it up explicitly.
+    paths = sorted(glob.glob(os.path.join(MODEL_DIR, "**", "*metrics*.json"), recursive=True))
+    paths += sorted(glob.glob(os.path.join(MODEL_DIR, "**", "router_meta.json"), recursive=True))
+    for path in paths:
         name = os.path.relpath(path, MODEL_DIR).replace("\\", "/")
         try:
             with open(path, encoding="utf-8") as f:
@@ -43,6 +49,12 @@ def collect():
             elif "mean_auc" in m:                                 # chest, multi-label
                 task = "chest 14-label (AUC only - accuracy is not defined for multi-label)"
                 extra = "mean AUC %.4f" % m["mean_auc"]
+            elif "eval" in m and isinstance(m["eval"], dict):      # MARBERT router_meta.json
+                e = m["eval"]
+                acc = e.get("top1")
+                task = "arabic specialty router (MARBERT, 20-way) [SERVED]"
+                extra = "top-3 %.4f" % e["top3"] if e.get("top3") else ""
+                m = {"train_accuracy": e.get("train_acc"), "overfitting_gap": e.get("gap")}
             elif "accuracy" in m:                                 # arabic input filter
                 acc = m["accuracy"]
 
