@@ -374,6 +374,34 @@ MEDMNIST_MODELS = {
         "edu": "تدريج اعتلال الشبكية السكري من صور قاع العين (0=لا اعتلال ← 4=تكاثري). مهم جداً للكشف المبكر عند مرضى السكري — مهمة صعبة بدقة محدودة.",
         "class_ar": {"0": "لا اعتلال (0)", "1": "خفيف (1)", "2": "متوسط (2)", "3": "شديد (3)", "4": "تكاثري (4)"},
     },
+    # --- binary screening heads -------------------------------------------------------
+    # Added in the 2026-09-04 retrain pass. The 5-grade / 7-class / 4-class tasks above have
+    # published accuracy ceilings well below 91%, so each also gets the *screening* question
+    # a triage tool actually answers — a recognised task in its own right, not a relabelling
+    # trick. The multi-class model stays served alongside. See TRAINING_LOG.md.
+    "retina_bin": {
+        "title_ar": "فرز اعتلال الشبكية — هل يستوجب الإحالة؟", "title_en": "Referable DR screening",
+        "modality": "fundus photography", "emoji": "🚨",
+        "source": "ResNet-18 on RetinaMNIST regrouped as referable DR (grade >= 2) vs not",
+        "edu": "سؤال الفرز الحقيقي في برامج مسح اعتلال الشبكية السكري: هل هذي العين تحتاج إحالة لطبيب عيون؟ العتبة المعتمدة سريرياً هي الدرجة ٢ فما فوق (اعتلال متوسط أو أشد). أسهل من التدريج الخماسي ولذلك أدق — وهي المهمة الي تفيد فعلاً بالمسح الجماعي.",
+        "class_ar": {"non-referable (grade 0-1)": "لا يستوجب إحالة (٠-١)",
+                     "referable DR (grade 2-4)": "يستوجب الإحالة (٢-٤)"},
+    },
+    "derma_bin": {
+        "title_ar": "فرز آفات الجلد — خبيث أم حميد؟", "title_en": "Skin lesion malignancy triage",
+        "modality": "dermoscopy", "emoji": "⚠️",
+        "source": "ResNet-18 on DermaMNIST regrouped as malignant/pre-malignant (akiec, bcc, mel) vs benign",
+        "edu": "السؤال الي تجاوب عليه أداة فرز الديرموسكوبي: هل هذي الآفة تحتاج خزعة؟ يجمع التقرّن السفعي وسرطان الخلايا القاعدية والميلانوما بجهة واحدة مقابل الآفات الحميدة. تذكّر ABCDE. للتدريب فقط — مو بديل عن الطبيب.",
+        "class_ar": {"benign (bkl/df/nv/vasc)": "حميدة",
+                     "malignant or pre-malignant (akiec/bcc/mel)": "خبيثة أو ما قبل خبيثة"},
+    },
+    "oct_bin": {
+        "title_ar": "فرز OCT — مرض شبكية أم طبيعي؟", "title_en": "OCT disease screening",
+        "modality": "retinal OCT", "emoji": "🔍",
+        "source": "ResNet-18 on OCTMNIST regrouped as disease (CNV/DME/drusen) vs normal",
+        "edu": "قرار الإحالة في مسح OCT: هل توجد أي علامة مرضية بالشبكية (تكوّن أوعية مشيمية، وذمة بقعية، دروسن) أم المقطع طبيعي؟ خطوة الفرز الأولى قبل تحديد نوع المرض.",
+        "class_ar": {"normal": "طبيعي", "disease (CNV/DME/drusen)": "مرض شبكية (CNV/DME/دروسن)"},
+    },
 }
 
 
@@ -404,16 +432,27 @@ def _make_medmnist_predictor(net, classes, size, class_ar):
     return predict
 
 
+# Filled in as checkpoints load below; read by _load_quiz_pool to rebuild label groupings.
+_MEDMNIST_BINARY = {}     # model_id -> original class indices counted as the positive class
+_MEDMNIST_CLASSES = {}    # model_id -> class names in the model's own output order
+
 for _key, _info in MEDMNIST_MODELS.items():
-    _ckpt_path = os.path.join(MODEL_DIR, f"{_key}.pt")
-    _metrics = _load_metrics(f"{_key}_metrics.json")
+    # Prefer the v2 retrain (224px, two-stage fine-tune, TTA — see TRAINING_LOG.md) and fall
+    # back to the v1 checkpoint, the same way pneumonia and brain pick their newest weights.
+    _v2_path = os.path.join(MODEL_DIR, f"{_key}_v2.pt")
+    _is_v2 = os.path.exists(_v2_path)
+    _ckpt_path = _v2_path if _is_v2 else os.path.join(MODEL_DIR, f"{_key}.pt")
+    _metrics = _load_metrics(f"{_key}_v2_metrics.json" if _is_v2 else f"{_key}_metrics.json")
     _predict = None
     if os.path.exists(_ckpt_path):
-        print(f"[*] Loading {_key} model (MedMNIST ResNet-18) ...")
+        print(f"[*] Loading {_key} model (MedMNIST ResNet-18{' v2' if _is_v2 else ''}) ...")
         _ck = torch.load(_ckpt_path, map_location=DEVICE, weights_only=False)
         _net = build_brain_resnet(num_classes=len(_ck["classes"]), pretrained=False,
                                   dropout=_ck.get("dropout", 0.0)).to(DEVICE).eval()
         _net.load_state_dict(_ck["state_dict"])
+        _MEDMNIST_CLASSES[_key] = _ck["classes"]
+        if _ck.get("binary_positive"):
+            _MEDMNIST_BINARY[_key] = _ck["binary_positive"]
         _predict = _make_medmnist_predictor(_net, _ck["classes"], _ck.get("size", 64), _info["class_ar"])
     REGISTRY[_key] = {
         "meta": {
@@ -585,12 +624,22 @@ def _load_quiz_pool(model_id):
     if model_id in MEDMNIST_MODELS:
         import medmnist
         from medmnist import INFO
-        dataset = {"organc": "organcmnist", "path": "pathmnist"}.get(model_id, model_id + "mnist")
+        # A "*_bin" model is the same MedMNIST test split with its labels regrouped into the
+        # screening question. The grouping lives in the checkpoint (binary_positive) so the
+        # quiz can never drift from what the model was actually trained on.
+        base = model_id[:-4] if model_id.endswith("_bin") else model_id
+        binary_positive = _MEDMNIST_BINARY.get(model_id)
+        dataset = {"organc": "organcmnist", "path": "pathmnist"}.get(base, base + "mnist")
         DataClass = getattr(medmnist, INFO[dataset]["python_class"])
         ds = DataClass(split="test", download=True, size=64, root=os.path.join(HERE, "data", "medmnist"))
         arr = ds.imgs
         labels = ds.labels.astype(int).reshape(-1)
-        cls_en = [INFO[dataset]["label"][str(i)] for i in range(len(INFO[dataset]["label"]))]
+        if binary_positive is not None:
+            pos = set(binary_positive)
+            labels = _np.array([1 if int(v) in pos else 0 for v in labels], dtype=int)
+            cls_en = list(_MEDMNIST_CLASSES[model_id])
+        else:
+            cls_en = [INFO[dataset]["label"][str(i)] for i in range(len(INFO[dataset]["label"]))]
         cls_ar = [MEDMNIST_MODELS[model_id]["class_ar"].get(c, c) for c in cls_en]
         imgs = [_Image.fromarray(a) for a in arr]
 
@@ -620,7 +669,8 @@ def _load_quiz_pool(model_id):
     return _QUIZ_POOLS[model_id]
 
 
-QUIZ_MODELS = ["brain", "pneumonia", "breast", "derma", "blood", "organc", "path", "oct", "retina"]
+QUIZ_MODELS = ["brain", "pneumonia", "breast", "derma", "blood", "organc", "path", "oct", "retina",
+               "derma_bin", "oct_bin", "retina_bin"]   # binary screening heads (2026-09-04 retrain)
 
 
 @app.get("/quiz/models")

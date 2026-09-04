@@ -8,6 +8,11 @@ measured on a held-out test split.
 > we train.** A model that scores well on test but perfectly on train is memorizing, and
 > hiding that helps nobody. The gap is in `*_metrics.json`, in `/models`, and on the site.
 
+> 📓 **This file describes where the project *is*. [`../TRAINING_LOG.md`](../TRAINING_LOG.md)
+> describes how it *got here*** — a dated, run-by-run record of every training pass: why it
+> was run, what changed, and the measured before/after. Read that one to understand a
+> decision; read this one to look up a model.
+
 ## ⚠️ Data-leakage finding (brain MRI) — read this first
 
 The brain model's original **98.95%** was **not a real generalization estimate**. Measured
