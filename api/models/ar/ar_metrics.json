@@ -1,0 +1,312 @@
+{
+  "system": "arabic_symptom_to_disease_v3",
+  "modality": "clinical text (Arabic)",
+  "datasets": "hajerbchn/arabic-medical-qa + MAQA + Shifaa (real Arabic, >=200k aggregate)",
+  "architecture": "specialty router (20, SGD modified_huber) + per-category diagnosis models (calibrated LinearSVC)",
+  "anti_overfitting": [
+    "router L2 alpha=5e-05 chosen by a measured sweep, not guessed: 2e-5 -> 5e-5 cut the train/test gap 0.215 -> 0.141 while top-3 ROSE 0.893 -> 0.901",
+    "per-category: calibrated LinearSVC C=0.1 from a measured sweep (C=1.0 -> 0.1 cut the gap 0.361 -> 0.280 and raised accuracy 0.638 -> 0.647)",
+    "rejected by measurement: the soft-vote ensemble raised top-3 by only +0.0025 but cost -0.010 top-1, and SGD on the small per-category sets memorized (train=1.000)",
+    "class_weight=balanced (all models)",
+    "min_df=3 feature pruning",
+    "per-diagnosis min support=20",
+    "train/test gap measured and published for every model"
+  ],
+  "categories": {
+    "general_surgery": "جراحة عامة",
+    "endocrine": "الغدد الصماء",
+    "internal_medicine": "الأمراض الباطنية",
+    "respiratory": "الجهاز التنفسي",
+    "cardiology": "القلب والشرايين",
+    "general_medicine": "الطب العام",
+    "gynecology": "أمراض النساء",
+    "hematology": "أمراض الدم",
+    "dermatology": "الأمراض الجلدية",
+    "cosmetic_surgery": "جراحة التجميل",
+    "gastroenterology": "الجهاز الهضمي",
+    "ent": "الأنف والأذن والحنجرة",
+    "urology": "المسالك البولية والتناسلية",
+    "ophthalmology": "أمراض العيون",
+    "musculoskeletal": "العضلات والعظام والمفاصل",
+    "psych_neuro": "النفسية والعصبية",
+    "sexual_health": "الصحة الجنسية",
+    "oncology": "الأورام",
+    "pediatrics": "طب الأطفال",
+    "dentistry": "طب الأسنان"
+  },
+  "router": {
+    "n_train": 166673,
+    "n_test": 29414,
+    "n_classes": 20,
+    "accuracy": 0.7053,
+    "train_accuracy": 0.8459,
+    "overfitting_gap": 0.1406,
+    "top3_accuracy": 0.9011,
+    "macro_f1": 0.7065,
+    "alpha": 5e-05,
+    "ensemble": false
+  },
+  "per_category": {
+    "dermatology": {
+      "n_train": 5321,
+      "n_test": 1331,
+      "n_diagnoses": 34,
+      "accuracy": 0.6469,
+      "train_accuracy": 0.9267,
+      "overfitting_gap": 0.2798,
+      "macro_f1": 0.5434,
+      "diagnoses": [
+        "أخرى",
+        "أنواع البشرة",
+        "الأكياس الدهنية تحت الجلد",
+        "الإكزيما",
+        "التينيا البيضاء والملونة",
+        "الثآليل",
+        "الجدري",
+        "الجرب",
+        "الحزاز",
+        "الحكة",
+        "الخطوط الجلدية البيضاء والحمراء والقاتمة",
+        "الدمامل والحبوب والفطريات في الجسم",
+        "الدوالي الجلدية",
+        "الذئبة الحمراء",
+        "الزوائد الجلدية واللحمية",
+        "الصدفية",
+        "الطفح الجلدي والتسلخات",
+        "العلامات المميزة في الجلد",
+        "المسامير اللحمية",
+        "الندب والتقرحات",
+        "الهربس الهربز",
+        "تعرق البدن عموما",
+        "تعرق اليدين والرجلين",
+        "تغير رائحة الجسم",
+        "تغير لون الجلد",
+        "تقشر وتشقق القدمين",
+        "حب الشباب وآثاره",
+        "حساسية الجلد",
+        "علاج الجلد بالليزر",
+        "مشاكل الأظفار",
+        "مشاكل السرة",
+        "مشاكل الشعر",
+        "مشاكل الوجه الجلدية",
+        "مشاكل فروة الرأس"
+      ]
+    },
+    "endocrine": {
+      "n_train": 786,
+      "n_test": 197,
+      "n_diagnoses": 6,
+      "accuracy": 0.868,
+      "train_accuracy": 0.9733,
+      "overfitting_gap": 0.1053,
+      "macro_f1": 0.6601,
+      "diagnoses": [
+        "الغدة الدرقية",
+        "الغدة النخامية",
+        "الغدد العرقية",
+        "الغدد اللمفاوية",
+        "الغدد عمومًا",
+        "الهرمونات وأثر اضطرابها"
+      ]
+    },
+    "ent": {
+      "n_train": 4456,
+      "n_test": 1115,
+      "n_diagnoses": 6,
+      "accuracy": 0.8879,
+      "train_accuracy": 0.9666,
+      "overfitting_gap": 0.0787,
+      "macro_f1": 0.7958,
+      "diagnoses": [
+        "آلام الرأس",
+        "الأنف والأذن والحنجرة",
+        "الدوخة والدوار",
+        "العيون",
+        "مشاكل الرأس الأخرى",
+        "مشاكل الفم والأسنان"
+      ]
+    },
+    "general_medicine": {
+      "n_train": 8520,
+      "n_test": 2130,
+      "n_diagnoses": 20,
+      "accuracy": 0.7174,
+      "train_accuracy": 0.9043,
+      "overfitting_gap": 0.187,
+      "macro_f1": 0.4574,
+      "diagnoses": [
+        "أخرى",
+        "أدوية عامة",
+        "أدوية نفسية وعصبية",
+        "ارتفاع حرارة الجسم الحمى",
+        "الأمراض المعدية وغير المعدية",
+        "التخلص من آثار الأدوية",
+        "التداوي وما يتعلق بالطب والأطباء",
+        "التنميل والنبضات",
+        "الرياضة وصحة البدن",
+        "الصحة الغذائية",
+        "العلاج بالأعشاب",
+        "العلاج بالرقية",
+        "الوراثة وأثرها في ظهور الأمراض",
+        "تأثير التقنيات الحديثة على الجسم",
+        "صحة عامة",
+        "ضوابط ومحاذير تعاطي الأدوية",
+        "فحوص طبية وتحاليل",
+        "مستحضرات طبيعية وأعشاب",
+        "مشاكل النمو وعلامات البلوغ",
+        "مشاكل الوزن"
+      ]
+    },
+    "general_surgery": {
+      "n_train": 260,
+      "n_test": 65,
+      "n_diagnoses": 3,
+      "accuracy": 0.8,
+      "train_accuracy": 0.9885,
+      "overfitting_gap": 0.1885,
+      "macro_f1": 0.7908,
+      "diagnoses": [
+        "الحروق وجراحتها",
+        "جراحة التجميل",
+        "مشاكل الجراحة العامة"
+      ]
+    },
+    "gynecology": {
+      "n_train": 7196,
+      "n_test": 1799,
+      "n_diagnoses": 3,
+      "accuracy": 0.8477,
+      "train_accuracy": 0.919,
+      "overfitting_gap": 0.0713,
+      "macro_f1": 0.6538,
+      "diagnoses": [
+        "أمراض النساء",
+        "الحمل ومشاكله",
+        "عمليات جراحية للنساء"
+      ]
+    },
+    "hematology": {
+      "n_train": 1811,
+      "n_test": 453,
+      "n_diagnoses": 6,
+      "accuracy": 0.883,
+      "train_accuracy": 0.9757,
+      "overfitting_gap": 0.0927,
+      "macro_f1": 0.7279,
+      "diagnoses": [
+        "أمراض الدم",
+        "الأورام الحميدة والخبيثة",
+        "السكري",
+        "الضغط",
+        "برودة الأطراف",
+        "مرض السرطان"
+      ]
+    },
+    "internal_medicine": {
+      "n_train": 6108,
+      "n_test": 1527,
+      "n_diagnoses": 7,
+      "accuracy": 0.7996,
+      "train_accuracy": 0.9216,
+      "overfitting_gap": 0.122,
+      "macro_f1": 0.7692,
+      "diagnoses": [
+        "أمراض الأمعاء",
+        "أمراض البلعوم والمريء",
+        "أمراض الصدر",
+        "أمراض القلب والأوعية الدموية",
+        "أمراض الكبد والطحال",
+        "أمراض المعدة",
+        "مشاكل القولون"
+      ]
+    },
+    "musculoskeletal": {
+      "n_train": 3968,
+      "n_test": 993,
+      "n_diagnoses": 6,
+      "accuracy": 0.9094,
+      "train_accuracy": 0.9751,
+      "overfitting_gap": 0.0657,
+      "macro_f1": 0.4564,
+      "diagnoses": [
+        "أخرى",
+        "الشد العضلي وآلام العضلات",
+        "العظام",
+        "تمزق العضلات والفتاق",
+        "جراحة العظام",
+        "ضعف وضمور العضلات والتهاباتها"
+      ]
+    },
+    "pediatrics": {
+      "n_train": 978,
+      "n_test": 245,
+      "n_diagnoses": 16,
+      "accuracy": 0.6122,
+      "train_accuracy": 0.9785,
+      "overfitting_gap": 0.3663,
+      "macro_f1": 0.5499,
+      "diagnoses": [
+        "أخرى",
+        "إصابة الأطفال عند الولادة",
+        "الإسهال الشديد عند الأطفال",
+        "الإمساك عند الأطفال",
+        "العناية بالطفل الرضيع وتغذيته",
+        "تأخر المشي عند الأطفال",
+        "تطعيم وتحصين الطفل",
+        "تغذية الأطفال عموما",
+        "فقدان الشهية عند الطفل",
+        "كثرة البكاء عند الطفل",
+        "كثرة القيء عند الأطفال",
+        "مشاكل الأنف عند الأطفال",
+        "مشاكل الخصية عند الأطفال",
+        "مشاكل الكلام عند الطفل",
+        "مشاكل النمو عند الطفل",
+        "مشاكل الوزن عند الأطفال"
+      ]
+    },
+    "psych_neuro": {
+      "n_train": 1225,
+      "n_test": 307,
+      "n_diagnoses": 2,
+      "accuracy": 0.9023,
+      "train_accuracy": 0.9902,
+      "overfitting_gap": 0.0879,
+      "macro_f1": 0.8406,
+      "diagnoses": [
+        "الدماغ",
+        "مشاكل الأعصاب"
+      ]
+    },
+    "urology": {
+      "n_train": 3256,
+      "n_test": 814,
+      "n_diagnoses": 2,
+      "accuracy": 0.9103,
+      "train_accuracy": 0.9595,
+      "overfitting_gap": 0.0491,
+      "macro_f1": 0.892,
+      "diagnoses": [
+        "أمراض الجهاز البولي والتناسلي",
+        "الجهاز التناسلي والمشاكل الجنسية"
+      ]
+    }
+  },
+  "categories_with_fine_model": [
+    "dermatology",
+    "endocrine",
+    "ent",
+    "general_medicine",
+    "general_surgery",
+    "gynecology",
+    "hematology",
+    "internal_medicine",
+    "musculoskeletal",
+    "pediatrics",
+    "psych_neuro",
+    "urology"
+  ],
+  "per_category_accuracy_min": 0.6122,
+  "per_category_accuracy_max": 0.9103,
+  "trained_at": "2026-07-16 16:27:29",
+  "train_seconds": 430.7
+}

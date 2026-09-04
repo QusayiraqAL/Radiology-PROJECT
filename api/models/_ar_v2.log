@@ -1,0 +1,17 @@
+[router] train=166673 test=29414 classes=20 alpha=5e-05 ensemble=True
+[router] train=0.7939 test=0.6949 gap=+0.099 top3=0.9036 macroF1=0.6965 (684s)
+[cat dermatology       ] dx=34 n= 6652 train=0.9267 test=0.6469 gap=+0.280 macroF1=0.5434
+[cat endocrine         ] dx= 6 n=  983 train=0.9733 test=0.8680 gap=+0.105 macroF1=0.6601
+[cat ent               ] dx= 6 n= 5571 train=0.9666 test=0.8879 gap=+0.079 macroF1=0.7958
+[cat general_medicine  ] dx=20 n=10650 train=0.9043 test=0.7174 gap=+0.187 macroF1=0.4574
+[cat general_surgery   ] dx= 3 n=  325 train=0.9885 test=0.8000 gap=+0.188 macroF1=0.7908
+[cat gynecology        ] dx= 3 n= 8995 train=0.9190 test=0.8477 gap=+0.071 macroF1=0.6538
+[cat hematology        ] dx= 6 n= 2264 train=0.9757 test=0.8830 gap=+0.093 macroF1=0.7279
+[cat internal_medicine ] dx= 7 n= 7635 train=0.9216 test=0.7996 gap=+0.122 macroF1=0.7692
+[cat musculoskeletal   ] dx= 6 n= 4961 train=0.9751 test=0.9094 gap=+0.066 macroF1=0.4564
+[cat pediatrics        ] dx=16 n= 1223 train=0.9785 test=0.6122 gap=+0.366 macroF1=0.5499
+[cat psych_neuro       ] dx= 2 n= 1532 train=0.9902 test=0.9023 gap=+0.088 macroF1=0.8406
+[cat urology           ] dx= 2 n= 4070 train=0.9595 test=0.9103 gap=+0.049 macroF1=0.8920
+
+[RESULT] router test=0.6949 (train=0.7939 gap=+0.099) top3=0.9036 | 12 category models 0.612..0.910
+AR_TRAIN_V2_DONE

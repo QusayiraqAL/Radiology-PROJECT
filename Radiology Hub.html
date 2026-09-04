@@ -1,0 +1,4132 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>مركز الأشعة الذكي | AI Radiology Hub</title>
+  <meta name="description"
+    content="منصة طبية متقدمة تعتمد على الذكاء الاصطناعي والتعلم العميق لتحليل صور الأشعة السينية والرنين المغناطيسي فورياً، مع تقارير آلية تحدد مناطق الإصابة بدقة.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --navy-900: #081f3a;
+      --navy-800: #0b2a4d;
+      --navy-700: #123a66;
+      --teal-500: #0ec2b8;
+      --teal-400: #2fd9cf;
+      --teal-100: #dcf7f5;
+      --cyan-glow: rgba(14, 194, 184, 0.35);
+      --ink: #14263c;
+      --ink-soft: #4a5d74;
+      --bg: #f5f8fc;
+      --card: #ffffff;
+      --line: #e2eaf3;
+      --danger: #e5484d;
+      --warn: #f5a524;
+      --radius: 16px;
+      --shadow: 0 10px 30px rgba(8, 31, 58, 0.08);
+      --shadow-lg: 0 24px 60px rgba(8, 31, 58, 0.16);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Tajawal', 'Segoe UI', Tahoma, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.75;
+      overflow-x: hidden;
+    }
+
+    ::selection {
+      background: var(--teal-400);
+      color: var(--navy-900);
+    }
+
+    .container {
+      width: min(1180px, 92%);
+      margin-inline: auto;
+    }
+
+    section {
+      padding: 88px 0;
+    }
+
+    h1,
+    h2,
+    h3 {
+      line-height: 1.35;
+      font-weight: 800;
+    }
+
+    .section-head {
+      text-align: center;
+      max-width: 720px;
+      margin: 0 auto 56px;
+    }
+
+    .section-head .eyebrow {
+      display: inline-block;
+      font-weight: 700;
+      font-size: 0.85rem;
+      color: var(--teal-500);
+      background: var(--teal-100);
+      padding: 4px 16px;
+      border-radius: 999px;
+      margin-bottom: 14px;
+      letter-spacing: 0.02em;
+    }
+
+    .section-head h2 {
+      font-size: clamp(1.6rem, 3.4vw, 2.3rem);
+      color: var(--navy-900);
+      margin-bottom: 12px;
+    }
+
+    .section-head p {
+      color: var(--ink-soft);
+      font-size: 1.05rem;
+    }
+
+    /* ---------- Navbar ---------- */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(8, 31, 58, 0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 68px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #fff;
+      font-weight: 800;
+      font-size: 1.15rem;
+      text-decoration: none;
+    }
+
+    .brand .logo {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, var(--teal-500), #1f8ef1);
+      box-shadow: 0 0 18px var(--cyan-glow);
+    }
+
+    .brand .logo svg {
+      width: 22px;
+      height: 22px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 26px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: #c9d7e8;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      transition: color .2s;
+    }
+
+    .nav-links a:hover {
+      color: var(--teal-400);
+    }
+
+    .nav-cta {
+      background: linear-gradient(135deg, var(--teal-500), #1f8ef1);
+      color: #fff;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.92rem;
+      padding: 9px 22px;
+      border-radius: 10px;
+      transition: transform .2s, box-shadow .2s;
+    }
+
+    .nav-cta:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 22px var(--cyan-glow);
+    }
+
+    .menu-btn {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+
+    .menu-btn svg {
+      width: 28px;
+      height: 28px;
+      stroke: #fff;
+    }
+
+    /* ---------- Hero ---------- */
+    .hero {
+      background:
+        radial-gradient(900px 480px at 85% -10%, rgba(31, 142, 241, 0.25), transparent 60%),
+        radial-gradient(700px 420px at 8% 110%, rgba(14, 194, 184, 0.18), transparent 60%),
+        linear-gradient(160deg, var(--navy-900) 0%, var(--navy-800) 60%, var(--navy-700) 100%);
+      color: #fff;
+      padding: 96px 0 110px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background-image: linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+      background-size: 44px 44px;
+      mask-image: radial-gradient(ellipse at 60% 40%, black 30%, transparent 75%);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 56px;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(14, 194, 184, 0.12);
+      border: 1px solid rgba(14, 194, 184, 0.4);
+      color: var(--teal-400);
+      font-weight: 700;
+      font-size: 0.85rem;
+      padding: 6px 16px;
+      border-radius: 999px;
+      margin-bottom: 22px;
+    }
+
+    .hero-badge .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--teal-400);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        box-shadow: 0 0 0 0 var(--cyan-glow);
+      }
+
+      50% {
+        box-shadow: 0 0 0 7px transparent;
+      }
+    }
+
+    .hero h1 {
+      font-size: clamp(1.9rem, 4.4vw, 3.1rem);
+      font-weight: 900;
+      margin-bottom: 18px;
+    }
+
+    .hero h1 .grad {
+      background: linear-gradient(90deg, var(--teal-400), #5db4ff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hero p.lead {
+      color: #b7c8dc;
+      font-size: 1.12rem;
+      max-width: 540px;
+      margin-bottom: 32px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-bottom: 46px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 1rem;
+      padding: 13px 30px;
+      border-radius: 12px;
+      transition: transform .2s, box-shadow .2s;
+      cursor: pointer;
+      border: none;
+      font-family: inherit;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--teal-500), #1f8ef1);
+      color: #fff;
+      box-shadow: 0 10px 26px rgba(31, 142, 241, 0.35);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 16px 34px rgba(31, 142, 241, 0.45);
+    }
+
+    .btn-ghost {
+      background: rgba(255, 255, 255, 0.07);
+      color: #e6eef7;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .btn-ghost:hover {
+      background: rgba(255, 255, 255, 0.13);
+      transform: translateY(-3px);
+    }
+
+    .hero-stats {
+      display: grid;
+      grid-template-columns: repeat(4, auto);
+      gap: 34px;
+    }
+
+    .hero-stats .stat b {
+      display: block;
+      font-size: 1.55rem;
+      font-weight: 900;
+      color: #fff;
+    }
+
+    .hero-stats .stat span {
+      color: #8fa6bf;
+      font-size: 0.86rem;
+    }
+
+    /* Scan viewer mock */
+    .viewer {
+      background: #0a1626;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      box-shadow: var(--shadow-lg), 0 0 60px rgba(31, 142, 241, 0.15);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .viewer-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 18px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .viewer-bar .title {
+      color: #9fb4cb;
+      font-size: 0.82rem;
+      font-weight: 500;
+    }
+
+    .viewer-bar .dots {
+      display: flex;
+      gap: 6px;
+    }
+
+    .viewer-bar .dots i {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      display: block;
+    }
+
+    .viewer-body {
+      position: relative;
+      padding: 22px;
+      display: grid;
+      place-items: center;
+    }
+
+    .viewer-body svg.scan {
+      width: 100%;
+      max-width: 380px;
+      display: block;
+    }
+
+    .scanline {
+      position: absolute;
+      right: 22px;
+      left: 22px;
+      height: 3px;
+      top: 40px;
+      background: linear-gradient(90deg, transparent, var(--teal-400), transparent);
+      box-shadow: 0 0 16px var(--teal-400);
+      border-radius: 2px;
+      animation: scanmove 3.4s ease-in-out infinite;
+    }
+
+    @keyframes scanmove {
+
+      0%,
+      100% {
+        top: 40px;
+        opacity: .9;
+      }
+
+      50% {
+        top: calc(100% - 46px);
+        opacity: .9;
+      }
+    }
+
+    .det-box {
+      position: absolute;
+      border: 2px solid var(--teal-400);
+      border-radius: 8px;
+      box-shadow: 0 0 0 3px rgba(14, 194, 184, 0.18), inset 0 0 22px rgba(14, 194, 184, 0.12);
+      animation: detpulse 2.2s ease-in-out infinite;
+    }
+
+    @keyframes detpulse {
+
+      0%,
+      100% {
+        box-shadow: 0 0 0 3px rgba(14, 194, 184, .18);
+      }
+
+      50% {
+        box-shadow: 0 0 0 7px rgba(14, 194, 184, .05);
+      }
+    }
+
+    .det-tag {
+      position: absolute;
+      background: var(--teal-500);
+      color: #04252c;
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 3px 10px;
+      border-radius: 6px;
+      white-space: nowrap;
+    }
+
+    .viewer-foot {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      padding: 14px 18px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .chip {
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 999px;
+      background: rgba(14, 194, 184, 0.12);
+      color: var(--teal-400);
+      border: 1px solid rgba(14, 194, 184, 0.35);
+    }
+
+    .chip.warn {
+      background: rgba(245, 165, 36, 0.1);
+      color: var(--warn);
+      border-color: rgba(245, 165, 36, 0.35);
+    }
+
+    /* ---------- Features ---------- */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
+    }
+
+    .feature {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 30px 26px;
+      box-shadow: var(--shadow);
+      transition: transform .25s, box-shadow .25s;
+    }
+
+    .feature:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .feature .icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      margin-bottom: 18px;
+      background: linear-gradient(135deg, var(--teal-100), #e3f0ff);
+      color: var(--navy-700);
+    }
+
+    .feature .icon svg {
+      width: 26px;
+      height: 26px;
+    }
+
+    .feature h3 {
+      font-size: 1.12rem;
+      color: var(--navy-900);
+      margin-bottom: 8px;
+    }
+
+    .feature p {
+      color: var(--ink-soft);
+      font-size: 0.95rem;
+    }
+
+    /* ---------- How it works ---------- */
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      counter-reset: step;
+    }
+
+    .step {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 28px 22px;
+      position: relative;
+      box-shadow: var(--shadow);
+    }
+
+    .step .num {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, var(--teal-500), #1f8ef1);
+      color: #fff;
+      font-weight: 900;
+      font-size: 1.15rem;
+      margin-bottom: 16px;
+      box-shadow: 0 6px 16px var(--cyan-glow);
+    }
+
+    .step h3 {
+      font-size: 1.05rem;
+      color: var(--navy-900);
+      margin-bottom: 6px;
+    }
+
+    .step p {
+      color: var(--ink-soft);
+      font-size: 0.92rem;
+    }
+
+    /* ---------- Modalities ---------- */
+    .modalities {
+      background: linear-gradient(160deg, var(--navy-900), var(--navy-800));
+      color: #fff;
+    }
+
+    .modalities .section-head h2 {
+      color: #fff;
+    }
+
+    .modalities .section-head p {
+      color: #a8bccf;
+    }
+
+    .mod-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    .mod-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 18px;
+      padding: 34px 30px;
+    }
+
+    .mod-card h3 {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 1.3rem;
+      margin-bottom: 8px;
+    }
+
+    .mod-card h3 .mod-icon {
+      width: 46px;
+      height: 46px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, var(--teal-500), #1f8ef1);
+    }
+
+    .mod-card h3 .mod-icon svg {
+      width: 24px;
+      height: 24px;
+    }
+
+    .mod-card>p {
+      color: #a8bccf;
+      font-size: 0.95rem;
+      margin-bottom: 18px;
+    }
+
+    .mod-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+    }
+
+    .mod-tags span {
+      font-size: 0.83rem;
+      font-weight: 500;
+      padding: 6px 15px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      color: #a8bccf;
+    }
+
+    .mod-tags span.live {
+      background: rgba(14, 194, 184, 0.16);
+      border-color: rgba(14, 194, 184, 0.55);
+      color: var(--teal-400);
+      font-weight: 700;
+    }
+
+    .live-dot-inline {
+      display: inline-block;
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--teal-400);
+      box-shadow: 0 0 8px var(--teal-400);
+      vertical-align: middle;
+      margin: 0 3px;
+    }
+
+    /* ---------- Demo ---------- */
+    .demo-note {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 10px;
+      background: #fff7e8;
+      border: 1px solid #f3ddb0;
+      color: #8a6116;
+      font-size: 0.85rem;
+      font-weight: 500;
+      padding: 6px 16px;
+      border-radius: 999px;
+    }
+
+    .demo-wrap {
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .case-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .case-btn {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      text-align: right;
+      width: 100%;
+      background: var(--card);
+      border: 2px solid var(--line);
+      border-radius: 14px;
+      padding: 16px 18px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: border-color .2s, box-shadow .2s;
+    }
+
+    .case-btn:hover {
+      border-color: #b9d8ec;
+    }
+
+    .case-btn.active {
+      border-color: var(--teal-500);
+      box-shadow: 0 8px 20px rgba(14, 194, 184, 0.15);
+    }
+
+    .case-btn .c-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 11px;
+      flex-shrink: 0;
+      display: grid;
+      place-items: center;
+      background: var(--teal-100);
+      color: var(--navy-700);
+    }
+
+    .case-btn .c-icon svg {
+      width: 22px;
+      height: 22px;
+    }
+
+    .case-btn b {
+      display: block;
+      font-size: 0.98rem;
+      color: var(--navy-900);
+    }
+
+    .case-btn span {
+      font-size: 0.8rem;
+      color: var(--ink-soft);
+    }
+
+    .analyze-btn {
+      width: 100%;
+      justify-content: center;
+      margin-top: 4px;
+    }
+
+    .analyze-btn:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    .demo-panel {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .demo-viewer {
+      background: #0a1626;
+      position: relative;
+      min-height: 340px;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+
+    .demo-viewer svg {
+      width: 100%;
+      max-width: 330px;
+    }
+
+    .demo-scanline {
+      display: none;
+    }
+
+    .demo-viewer.scanning .demo-scanline {
+      display: block;
+      position: absolute;
+      right: 24px;
+      left: 24px;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, var(--teal-400), transparent);
+      box-shadow: 0 0 16px var(--teal-400);
+      border-radius: 2px;
+      animation: demoscan 1.3s ease-in-out infinite;
+    }
+
+    @keyframes demoscan {
+
+      0%,
+      100% {
+        top: 8%;
+      }
+
+      50% {
+        top: 90%;
+      }
+    }
+
+    .demo-det {
+      position: absolute;
+      opacity: 0;
+      transition: opacity .5s;
+    }
+
+    .demo-det.show {
+      opacity: 1;
+    }
+
+    .demo-det .det-box {
+      position: absolute;
+      inset: 0;
+    }
+
+    .demo-det .det-tag {
+      top: -26px;
+      right: -2px;
+      position: absolute;
+    }
+
+    .demo-empty {
+      color: #5d7591;
+      font-size: 0.95rem;
+      text-align: center;
+    }
+
+    .demo-progress {
+      padding: 0 24px;
+      background: #0a1626;
+    }
+
+    .demo-progress .bar-track {
+      height: 6px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 999px;
+      overflow: hidden;
+      margin-bottom: 8px;
+    }
+
+    .demo-progress .bar-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--teal-500), #1f8ef1);
+      border-radius: 999px;
+      transition: width .3s;
+    }
+
+    .demo-progress .bar-label {
+      color: #8fa6bf;
+      font-size: 0.8rem;
+      padding-bottom: 16px;
+    }
+
+    .demo-report {
+      padding: 26px;
+    }
+
+    .demo-report h4 {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--navy-900);
+      font-size: 1.05rem;
+      margin-bottom: 16px;
+    }
+
+    .findings {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .finding {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px 16px;
+    }
+
+    .finding .f-name {
+      font-weight: 500;
+      font-size: 0.93rem;
+      color: var(--ink);
+      display: flex;
+      align-items: center;
+      gap: 9px;
+    }
+
+    .finding .f-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .finding .f-conf {
+      font-weight: 800;
+      font-size: 0.9rem;
+      color: var(--navy-700);
+      direction: ltr;
+    }
+
+    .report-text {
+      background: #f0f6fb;
+      border-inline-start: 4px solid var(--teal-500);
+      border-radius: 10px;
+      padding: 16px 18px;
+      font-size: 0.92rem;
+      color: var(--ink-soft);
+      white-space: pre-line;
+    }
+
+    .report-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 18px;
+      flex-wrap: wrap;
+    }
+
+    .mini-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-family: inherit;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 700;
+      padding: 8px 18px;
+      border-radius: 9px;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--navy-700);
+      transition: background .2s;
+    }
+
+    .mini-btn:hover {
+      background: var(--teal-100);
+    }
+
+    /* ---------- Real API analysis ---------- */
+    .api-bar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 14px 18px;
+      box-shadow: var(--shadow);
+      margin-bottom: 22px;
+    }
+
+    .api-bar label {
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: var(--navy-900);
+    }
+
+    .api-bar input {
+      flex: 1;
+      min-width: 220px;
+      font-family: inherit;
+      font-size: 0.9rem;
+      padding: 9px 14px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      direction: ltr;
+      text-align: left;
+      color: var(--ink);
+      outline: none;
+    }
+
+    .api-bar input:focus {
+      border-color: var(--teal-500);
+    }
+
+    .api-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.86rem;
+      font-weight: 700;
+    }
+
+    .api-status .s-dot {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      background: #97a8bb;
+    }
+
+    .api-status.on {
+      color: #17a34a;
+    }
+
+    .api-status.on .s-dot {
+      background: #17a34a;
+      box-shadow: 0 0 0 4px rgba(23, 163, 74, 0.15);
+    }
+
+    .api-status.off {
+      color: var(--danger);
+    }
+
+    .api-status.off .s-dot {
+      background: var(--danger);
+      box-shadow: 0 0 0 4px rgba(229, 72, 77, 0.12);
+    }
+
+    .real-wrap {
+      display: grid;
+      grid-template-columns: 1fr 1.15fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .upload-card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .dropzone {
+      border: 2px dashed #b9cde2;
+      border-radius: 14px;
+      background: #f6fafd;
+      min-height: 250px;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color .2s, background .2s;
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .dropzone:hover,
+    .dropzone.drag {
+      border-color: var(--teal-500);
+      background: var(--teal-100);
+    }
+
+    .dropzone .dz-inner {
+      color: var(--ink-soft);
+      font-size: 0.94rem;
+    }
+
+    .dropzone .dz-inner svg {
+      width: 46px;
+      height: 46px;
+      margin-bottom: 10px;
+      color: var(--teal-500);
+    }
+
+    .dropzone img.preview {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      background: #0a1626;
+    }
+
+    .file-meta {
+      font-size: 0.83rem;
+      color: var(--ink-soft);
+      direction: ltr;
+      text-align: left;
+    }
+
+    .spinner {
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255, 255, 255, 0.35);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .results-card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      padding: 26px;
+      min-height: 250px;
+    }
+
+    .results-card h4 {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--navy-900);
+      font-size: 1.05rem;
+      margin-bottom: 16px;
+    }
+
+    .prob-row {
+      margin-bottom: 13px;
+    }
+
+    .prob-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 5px;
+    }
+
+    .prob-head .p-name {
+      font-weight: 500;
+      font-size: 0.92rem;
+      color: var(--ink);
+    }
+
+    .prob-head .p-name small {
+      color: var(--ink-soft);
+      font-weight: 400;
+      font-size: 0.76rem;
+      margin-inline-start: 6px;
+      direction: ltr;
+      display: inline-block;
+    }
+
+    .prob-head .p-val {
+      font-weight: 800;
+      font-size: 0.88rem;
+      direction: ltr;
+    }
+
+    .prob-track {
+      height: 8px;
+      border-radius: 999px;
+      background: #edf2f8;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .prob-fill {
+      height: 100%;
+      border-radius: 999px;
+      width: 0%;
+      transition: width .8s cubic-bezier(.2, .7, .3, 1);
+    }
+
+    .prob-track::after {
+      content: "";
+      position: absolute;
+      top: -1px;
+      bottom: -1px;
+      inset-inline-start: calc(50% - 1px);
+      width: 2px;
+      background: #8fa6bf;
+      border-radius: 2px;
+      z-index: 2;
+      opacity: 0.85;
+    }
+
+    .explain-box {
+      background: #eef6ff;
+      border: 1px solid #cfe3fa;
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: 0.86rem;
+      color: #2d4a6b;
+      line-height: 1.9;
+      margin-bottom: 18px;
+    }
+
+    .explain-box b {
+      color: var(--navy-900);
+    }
+
+    .grp-title {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      font-weight: 800;
+      font-size: 0.95rem;
+      margin: 18px 0 12px;
+    }
+
+    .grp-title .g-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .grp-count {
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 2px 10px;
+      border-radius: 999px;
+      background: #edf2f8;
+      color: var(--ink-soft);
+    }
+
+    .all-clear {
+      background: #ecfaf1;
+      border: 1px solid #bfe8cf;
+      color: #17693a;
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: 0.92rem;
+      font-weight: 500;
+    }
+
+    details.low-findings {
+      margin-top: 14px;
+    }
+
+    details.low-findings summary {
+      cursor: pointer;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--navy-700);
+      padding: 10px 14px;
+      background: #f3f7fb;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      list-style: none;
+      user-select: none;
+    }
+
+    details.low-findings summary::-webkit-details-marker {
+      display: none;
+    }
+
+    details.low-findings summary::before {
+      content: "◂ ";
+      transition: transform .2s;
+      display: inline-block;
+    }
+
+    details.low-findings[open] summary::before {
+      content: "▾ ";
+    }
+
+    details.low-findings .prob-row:first-of-type {
+      margin-top: 14px;
+    }
+
+    .api-error {
+      background: #fdecec;
+      border: 1px solid #f3c1c3;
+      color: #9b2c30;
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: 0.9rem;
+      line-height: 1.8;
+    }
+
+    .api-error code {
+      background: #fff;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-size: 0.82rem;
+      direction: ltr;
+      display: inline-block;
+    }
+
+    .result-meta {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+
+    /* Grad-CAM heatmap (educational) */
+    .heat-wrap {
+      margin: 4px 0 18px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      overflow: hidden;
+      background: #0a1626;
+    }
+
+    .heat-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+      padding: 10px 14px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #cfe0f0;
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .heat-toggle {
+      padding: 5px 12px;
+      font-size: 0.78rem;
+    }
+
+    .heat-imgs {
+      display: grid;
+      place-items: center;
+      padding: 12px;
+    }
+
+    .heat-imgs img {
+      width: 100%;
+      max-width: 300px;
+      border-radius: 10px;
+      display: block;
+    }
+
+    .heat-cap {
+      padding: 10px 14px 14px;
+      font-size: 0.82rem;
+      color: #9fb4cb;
+      line-height: 1.7;
+    }
+
+    /* educational box */
+    .edu-box {
+      margin-top: 16px;
+      background: #f0fbfa;
+      border: 1px solid #bfe9e6;
+      border-inline-start: 4px solid var(--teal-500);
+      border-radius: 12px;
+      padding: 13px 16px;
+      font-size: 0.88rem;
+      color: #14484a;
+      line-height: 1.9;
+    }
+
+    .edu-box b {
+      color: #0b6b64;
+    }
+
+    /* ---------- Quiz mode ---------- */
+    .quiz-models {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .quiz-model-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: inherit;
+      cursor: pointer;
+      background: var(--card);
+      border: 2px solid var(--line);
+      border-radius: 999px;
+      padding: 9px 18px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--navy-800);
+      transition: border-color .2s, box-shadow .2s;
+    }
+
+    .quiz-model-btn:hover {
+      border-color: #b9d8ec;
+    }
+
+    .quiz-model-btn.active {
+      border-color: var(--teal-500);
+      box-shadow: 0 6px 16px rgba(14, 194, 184, 0.18);
+    }
+
+    .quiz-scorebar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      margin-bottom: 22px;
+    }
+
+    .score-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 10px 18px;
+      box-shadow: var(--shadow);
+      font-size: 0.9rem;
+      color: var(--ink-soft);
+    }
+
+    .score-pill b {
+      font-size: 1.15rem;
+      color: var(--navy-900);
+      direction: ltr;
+    }
+
+    .quiz-wrap {
+      display: grid;
+      grid-template-columns: 1fr 1.1fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .quiz-image-card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      padding: 18px;
+    }
+
+    .quiz-img-box {
+      background: #0a1626;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      padding: 12px;
+      min-height: 260px;
+    }
+
+    .quiz-img-box img {
+      width: 100%;
+      max-width: 320px;
+      image-rendering: auto;
+      border-radius: 8px;
+      display: block;
+    }
+
+    .quiz-modality {
+      text-align: center;
+      margin-top: 10px;
+      font-size: 0.85rem;
+      color: var(--ink-soft);
+    }
+
+    .quiz-panel {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      padding: 22px;
+    }
+
+    .quiz-prompt {
+      font-weight: 800;
+      color: var(--navy-900);
+      margin-bottom: 14px;
+    }
+
+    .quiz-options {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .quiz-opt {
+      text-align: right;
+      font-family: inherit;
+      cursor: pointer;
+      font-size: 0.96rem;
+      font-weight: 600;
+      background: var(--bg);
+      border: 2px solid var(--line);
+      border-radius: 12px;
+      padding: 13px 16px;
+      color: var(--ink);
+      transition: border-color .15s, background .15s;
+    }
+
+    .quiz-opt:hover {
+      border-color: var(--teal-400);
+      background: var(--teal-100);
+    }
+
+    .quiz-opt:disabled {
+      cursor: default;
+    }
+
+    .quiz-opt.correct {
+      border-color: #17a34a;
+      background: #ecfaf1;
+      color: #17693a;
+    }
+
+    .quiz-opt.wrong {
+      border-color: var(--danger);
+      background: #fdecec;
+      color: #9b2c30;
+    }
+
+    .quiz-reveal {
+      margin-top: 16px;
+    }
+
+    .quiz-verdict {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-radius: 12px;
+      padding: 13px 16px;
+      font-weight: 800;
+      margin-bottom: 14px;
+    }
+
+    .quiz-verdict.ok {
+      background: #ecfaf1;
+      border: 1px solid #bfe8cf;
+      color: #17693a;
+    }
+
+    .quiz-verdict.no {
+      background: #fdecec;
+      border: 1px solid #f3c1c3;
+      color: #9b2c30;
+    }
+
+    .quiz-cmp {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 12px;
+      font-size: 0.9rem;
+    }
+
+    .quiz-cmp .row {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 10px 14px;
+    }
+
+    .quiz-cmp .row b {
+      color: var(--navy-900);
+    }
+
+    .quiz-cmp .mtag {
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 1px 8px;
+      border-radius: 999px;
+    }
+
+    .quiz-cmp .mtag.ok {
+      background: #ecfaf1;
+      color: #17693a;
+    }
+
+    .quiz-cmp .mtag.no {
+      background: #fdecec;
+      color: #9b2c30;
+    }
+
+    @media (max-width: 860px) {
+      .quiz-wrap {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* ---------- Case library / atlas ---------- */
+    .atlas-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+      gap: 16px;
+    }
+
+    .atlas-card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .atlas-card .ac-imgs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px;
+      background: #0a1626;
+    }
+
+    .atlas-card .ac-imgs img {
+      width: 100%;
+      display: block;
+      aspect-ratio: 1;
+      object-fit: cover;
+    }
+
+    .atlas-card .ac-body {
+      padding: 12px 14px;
+    }
+
+    .atlas-card .ac-label {
+      font-weight: 800;
+      color: var(--navy-900);
+      font-size: 0.95rem;
+      margin-bottom: 6px;
+    }
+
+    .atlas-card .ac-model {
+      font-size: 0.8rem;
+      color: var(--ink-soft);
+    }
+
+    .atlas-card .ac-tag {
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 1px 8px;
+      border-radius: 999px;
+    }
+
+    .atlas-card .ac-tag.ok {
+      background: #ecfaf1;
+      color: #17693a;
+    }
+
+    .atlas-card .ac-tag.no {
+      background: #fdecec;
+      color: #9b2c30;
+    }
+
+    .ac-cap {
+      font-size: 0.68rem;
+      color: #93a2b3;
+      text-align: center;
+      padding: 3px;
+      background: #0a1626;
+    }
+
+    /* ---------- Report writing ---------- */
+    .report-wrap {
+      display: grid;
+      grid-template-columns: 1fr 1.15fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .report-wrap textarea {
+      width: 100%;
+      font-family: inherit;
+      font-size: 0.95rem;
+      line-height: 1.7;
+      color: var(--ink);
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      resize: vertical;
+      outline: none;
+    }
+
+    .report-wrap textarea:focus {
+      border-color: var(--teal-500);
+      box-shadow: 0 0 0 3px rgba(14, 194, 184, 0.12);
+    }
+
+    .report-wrap .s-label {
+      display: block;
+    }
+
+    .report-check {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      margin: 14px 0;
+    }
+
+    .report-check .rc {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      font-size: 0.88rem;
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 9px 13px;
+    }
+
+    .report-ref {
+      background: #eef6ff;
+      border: 1px solid #cfe3fa;
+      border-radius: 12px;
+      padding: 14px 16px;
+      font-size: 0.88rem;
+      color: #2d4a6b;
+      line-height: 1.9;
+      margin-top: 12px;
+    }
+
+    .report-ref b {
+      color: var(--navy-900);
+    }
+
+    @media (max-width: 860px) {
+      .report-wrap {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* model selector */
+    .model-select {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-bottom: 22px;
+    }
+
+    .model-btn {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      text-align: right;
+      font-family: inherit;
+      cursor: pointer;
+      background: var(--card);
+      border: 2px solid var(--line);
+      border-radius: 14px;
+      padding: 15px 18px;
+      transition: border-color .2s, box-shadow .2s, transform .2s;
+    }
+
+    .model-btn:hover {
+      border-color: #b9d8ec;
+      transform: translateY(-2px);
+    }
+
+    .model-btn.active {
+      border-color: var(--teal-500);
+      box-shadow: 0 8px 20px rgba(14, 194, 184, 0.16);
+    }
+
+    .model-btn.disabled {
+      opacity: .5;
+      cursor: not-allowed;
+    }
+
+    .model-btn .m-ico {
+      font-size: 1.7rem;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+
+    .model-btn .m-txt b {
+      display: block;
+      font-size: 0.96rem;
+      color: var(--navy-900);
+    }
+
+    .model-btn .m-txt span {
+      font-size: 0.78rem;
+      color: var(--ink-soft);
+      direction: ltr;
+      display: inline-block;
+    }
+
+    /* multiclass / binary verdict banner */
+    .verdict-banner {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-radius: 12px;
+      padding: 16px 18px;
+      margin-bottom: 16px;
+      font-weight: 700;
+      font-size: 1.02rem;
+    }
+
+    .verdict-banner.pos {
+      background: #fdecec;
+      border: 1px solid #f3c1c3;
+      color: #9b2c30;
+    }
+
+    .verdict-banner.neg {
+      background: #ecfaf1;
+      border: 1px solid #bfe8cf;
+      color: #17693a;
+    }
+
+    .verdict-banner .v-ico {
+      font-size: 1.5rem;
+    }
+
+    .verdict-banner .v-conf {
+      margin-inline-start: auto;
+      font-size: 0.9rem;
+      direction: ltr;
+    }
+
+    /* ---------- Validation / metrics section ---------- */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
+    }
+
+    .metric-card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .metric-card .m-head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 6px;
+    }
+
+    .metric-card .m-head .m-emoji {
+      font-size: 1.5rem;
+    }
+
+    .metric-card h3 {
+      font-size: 1.05rem;
+      color: var(--navy-900);
+    }
+
+    .metric-card .m-modality {
+      font-size: 0.8rem;
+      color: var(--teal-500);
+      font-weight: 700;
+      margin-bottom: 14px;
+    }
+
+    .metric-card .big-num {
+      font-size: 2.1rem;
+      font-weight: 900;
+      color: var(--navy-900);
+      line-height: 1;
+      direction: ltr;
+    }
+
+    .metric-card .big-lbl {
+      font-size: 0.82rem;
+      color: var(--ink-soft);
+      margin-bottom: 16px;
+    }
+
+    .metric-rows {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: auto;
+    }
+
+    .metric-rows .mr {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.86rem;
+      border-top: 1px dashed var(--line);
+      padding-top: 8px;
+    }
+
+    .metric-rows .mr span {
+      color: var(--ink-soft);
+    }
+
+    .metric-rows .mr b {
+      color: var(--navy-800);
+      direction: ltr;
+    }
+
+    .metric-card .m-source {
+      font-size: 0.74rem;
+      color: #93a2b3;
+      margin-top: 14px;
+      border-top: 1px solid var(--line);
+      padding-top: 10px;
+      line-height: 1.7;
+    }
+
+    .metrics-loading {
+      text-align: center;
+      color: var(--ink-soft);
+      padding: 30px;
+      grid-column: 1 / -1;
+    }
+
+    /* generalization gap (train vs test) + anti-overfitting techniques */
+    .metric-rows .mr.gap-row span small {
+      color: #93a2b3;
+      font-weight: 400;
+      font-size: 0.76rem;
+    }
+
+    .gap-badge {
+      font-size: 0.78rem;
+      font-weight: 800;
+      padding: 2px 10px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      direction: ltr;
+      display: inline-block;
+    }
+
+    .gap-badge.ok {
+      background: #ecfaf1;
+      color: #17693a;
+      border-color: #bfe8cf;
+    }
+
+    .gap-badge.warn {
+      background: #fff7e8;
+      color: #8a6116;
+      border-color: #f3ddb0;
+    }
+
+    .gap-badge.bad {
+      background: #fdecec;
+      color: #9b2c30;
+      border-color: #f3c1c3;
+    }
+
+    details.af-details {
+      margin-top: 12px;
+    }
+
+    details.af-details summary {
+      cursor: pointer;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--navy-700);
+      padding: 7px 11px;
+      background: #f3f7fb;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      list-style: none;
+      user-select: none;
+    }
+
+    details.af-details summary::-webkit-details-marker {
+      display: none;
+    }
+
+    details.af-details[open] summary {
+      border-color: var(--teal-400);
+      background: var(--teal-100);
+    }
+
+    .af-list {
+      margin: 10px 4px 0;
+      padding-inline-start: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .af-list li {
+      font-size: 0.76rem;
+      color: var(--ink-soft);
+      line-height: 1.6;
+      direction: ltr;
+      text-align: left;
+    }
+
+    details.split-note summary {
+      background: #fff7e8;
+      border-color: #f3ddb0;
+      color: #8a6116;
+    }
+
+    details.split-note[open] summary {
+      background: #fff7e8;
+      border-color: #e8c98a;
+    }
+
+    .sn-body {
+      margin: 10px 2px 0;
+      font-size: 0.76rem;
+      color: var(--ink-soft);
+      line-height: 1.75;
+      direction: ltr;
+      text-align: left;
+    }
+
+    details.card-details summary {
+      background: #eef6ff;
+      border-color: #cfe3fa;
+      color: #2d4a6b;
+    }
+
+    details.card-details[open] summary {
+      background: #e3f0ff;
+      border-color: #b9d8ec;
+    }
+
+    .card-body {
+      margin: 10px 4px 0;
+      font-size: 0.79rem;
+      color: var(--ink-soft);
+      line-height: 1.85;
+    }
+
+    .card-body p {
+      margin-bottom: 8px;
+    }
+
+    .card-body b {
+      color: var(--navy-900);
+    }
+
+    /* ---------- Symptom text checker ---------- */
+    .symptom-wrap {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .symptom-input-card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .s-label {
+      font-weight: 700;
+      font-size: 0.92rem;
+      color: var(--navy-900);
+    }
+
+    #symptomText {
+      width: 100%;
+      font-family: inherit;
+      font-size: 0.96rem;
+      line-height: 1.7;
+      color: var(--ink);
+      padding: 14px 16px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      resize: vertical;
+      direction: ltr;
+      text-align: left;
+      outline: none;
+      min-height: 120px;
+    }
+
+    #symptomText:focus {
+      border-color: var(--teal-500);
+      box-shadow: 0 0 0 3px rgba(14, 194, 184, 0.12);
+    }
+
+    .s-examples {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .s-examples button {
+      font-family: inherit;
+      cursor: pointer;
+      font-size: 0.82rem;
+      font-weight: 600;
+      padding: 7px 13px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: var(--bg);
+      color: var(--navy-700);
+      transition: background .2s, border-color .2s;
+    }
+
+    .s-examples button:hover {
+      background: var(--teal-100);
+      border-color: var(--teal-400);
+    }
+
+    .route-path {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+      background: #f0f6fb;
+      border: 1px solid #d7e6f2;
+      border-radius: 12px;
+      padding: 12px 16px;
+    }
+
+    .route-path .rp-step {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .route-path .rp-step small {
+      font-size: 0.72rem;
+      color: var(--ink-soft);
+    }
+
+    .route-path .rp-step b {
+      font-size: 0.95rem;
+      color: var(--navy-900);
+    }
+
+    .route-path .rp-arrow {
+      color: var(--teal-500);
+      font-weight: 900;
+      font-size: 1.1rem;
+    }
+
+    .route-path .rp-acc {
+      margin-inline-start: auto;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #0b7d76;
+      background: var(--teal-100);
+      border: 1px solid #bfe9e6;
+      padding: 4px 12px;
+      border-radius: 999px;
+    }
+
+    /* ranked top-3 specialties */
+    .spec-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--navy-900);
+      margin-bottom: 10px;
+    }
+
+    .spec-title small {
+      font-weight: 400;
+      color: var(--ink-soft);
+      font-size: 0.76rem;
+      margin-inline-start: 6px;
+    }
+
+    .spec-rank-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .spec-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .spec-rank {
+      width: 26px;
+      height: 26px;
+      border-radius: 8px;
+      flex-shrink: 0;
+      display: grid;
+      place-items: center;
+      font-size: 0.78rem;
+      font-weight: 800;
+      background: #eef2f7;
+      color: #5a6b7d;
+      border: 1px solid #e2e8f0;
+    }
+
+    .spec-item.top .spec-rank {
+      background: var(--teal-500);
+      color: #fff;
+      border-color: var(--teal-500);
+      box-shadow: 0 3px 10px var(--cyan-glow);
+    }
+
+    .spec-body {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .spec-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 4px;
+      gap: 8px;
+    }
+
+    .spec-head b {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--ink);
+    }
+
+    .spec-item.top .spec-head b {
+      font-weight: 700;
+      color: var(--navy-900);
+    }
+
+    .spec-head span {
+      font-size: 0.82rem;
+      font-weight: 800;
+      color: var(--ink-soft);
+      direction: ltr;
+    }
+
+    .spec-item.top .spec-head span {
+      color: #0b7d76;
+    }
+
+    .spec-track {
+      height: 7px;
+      border-radius: 999px;
+      background: #edf2f8;
+      overflow: hidden;
+    }
+
+    .spec-fill {
+      height: 100%;
+      width: 0%;
+      border-radius: 999px;
+      background: #b6c6d6;
+      transition: width .8s cubic-bezier(.2, .7, .3, 1);
+    }
+
+    .spec-item.top .spec-fill {
+      background: linear-gradient(90deg, var(--teal-500), #1f8ef1);
+    }
+
+    /* ---------- Clinics ---------- */
+    .clinic-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: center;
+    }
+
+    .clinic-grid h2 {
+      font-size: clamp(1.5rem, 3vw, 2.1rem);
+      color: var(--navy-900);
+      margin-bottom: 14px;
+    }
+
+    .clinic-grid .lead-p {
+      color: var(--ink-soft);
+      margin-bottom: 24px;
+    }
+
+    .check-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .check-list li {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .check-list .chk {
+      width: 26px;
+      height: 26px;
+      border-radius: 8px;
+      flex-shrink: 0;
+      margin-top: 3px;
+      background: var(--teal-100);
+      color: var(--teal-500);
+      display: grid;
+      place-items: center;
+    }
+
+    .check-list .chk svg {
+      width: 15px;
+      height: 15px;
+    }
+
+    .check-list b {
+      color: var(--navy-900);
+    }
+
+    .check-list p {
+      color: var(--ink-soft);
+      font-size: 0.92rem;
+    }
+
+    .integration-card {
+      background: linear-gradient(160deg, var(--navy-900), var(--navy-700));
+      border-radius: 20px;
+      padding: 36px;
+      color: #fff;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .integration-card h3 {
+      margin-bottom: 20px;
+      font-size: 1.15rem;
+    }
+
+    .int-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.09);
+    }
+
+    .int-row:last-child {
+      border-bottom: none;
+    }
+
+    .int-row .int-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 11px;
+      flex-shrink: 0;
+      background: rgba(14, 194, 184, 0.12);
+      border: 1px solid rgba(14, 194, 184, 0.3);
+      display: grid;
+      place-items: center;
+      color: var(--teal-400);
+    }
+
+    .int-row .int-icon svg {
+      width: 21px;
+      height: 21px;
+    }
+
+    .int-row b {
+      display: block;
+      font-size: 0.97rem;
+    }
+
+    .int-row span {
+      color: #93a9c0;
+      font-size: 0.83rem;
+    }
+
+    /* ---------- Security ---------- */
+    .sec-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
+    }
+
+    /* ---------- CTA ---------- */
+    .cta-band {
+      background:
+        radial-gradient(600px 300px at 20% 120%, rgba(14, 194, 184, 0.25), transparent 60%),
+        linear-gradient(135deg, var(--navy-900), var(--navy-700));
+      border-radius: 24px;
+      padding: 60px 48px;
+      text-align: center;
+      color: #fff;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .cta-band h2 {
+      font-size: clamp(1.5rem, 3vw, 2.2rem);
+      margin-bottom: 12px;
+    }
+
+    .cta-band p {
+      color: #a8bccf;
+      max-width: 560px;
+      margin: 0 auto 28px;
+    }
+
+    /* ---------- Footer ---------- */
+    footer {
+      background: var(--navy-900);
+      color: #93a9c0;
+      padding: 56px 0 28px;
+      margin-top: 88px;
+    }
+
+    .foot-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1.4fr;
+      gap: 36px;
+      margin-bottom: 40px;
+    }
+
+    .foot-grid h4 {
+      color: #fff;
+      font-size: 1rem;
+      margin-bottom: 14px;
+    }
+
+    .foot-grid ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+    }
+
+    .foot-grid a {
+      color: #93a9c0;
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: color .2s;
+    }
+
+    .foot-grid a:hover {
+      color: var(--teal-400);
+    }
+
+    .foot-brand p {
+      font-size: 0.9rem;
+      margin-top: 12px;
+      max-width: 300px;
+    }
+
+    .disclaimer {
+      background: rgba(245, 165, 36, 0.08);
+      border: 1px solid rgba(245, 165, 36, 0.25);
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: 0.84rem;
+      color: #d9c9a3;
+      margin-bottom: 28px;
+    }
+
+    .copyright {
+      text-align: center;
+      font-size: 0.83rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding-top: 22px;
+    }
+
+    /* ---------- Reveal animation ---------- */
+    .reveal {
+      opacity: 0;
+      transform: translateY(26px);
+      transition: opacity .7s ease, transform .7s ease;
+    }
+
+    .reveal.in {
+      opacity: 1;
+      transform: none;
+    }
+
+    /* ---------- Responsive ---------- */
+    @media (max-width: 980px) {
+
+      .hero-grid,
+      .mod-grid,
+      .clinic-grid,
+      .demo-wrap,
+      .real-wrap {
+        grid-template-columns: 1fr;
+      }
+
+      .features-grid,
+      .sec-grid,
+      .metrics-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .model-select,
+      .symptom-wrap {
+        grid-template-columns: 1fr;
+      }
+
+      .steps {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .foot-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .hero-stats {
+        grid-template-columns: repeat(2, auto);
+        gap: 22px;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      .menu-btn {
+        display: block;
+      }
+
+      .nav-links.open {
+        display: flex;
+        position: absolute;
+        top: 68px;
+        right: 0;
+        left: 0;
+        flex-direction: column;
+        background: var(--navy-900);
+        padding: 20px 6%;
+        gap: 16px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+    }
+
+    @media (max-width: 600px) {
+      section {
+        padding: 60px 0;
+      }
+
+      .features-grid,
+      .sec-grid,
+      .steps,
+      .foot-grid,
+      .metrics-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .cta-band {
+        padding: 44px 24px;
+      }
+
+      .hero {
+        padding: 64px 0 76px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ===================== Navbar ===================== -->
+  <header>
+    <div class="container nav">
+      <a href="#" class="brand">
+        <span class="logo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path d="M12 2v4M12 18v4M2 12h4M18 12h4" />
+            <circle cx="12" cy="12" r="5" />
+            <circle cx="12" cy="12" r="1.5" fill="#fff" />
+          </svg>
+        </span>
+        مركز الأشعة الذكي
+      </a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#features">الميزات</a></li>
+        <li><a href="#how">آلية العمل</a></li>
+        <li><a href="#modalities">الفحوصات المدعومة</a></li>
+        <li><a href="#realapi">تحليل الصور</a></li>
+        <li><a href="#quiz">وضع الاختبار</a></li>
+        <li><a href="#atlas">أطلس الحالات</a></li>
+        <li><a href="#report">كتابة التقرير</a></li>
+        <li><a href="#validation">الأداء المُقاس</a></li>
+        <li><a href="#clinics">للعيادات الذكية</a></li>
+      </ul>
+      <a href="#contact" class="nav-cta">اطلب عرضاً تجريبياً</a>
+      <button class="menu-btn" id="menuBtn" aria-label="القائمة">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round">
+          <path d="M4 7h16M4 12h16M4 17h16" />
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- ===================== Hero ===================== -->
+  <section class="hero">
+    <div class="container hero-grid">
+      <div>
+        <span class="hero-badge"><span class="dot"></span> مدعوم بالتعلم العميق Deep Learning</span>
+        <h1>التشخيص الإشعاعي بعين <span class="grad">الذكاء الاصطناعي</span> ودقة لا تعرف التعب</h1>
+        <p class="lead">منصة طبية متقدمة تحلّل صور الأشعة السينية (X-Ray) والرنين المغناطيسي (MRI) فورياً، تحدّد مناطق
+          الإصابة بدقة، وتُصدر تقارير آلية منظمة — لتكون المساعد الأول لأطباء الأشعة في تقليل هامش الخطأ وتسريع التشخيص.
+        </p>
+        <div class="hero-actions">
+          <a href="#realapi" class="btn btn-primary">حلّل صورة حقيقية الآن</a>
+          <a href="#how" class="btn btn-ghost">كيف تعمل المنصة؟</a>
+        </div>
+        <div class="hero-stats">
+          <div class="stat"><b id="statChest">—</b><span>دقة نموذج الصدر (AUC مُقاس)</span></div>
+          <div class="stat"><b id="statPneu">—</b><span>دقة كشف الالتهاب الرئوي</span></div>
+          <div class="stat"><b id="statBrain">—</b><span>دقة تصنيف أورام الدماغ</span></div>
+          <div class="stat"><b id="statModels">3</b><span>نماذج حقيقية مُدرّبة ومُقيَّمة</span></div>
+        </div>
+      </div>
+
+      <div class="viewer reveal">
+        <div class="viewer-bar">
+          <div class="dots"><i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i
+              style="background:#28c840"></i></div>
+          <span class="title">أشعة سينية — صدر (PA) · تحليل مباشر</span>
+        </div>
+        <div class="viewer-body">
+          <!-- Stylized chest X-ray -->
+          <svg class="scan" viewBox="0 0 300 300" role="img" aria-label="صورة أشعة صدرية توضيحية">
+            <rect width="300" height="300" rx="10" fill="#0d1f33" />
+            <ellipse cx="150" cy="160" rx="118" ry="128" fill="#16304e" opacity="0.7" />
+            <path d="M92 70 Q150 46 208 70 L216 250 Q150 272 84 250 Z" fill="#1d3d61" opacity="0.8" />
+            <ellipse cx="112" cy="158" rx="42" ry="72" fill="#0a1626" opacity="0.9" />
+            <ellipse cx="188" cy="158" rx="42" ry="72" fill="#0a1626" opacity="0.9" />
+            <g stroke="#3b5f88" stroke-width="4" fill="none" opacity="0.65">
+              <path d="M76 105 Q150 84 224 105" />
+              <path d="M72 135 Q150 112 228 135" />
+              <path d="M72 165 Q150 142 228 165" />
+              <path d="M76 195 Q150 172 224 195" />
+              <path d="M82 225 Q150 202 218 225" />
+            </g>
+            <rect x="143" y="60" width="14" height="200" rx="7" fill="#2c4c74" opacity="0.8" />
+            <ellipse cx="168" cy="185" rx="26" ry="30" fill="#24466e" opacity="0.85" />
+            <ellipse cx="196" cy="132" rx="15" ry="12" fill="#4a7fb5" opacity="0.75" />
+          </svg>
+          <div class="scanline"></div>
+          <div class="det-box" style="top: 41%; left: 24%; width: 15%; height: 13%;"></div>
+          <div class="det-tag" style="top: 34%; left: 22%;">عتامة رئوية · 96.4٪</div>
+        </div>
+        <div class="viewer-foot">
+          <span class="chip">تم التحليل خلال 18 ثانية</span>
+          <span class="chip warn">رصد موضع مشتبه به: الفص العلوي الأيسر</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== Features ===================== -->
+  <section id="features">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">لماذا منصتنا؟</span>
+        <h2>قدرات مصممة لغرفة قراءة الأشعة الحديثة</h2>
+        <p>كل ميزة بُنيت لخدمة هدف واحد: تشخيص أسرع وأدق، وطبيب أشعة أكثر ثقة واطمئناناً.</p>
+      </div>
+      <div class="features-grid">
+        <div class="feature reveal">
+          <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="9" />
+              <circle cx="12" cy="12" r="4.5" />
+              <circle cx="12" cy="12" r="1" fill="currentColor" />
+            </svg></div>
+          <h3>دقة تشخيصية فائقة</h3>
+          <p>شبكات عصبية عميقة مدرّبة على ملايين الصور الشعاعية الموثقة، تكشف التفاصيل الدقيقة التي قد تفوت العين
+            البشرية المجهدة.</p>
+        </div>
+        <div class="feature reveal">
+          <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M13 2 4 14h6l-1 8 9-12h-6l1-8z" />
+            </svg></div>
+          <h3>تحليل فوري</h3>
+          <p>نتائج أولية خلال ثوانٍ من رفع الصورة، مع ترتيب تلقائي لأولوية الحالات الحرجة (Triage) في قائمة العمل.</p>
+        </div>
+        <div class="feature reveal">
+          <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="18" height="18" rx="3" />
+              <circle cx="13" cy="11" r="3.5" />
+              <path d="M13 3v4M13 15v6M3 11h6M17 11h4" />
+            </svg></div>
+          <h3>تحديد مناطق الإصابة</h3>
+          <p>خرائط حرارية (Heatmaps) وصناديق تحديد دقيقة تُظهر موضع الاشتباه على الصورة مباشرة، مع نسبة الثقة لكل رصد.
+          </p>
+        </div>
+        <div class="feature reveal">
+          <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+              <path d="M14 2v6h6M9 13h6M9 17h6" />
+            </svg></div>
+          <h3>تقارير آلية منظمة</h3>
+          <p>تقرير إشعاعي مهيكل يُولَّد تلقائياً بصياغة طبية معيارية، قابل للتحرير والاعتماد النهائي من الطبيب المختص.
+          </p>
+        </div>
+        <div class="feature reveal">
+          <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path
+                d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M8 21H5a2 2 0 0 1-2-2v-3M16 21h3a2 2 0 0 0 2-2v-3" />
+              <path d="M7 12h10M12 7v10" opacity="0.6" />
+            </svg></div>
+          <h3>تغطية شاملة للفحوصات</h3>
+          <p>دعم متكامل للأشعة السينية والرنين المغناطيسي عبر مختلف أعضاء الجسم — من الصدر والدماغ إلى المفاصل والعمود
+            الفقري.</p>
+        </div>
+        <div class="feature reveal">
+          <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="7" width="8" height="10" rx="2" />
+              <rect x="14" y="7" width="8" height="10" rx="2" />
+              <path d="M10 12h4" />
+            </svg></div>
+          <h3>تكامل مع العيادات الذكية</h3>
+          <p>واجهات برمجية جاهزة للربط مع أنظمة العيادات والمستشفيات، لتصبح المنصة ذراع التشخيص المتقدم ضمن منظومتك
+            الرقمية.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== How it works ===================== -->
+  <section id="how" style="background:#eef4fa;">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">آلية العمل</span>
+        <h2>من الصورة إلى التقرير في أربع خطوات</h2>
+        <p>سير عمل مبسط صُمم ليندمج بسلاسة مع الروتين اليومي لقسم الأشعة دون أي تعقيد إضافي.</p>
+      </div>
+      <div class="steps">
+        <div class="step reveal">
+          <div class="num">1</div>
+          <h3>استقبال الصورة</h3>
+          <p>تُرفع الصورة يدوياً أو تصل تلقائياً من جهاز التصوير عبر بروتوكول DICOM دون تدخل بشري.</p>
+        </div>
+        <div class="step reveal">
+          <div class="num">2</div>
+          <h3>التحليل العميق</h3>
+          <p>تفحص النماذج العصبية الصورة بكسلاً بكسل، وتقارنها بأنماط ملايين الحالات المُدرّبة عليها.</p>
+        </div>
+        <div class="step reveal">
+          <div class="num">3</div>
+          <h3>تحديد مناطق الإصابة</h3>
+          <p>تُعلَّم المواضع المشتبه بها على الصورة مع نسبة ثقة لكل رصد، وتُرتب الحالات الحرجة أولاً.</p>
+        </div>
+        <div class="step reveal">
+          <div class="num">4</div>
+          <h3>التقرير والاعتماد</h3>
+          <p>يُولَّد تقرير مهيكل جاهز للمراجعة، ويبقى القرار النهائي والاعتماد بيد الطبيب المختص دائماً.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== Modalities ===================== -->
+  <section id="modalities" class="modalities">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">الفحوصات المدعومة</span>
+        <h2>نماذج حقيقية تعمل الآن — وخريطة توسّع واضحة</h2>
+        <p>الوسوم المميّزة بعلامة <span class="live-dot-inline"></span> «مُفعّل» تعمل بنماذج حقيقية مُدرَّبة ومُقيَّمة
+          على هذا الخادم فعلاً؛ البقية على خريطة التطوير.</p>
+      </div>
+      <div class="mod-grid">
+        <div class="mod-card reveal">
+          <h3>
+            <span class="mod-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"
+                stroke-linecap="round">
+                <path d="M12 3v18M7 6h10M6 9.5h12M6.5 13h11M7.5 16.5h9" />
+              </svg></span>
+            الأشعة السينية X-Ray
+          </h3>
+          <p>نموذجان حقيقيان يعملان الآن على أشعة الصدر: تحليل شامل لـ18 حالة (TorchXRayVision) وكاشف التهاب رئوي
+            مُدرَّب ومُقيَّم. باقي الأعضاء على خريطة التطوير.</p>
+          <div class="mod-tags">
+            <span class="live">صدر PA / AP · مُفعّل</span><span class="live">التهاب رئوي · مُفعّل</span>
+            <span>عظام وكسور</span><span>عمود فقري</span><span>حوض وورك</span><span>أطراف</span><span>بطن</span>
+          </div>
+        </div>
+        <div class="mod-card reveal">
+          <h3>
+            <span class="mod-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path
+                  d="M12 3a7 7 0 0 0-7 7c0 2 .8 3.4 1.8 4.6.8 1 1.2 2.2 1.2 3.4h8c0-1.2.4-2.4 1.2-3.4 1-1.2 1.8-2.6 1.8-4.6a7 7 0 0 0-7-7z" />
+                <path d="M9.5 21h5" />
+              </svg></span>
+            الرنين المغناطيسي MRI
+          </h3>
+          <p>نموذج حقيقي يعمل الآن لتصنيف أورام الدماغ (ورم دبقي / سحائي / نخامي / سليم) عبر شبكة ResNet-18 مُدرَّبة على
+            صور رنين فعلية. باقي المناطق على خريطة التطوير.</p>
+          <div class="mod-tags">
+            <span class="live">أورام الدماغ · مُفعّل</span>
+            <span>عمود فقري قطني وعنقي</span><span>ركبة وأربطة</span><span>كتف</span><span>بطن وحوض</span>
+          </div>
+        </div>
+        <div class="mod-card reveal">
+          <h3>
+            <span class="mod-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 12h4l2-6 4 12 2-6h6" />
+              </svg></span>
+            تصوير طبي إضافي
+          </h3>
+          <p>ثلاثة نماذج حقيقية جديدة تعمل الآن: الموجات فوق الصوتية للثدي (خبيث/حميد)، وتحليل آفات الجلد بالديرموسكوبي
+            (٧ أصناف منها الميلانوما)، وتصنيف خلايا الدم المجهرية (٨ أصناف) — كلها ResNet-18 مُدرَّبة ومُقيَّمة على
+            بيانات طبية فعلية.</p>
+          <div class="mod-tags">
+            <span class="live">الثدي — موجات فوق صوتية · مُفعّل</span>
+            <span class="live">الجلد — ديرموسكوبي · مُفعّل</span>
+            <span class="live">خلايا الدم — مجهري · مُفعّل</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== Real API Analysis ===================== -->
+  <section id="realapi" style="background:#eef4fa;">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">تحليل فعلي — نماذج حقيقية</span>
+        <h2>ارفع صورة أشعة أو رنين وحلّلها بالذكاء الاصطناعي الآن</h2>
+        <p>هذا القسم متصل بخادم تحليل حقيقي يشغّل <b>ثلاثة نماذج تعلم عميق مُدرَّبة ومُقيَّمة على بيانات طبية فعلية</b>:
+          تحليل شامل لأشعة الصدر، كشف الالتهاب الرئوي، وتصنيف أورام الدماغ في الرنين المغناطيسي.</p>
+        <span class="demo-note">ℹ النتائج تُحسب لحظياً من النماذج الفعلية لدعم القرار والتعليم — ولا تغني عن الطبيب
+          المختص</span>
+      </div>
+
+      <div class="api-bar reveal">
+        <label for="apiUrl">عنوان الخادم API:</label>
+        <input type="text" id="apiUrl" value="http://127.0.0.1:8000" spellcheck="false">
+        <span class="api-status" id="apiStatus"><span class="s-dot"></span><span id="apiStatusText">جارٍ
+            الفحص…</span></span>
+        <button class="mini-btn" id="recheckBtn">↻ إعادة فحص الاتصال</button>
+      </div>
+
+      <div class="model-select reveal" id="modelSelect">
+        <button class="model-btn active" data-model="chest">
+          <span class="m-ico">🫁</span>
+          <span class="m-txt"><b>أشعة الصدر — تحليل شامل</b><span>Chest X-ray · 18 حالة</span></span>
+        </button>
+        <button class="model-btn" data-model="pneumonia">
+          <span class="m-ico">🦠</span>
+          <span class="m-txt"><b>كشف الالتهاب الرئوي</b><span>Chest X-ray · ثنائي</span></span>
+        </button>
+        <button class="model-btn" data-model="brain">
+          <span class="m-ico">🧠</span>
+          <span class="m-txt"><b>أورام الدماغ — رنين</b><span>Brain MRI · 4 أصناف</span></span>
+        </button>
+        <button class="model-btn" data-model="breast">
+          <span class="m-ico">🎗️</span>
+          <span class="m-txt"><b>الموجات فوق الصوتية للثدي</b><span>Breast US · خبيث/حميد</span></span>
+        </button>
+        <button class="model-btn" data-model="derma">
+          <span class="m-ico">🩺</span>
+          <span class="m-txt"><b>آفات الجلد — ديرموسكوبي</b><span>Dermoscopy · 7 أصناف</span></span>
+        </button>
+        <button class="model-btn" data-model="blood">
+          <span class="m-ico">🩸</span>
+          <span class="m-txt"><b>خلايا الدم — مجهري</b><span>Blood smear · 8 أصناف</span></span>
+        </button>
+        <button class="model-btn" data-model="organc">
+          <span class="m-ico">🫀</span>
+          <span class="m-txt"><b>أعضاء البطن — CT</b><span>Abdominal CT · 11 عضواً</span></span>
+        </button>
+        <button class="model-btn" data-model="path">
+          <span class="m-ico">🔬</span>
+          <span class="m-txt"><b>أنسجة القولون — باثولوجي</b><span>Histopathology · 9 أصناف</span></span>
+        </button>
+        <button class="model-btn" data-model="oct">
+          <span class="m-ico">👁️</span>
+          <span class="m-txt"><b>الشبكية — OCT</b><span>Retinal OCT · 4 أصناف</span></span>
+        </button>
+        <button class="model-btn" data-model="retina">
+          <span class="m-ico">🔆</span>
+          <span class="m-txt"><b>اعتلال الشبكية السكري</b><span>Fundus · تدريج 0–4</span></span>
+        </button>
+      </div>
+
+      <div class="real-wrap">
+        <div class="upload-card reveal">
+          <div class="dropzone" id="dropzone">
+            <input type="file" id="fileInput" accept="image/png, image/jpeg, image/bmp, image/webp" hidden>
+            <div class="dz-inner" id="dzInner">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <path d="M17 8l-5-5-5 5M12 3v12" />
+              </svg>
+              <div><b>اسحب صورة الأشعة هنا</b> أو انقر للاختيار</div>
+              <div style="font-size:0.8rem; margin-top:6px;">PNG · JPG · BMP · WEBP</div>
+            </div>
+          </div>
+          <div class="file-meta" id="fileMeta"></div>
+          <button class="btn btn-primary analyze-btn" id="realAnalyzeBtn" disabled>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"
+              stroke-linecap="round">
+              <path d="M13 2 4 14h6l-1 8 9-12h-6l1-8z" />
+            </svg>
+            <span id="realBtnText">حلّل الصورة بالنموذج الحقيقي</span>
+          </button>
+        </div>
+
+        <div class="results-card reveal">
+          <h4>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0ec2b8" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+            </svg>
+            نتائج النموذج الحقيقي
+          </h4>
+          <div id="realResults">
+            <p style="color:var(--ink-soft);font-size:0.93rem;">
+              ١. شغّل الخادم بالنقر المزدوج على <code
+                style="background:#f0f6fb;padding:2px 8px;border-radius:6px;direction:ltr;display:inline-block;">start_server.bat</code>
+              في مجلد المشروع.<br>
+              ٢. اختر النموذج المناسب أعلاه، ثم ارفع صورة من نفس نوع الفحص.<br>
+              ٣. اضغط «حلّل الصورة» لعرض النتائج كما يحسبها النموذج فعلياً.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== Quiz / Training Mode ===================== -->
+  <section id="quiz" style="background:#eef4fa;">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">وضع التدريب — لطلاب الطب</span>
+        <h2>اختبر نفسك: خمّن التشخيص قبل أن يكشف النموذج</h2>
+        <p>صورة طبية حقيقية من مجموعة الاختبار، خمّن التشخيص، ثم قارن إجابتك بالجواب الصحيح وبرأي النموذج مع خريطة
+          الانتباه الحرارية. تتبّع نقاطك مقابل نقاط النموذج.</p>
+      </div>
+
+      <div class="quiz-models reveal" id="quizModels"></div>
+
+      <div class="quiz-scorebar reveal" id="quizScorebar" style="display:none;">
+        <div class="score-pill"><span>👨‍⚕️ أنت</span><b id="scoreYou">0/0</b></div>
+        <div class="score-pill"><span>🤖 النموذج</span><b id="scoreModel">0/0</b></div>
+        <button class="mini-btn" id="quizReset">↺ تصفير</button>
+      </div>
+
+      <div class="quiz-wrap reveal" id="quizWrap" style="display:none;">
+        <div class="quiz-image-card">
+          <div class="quiz-img-box"><img id="quizImg" alt="حالة اختبار"></div>
+          <div class="quiz-modality" id="quizModality"></div>
+        </div>
+        <div class="quiz-panel">
+          <div id="quizPrompt" class="quiz-prompt">ما التشخيص الأرجح؟ اختر إجابة:</div>
+          <div id="quizOptions" class="quiz-options"></div>
+          <div id="quizReveal" class="quiz-reveal"></div>
+          <button class="btn btn-primary" id="quizNext"
+            style="display:none;width:100%;justify-content:center;margin-top:14px;">سؤال جديد ←</button>
+        </div>
+      </div>
+      <div class="quiz-empty" id="quizEmpty" style="text-align:center;color:var(--ink-soft);padding:20px;">شغّل الخادم
+        واختر نوع الفحص أعلاه لبدء الاختبار.</div>
+    </div>
+  </section>
+
+  <!-- ===================== Case Library / Atlas ===================== -->
+  <section id="atlas">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">أطلس الحالات — مرجع بصري</span>
+        <h2>مكتبة حالات مشروحة: مثال حقيقي لكل تشخيص</h2>
+        <p>لكل نوع فحص، مثال حقيقي من مجموعة الاختبار عن كل صنف، مع قراءة النموذج وخريطة الانتباه — مرجع بصري يبني عين
+          الطالب على أنماط كل حالة.</p>
+      </div>
+      <div class="quiz-models reveal" id="atlasModels"></div>
+      <div class="edu-box reveal" id="atlasEdu" style="display:none;"></div>
+      <div class="atlas-grid reveal" id="atlasGrid"></div>
+      <div class="quiz-empty" id="atlasEmpty" style="text-align:center;color:var(--ink-soft);padding:20px;">اختر نوع فحص
+        لعرض أمثلته المشروحة.</div>
+    </div>
+  </section>
+
+  <!-- ===================== Report Writing Practice ===================== -->
+  <section id="report" style="background:#eef4fa;">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">تدريب سريري</span>
+        <h2>تدريب كتابة التقرير الإشعاعي</h2>
+        <p>اكتب تقريرك (المُوجودات + الانطباع) للحالة، ثم قارنه بتقرير مرجعي منظّم وقائمة تحقّق — تمرين على مهارة كتابة
+          التقرير الحقيقية.</p>
+      </div>
+      <div class="quiz-models reveal" id="reportModels"></div>
+      <div class="report-wrap reveal" id="reportWrap" style="display:none;">
+        <div class="quiz-image-card">
+          <div class="quiz-img-box"><img id="reportImg" alt="حالة تقرير"></div>
+          <div class="quiz-modality" id="reportModality"></div>
+        </div>
+        <div class="quiz-panel">
+          <label class="s-label">المُوجودات (Findings):</label>
+          <textarea id="rFindings" rows="4" placeholder="صف ما تراه في الصورة..."></textarea>
+          <label class="s-label" style="margin-top:10px;">الانطباع (Impression):</label>
+          <textarea id="rImpression" rows="2" placeholder="التشخيص الأرجح..."></textarea>
+          <button class="btn btn-primary" id="reportSubmit"
+            style="width:100%;justify-content:center;margin-top:12px;">صحّح تقريري</button>
+          <button class="btn btn-ghost" id="reportNew"
+            style="width:100%;justify-content:center;margin-top:8px;display:none;color:var(--navy-700);border-color:var(--line);">حالة
+            جديدة ←</button>
+          <div id="reportResult"></div>
+        </div>
+      </div>
+      <div class="quiz-empty" id="reportEmpty" style="text-align:center;color:var(--ink-soft);padding:20px;">اختر نوع
+        فحص لبدء تمرين كتابة التقرير.</div>
+    </div>
+  </section>
+
+  <!-- ===================== Symptom Text Checker ===================== -->
+  <section id="symptoms">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">تنبؤ نصّي عربي — مُدرَّب على أكثر من 200 ألف سجل حقيقي</span>
+        <h2>صف أعراضك بالعربية ودع النظام يتنبأ بالتخصص والتشخيص</h2>
+        <p>نظام عربي حقيقي مُدرَّب على <b>أكثر من 200,000 استشارة طبية عربية فعلية</b> عبر بنية هرمية: <b>مُوجِّه يحدّد
+            التخصص</b> من بين 20 تخصصاً، ثم <b>نموذج مخصّص لكل تخصص</b> يحدّد التشخيص. ويتضمن <b>مرشّح مدخلات</b> يرفض
+          النصوص غير الطبية أو غير الواضحة بدل فرض تشخيص خاطئ.</p>
+        <span class="demo-note">ℹ الأرقام المعروضة مُقاسة فعلياً على مجموعة اختبار محجوزة — التوجيه الصحيح ضمن أفضل 3
+          تخصصات ≈ 89٪</span>
+      </div>
+
+      <div class="symptom-wrap">
+        <div class="symptom-input-card reveal">
+          <label class="s-label" for="symptomText">اكتب الأعراض بالعربية:</label>
+          <textarea id="symptomText" rows="5"
+            placeholder="مثال: أعاني من حرقان شديد عند التبول مع ألم أسفل البطن ورغبة متكررة في التبول منذ يومين..."></textarea>
+          <div class="s-examples" id="sExamples">
+            <button data-ex="لدي بقع حمراء متقشرة ومثيرة للحكة على المرفقين والركبتين والجلد جاف ومتشقق">🩹 طفح
+              جلدي</button>
+            <button data-ex="أعاني من حرقان شديد عند التبول مع ألم أسفل البطن ورغبة متكررة في التبول">💧 مسالك
+              بولية</button>
+            <button data-ex="عندي ألم في الصدر وضيق في التنفس عند بذل الجهد مع خفقان في القلب">❤️ ألم صدر</button>
+            <button data-ex="أشعر بحرقة في المعدة بعد الأكل مع ارتجاع حمضي وطعم مر في الحلق">🔥 حرقة معدة</button>
+            <button data-ex="ألم شديد ومستمر في الرقبة والكتف ينتشر إلى الذراع مع تنميل في الأصابع">🦴 ألم رقبة</button>
+          </div>
+          <button class="btn btn-primary analyze-btn" id="symptomBtn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+            </svg>
+            <span id="symptomBtnText">تنبّأ بالمرض</span>
+          </button>
+        </div>
+
+        <div class="results-card reveal">
+          <h4>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0ec2b8" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 11l3 3L22 4M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
+            </svg>
+            نتيجة التنبؤ النصّي
+          </h4>
+          <div id="symptomResults">
+            <p style="color:var(--ink-soft);font-size:0.93rem;">اكتب وصفاً للأعراض (أو اختر مثالاً جاهزاً) ثم اضغط
+              «تنبّأ بالمرض».</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== Validation / Model Performance ===================== -->
+  <section id="validation">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">أداء مُقاس — لا أرقام افتراضية</span>
+        <h2>نتائج التقييم الفعلي على بيانات اختبار مستقلة</h2>
+        <p>كل رقم هنا مُحتسب فعلياً على مجموعة اختبار محجوزة (Held-out Test Set) لم يرها النموذج أثناء التدريب. تُجلب
+          هذه القيم مباشرة من خادم النماذج لحظة فتح الصفحة.</p>
+        <span class="demo-note">🛡 نعرض أيضاً <b>فجوة التعميم</b> (دقة التدريب − دقة الاختبار) لكل نموذج: كلما صغرت، قلّ
+          الإفراط في التعلّم (Overfitting). لا نُخفيها.</span>
+      </div>
+      <div class="metrics-grid reveal" id="metricsGrid">
+        <div class="metrics-loading" id="metricsLoading">
+          شغّل الخادم (<code style="direction:ltr;display:inline-block;">start_server.bat</code>) لعرض مقاييس الأداء
+          الحقيقية للنماذج.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== Clinics ===================== -->
+  <section id="clinics" style="background:#eef4fa;">
+    <div class="container clinic-grid">
+      <div class="reveal">
+        <span class="eyebrow"
+          style="display:inline-block;font-weight:700;font-size:0.85rem;color:var(--teal-500);background:var(--teal-100);padding:4px 16px;border-radius:999px;margin-bottom:14px;">للعيادات
+          والمستشفيات</span>
+        <h2>ذراع التشخيص المتقدم ضمن عيادتك الذكية</h2>
+        <p class="lead-p">صُممت المنصة لتندمج في منظومة العيادات الذكية، فتُسهم في توجيه المرضى بذكاء، ومتابعة حالاتهم
+          بفعالية، ورفع كفاءة قسم الأشعة دون زيادة الأعباء التشغيلية.</p>
+        <ul class="check-list">
+          <li>
+            <span class="chk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 6 9 17l-5-5" />
+              </svg></span>
+            <div><b>فرز وتوجيه ذكي للمرضى</b>
+              <p>ترتيب تلقائي للحالات حسب الخطورة، وتنبيهات فورية للموجودات الحرجة التي لا تحتمل التأخير.</p>
+            </div>
+          </li>
+          <li>
+            <span class="chk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 6 9 17l-5-5" />
+              </svg></span>
+            <div><b>متابعة تطور الحالات</b>
+              <p>مقارنة آلية بين الفحوصات المتتابعة للمريض نفسه لرصد التحسن أو التدهور بمرور الوقت.</p>
+            </div>
+          </li>
+          <li>
+            <span class="chk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 6 9 17l-5-5" />
+              </svg></span>
+            <div><b>تقليل زمن انتظار النتائج</b>
+              <p>قراءة أولية فورية تساعد الطبيب المعالج على اتخاذ قرارات مبكرة قبل التقرير النهائي.</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div class="integration-card reveal">
+        <h3>جاهزية تقنية للتكامل الفوري</h3>
+        <div class="int-row">
+          <span class="int-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M16 18 22 12 16 6M8 6 2 12l6 6" />
+            </svg></span>
+          <div><b>واجهة برمجية REST API</b><span>ربط مباشر مع أنظمة إدارة العيادات والسجلات الطبية</span></div>
+        </div>
+        <div class="int-row">
+          <span class="int-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="14" rx="2" />
+              <path d="M8 21h8M12 18v3" />
+            </svg></span>
+          <div><b>PACS / DICOM</b><span>استقبال الصور تلقائياً من أجهزة التصوير وأنظمة الأرشفة</span></div>
+        </div>
+        <div class="int-row">
+          <span class="int-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 7V4h16v3M9 20h6M12 4v16" />
+            </svg></span>
+          <div><b>HL7 / FHIR</b><span>تبادل معياري للتقارير والبيانات السريرية مع أنظمة المستشفى</span></div>
+        </div>
+        <div class="int-row">
+          <span class="int-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="11" width="18" height="10" rx="2" />
+              <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+            </svg></span>
+          <div><b>نشر سحابي أو محلي</b><span>خيار الاستضافة داخل بنية المنشأة للامتثال الكامل لسياسات البيانات</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== Security ===================== -->
+  <section id="security">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">الأمان والخصوصية</span>
+        <h2>بيانات مرضاك خط أحمر</h2>
+        <p>بنية أمنية صُممت وفق أفضل الممارسات العالمية في حماية البيانات الصحية.</p>
+      </div>
+      <div class="sec-grid">
+        <div class="feature reveal">
+          <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2 4 6v6c0 5 3.4 8.6 8 10 4.6-1.4 8-5 8-10V6z" />
+              <path d="m9 12 2 2 4-4" />
+            </svg></div>
+          <h3>تشفير شامل</h3>
+          <p>تشفير كامل للصور والتقارير أثناء النقل والتخزين، مع إدارة صارمة لمفاتيح التشفير.</p>
+        </div>
+        <div class="feature reveal">
+          <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="8" r="4" />
+              <path d="M4 21c0-4 3.6-6.5 8-6.5s8 2.5 8 6.5" />
+            </svg></div>
+          <h3>إخفاء هوية المرضى</h3>
+          <p>تجريد تلقائي للبيانات التعريفية من ملفات DICOM قبل أي معالجة، حفاظاً على خصوصية المريض.</p>
+        </div>
+        <div class="feature reveal">
+          <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+              <path d="M14 2v6h6M9 14l2 2 4-4" />
+            </svg></div>
+          <h3>سجلات تدقيق كاملة</h3>
+          <p>تتبع دقيق لكل وصول وتعديل واعتماد، بما يلبي متطلبات الحوكمة والامتثال الصحي.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== CTA ===================== -->
+  <section id="contact" style="padding-bottom:0;">
+    <div class="container">
+      <div class="cta-band reveal">
+        <h2>جاهز لرفع دقة التشخيص في منشأتك؟</h2>
+        <p>احجز جلسة عرض مباشرة مع فريقنا لنستعرض معك المنصة على حالات من تخصصك، ونناقش خطة التكامل مع أنظمتك الحالية.
+        </p>
+        <a href="mailto:info@radiologyhub.ai" class="btn btn-primary">تواصل معنا الآن</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== Footer ===================== -->
+  <footer>
+    <div class="container">
+      <div class="foot-grid">
+        <div class="foot-brand">
+          <a href="#" class="brand" style="font-size:1.05rem;">
+            <span class="logo"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2v4M12 18v4M2 12h4M18 12h4" />
+                <circle cx="12" cy="12" r="5" />
+                <circle cx="12" cy="12" r="1.5" fill="#fff" />
+              </svg></span>
+            مركز الأشعة الذكي
+          </a>
+          <p>منصة الذكاء الاصطناعي الطبية لتحليل الأشعة السينية والرنين المغناطيسي — المساعد الأول لأطباء الأشعة
+            والعيادات الذكية.</p>
+        </div>
+        <div>
+          <h4>المنصة</h4>
+          <ul>
+            <li><a href="#features">الميزات</a></li>
+            <li><a href="#how">آلية العمل</a></li>
+            <li><a href="#modalities">الفحوصات المدعومة</a></li>
+            <li><a href="#validation">الأداء المُقاس</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>الحلول</h4>
+          <ul>
+            <li><a href="#clinics">العيادات الذكية</a></li>
+            <li><a href="#clinics">المستشفيات</a></li>
+            <li><a href="#security">الأمان والخصوصية</a></li>
+            <li><a href="#contact">تواصل معنا</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>تواصل</h4>
+          <ul>
+            <li><a href="mailto:info@radiologyhub.ai">info@radiologyhub.ai</a></li>
+            <li><a href="#contact">احجز عرضاً تجريبياً</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="disclaimer">
+        <b>إخلاء مسؤولية طبي:</b> هذه المنصة أداة مساعدة لدعم القرار التشخيصي، ولا تُغني بأي حال عن التقييم السريري ورأي
+        الطبيب المختص. القرار التشخيصي والعلاجي النهائي مسؤولية الكادر الطبي المرخص حصراً.
+      </div>
+      <div class="copyright">© 2026 مركز الأشعة الذكي — AI Radiology Hub. جميع الحقوق محفوظة.</div>
+    </div>
+  </footer>
+
+  <script>
+    // ---------- Mobile menu ----------
+    const menuBtn = document.getElementById('menuBtn');
+    const navLinks = document.getElementById('navLinks');
+    menuBtn.addEventListener('click', () => navLinks.classList.toggle('open'));
+    navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => navLinks.classList.remove('open')));
+
+    // ---------- Reveal on scroll ----------
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+    /* ---------- Removed: simulated demo (replaced entirely by real, validated models) ----------
+    const CASES = {
+      chest: {
+        svg: `<svg viewBox="0 0 300 300"><rect width="300" height="300" rx="10" fill="#0d1f33"/><ellipse cx="150" cy="160" rx="118" ry="128" fill="#16304e" opacity="0.7"/><path d="M92 70 Q150 46 208 70 L216 250 Q150 272 84 250 Z" fill="#1d3d61" opacity="0.8"/><ellipse cx="112" cy="158" rx="42" ry="72" fill="#0a1626" opacity="0.9"/><ellipse cx="188" cy="158" rx="42" ry="72" fill="#0a1626" opacity="0.9"/><g stroke="#3b5f88" stroke-width="4" fill="none" opacity="0.65"><path d="M76 105 Q150 84 224 105"/><path d="M72 135 Q150 112 228 135"/><path d="M72 165 Q150 142 228 165"/><path d="M76 195 Q150 172 224 195"/><path d="M82 225 Q150 202 218 225"/></g><rect x="143" y="60" width="14" height="200" rx="7" fill="#2c4c74" opacity="0.8"/><ellipse cx="168" cy="185" rx="26" ry="30" fill="#24466e" opacity="0.85"/><ellipse cx="105" cy="200" rx="16" ry="13" fill="#4a7fb5" opacity="0.8"/></svg>`,
+        det: { top: '62%', left: '58%', width: '16%', height: '12%' },
+        tag: 'عتامة رئوية · 94.2٪',
+        findings: [
+          { name: 'عتامة في الفص السفلي الأيمن', conf: '94.2%', level: 'high' },
+          { name: 'انصباب جنبي محتمل بكمية قليلة', conf: '71.8%', level: 'mid' },
+          { name: 'لا دلائل على كسور ضلعية', conf: '98.5%', level: 'ok' },
+          { name: 'حجم القلب ضمن الحدود الطبيعية', conf: '97.1%', level: 'ok' },
+        ],
+        report: `الانطباع الآلي:\nعتامة بؤرية في الفص السفلي الأيمن تتوافق مع ارتشاح التهابي، مع اشتباه بانصباب جنبي قليل الكمية في الجهة نفسها. لا توجد علامات كسور أو تضخم قلبي.\n\nالتوصية:\nيُنصح بالمقارنة مع فحوصات سابقة إن وُجدت، والمتابعة السريرية، مع إمكانية إجراء تصوير مقطعي للصدر عند الحاجة.`,
+        time: 'اكتمل التحليل خلال 14 ثانية'
+      },
+      brain: {
+        svg: `<svg viewBox="0 0 300 300"><rect width="300" height="300" rx="10" fill="#0d1f33"/><ellipse cx="150" cy="150" rx="105" ry="120" fill="#1d3d61"/><ellipse cx="150" cy="150" rx="92" ry="107" fill="#0f2540"/><path d="M150 45 C 95 45 60 95 62 150 C 64 210 100 258 150 258 C 200 258 236 210 238 150 C 240 95 205 45 150 45 Z" fill="#24466e" opacity="0.9"/><path d="M150 55 v195" stroke="#0a1626" stroke-width="5" opacity="0.8"/><g stroke="#3b6a9c" stroke-width="5" fill="none" opacity="0.7" stroke-linecap="round"><path d="M95 90 q 25 -12 48 -2"/><path d="M160 85 q 26 -8 46 8"/><path d="M82 130 q 20 -16 44 -8"/><path d="M175 125 q 24 -10 42 4"/><path d="M85 175 q 22 -12 44 -4"/><path d="M172 172 q 24 -8 44 6"/><path d="M100 215 q 22 -10 42 -2"/><path d="M162 214 q 22 -6 40 8"/></g><ellipse cx="150" cy="160" rx="14" ry="24" fill="#0a1626"/><ellipse cx="196" cy="118" rx="14" ry="11" fill="#5b93c9" opacity="0.85"/></svg>`,
+        det: { top: '33%', left: '20%', width: '15%', height: '11%' },
+        tag: 'آفة إشارية · 91.6٪',
+        findings: [
+          { name: 'بؤرة إشارة مرتفعة في المادة البيضاء (FLAIR)', conf: '91.6%', level: 'high' },
+          { name: 'لا انزياح في خط المنتصف', conf: '98.9%', level: 'ok' },
+          { name: 'البطينات الدماغية ضمن الحجم الطبيعي', conf: '97.4%', level: 'ok' },
+          { name: 'لا دلائل على نزف حاد', conf: '99.2%', level: 'ok' },
+        ],
+        report: `الانطباع الآلي:\nبؤرة صغيرة مرتفعة الإشارة في المادة البيضاء الجبهية اليمنى على تسلسل FLAIR، غير مصحوبة بتأثير كتلي أو انزياح في خط المنتصف. لا علامات نزف أو استسقاء دماغي.\n\nالتوصية:\nترتبط مثل هذه البؤر بأسباب متعددة (وعائية دقيقة، التهابية، أو غير نوعية). يُنصح بالربط مع السياق السريري والمتابعة الدورية بالتصوير.`,
+        time: 'اكتمل التحليل خلال 21 ثانية'
+      },
+      knee: {
+        svg: `<svg viewBox="0 0 300 300"><rect width="300" height="300" rx="10" fill="#0d1f33"/><path d="M118 20 q -14 55 -6 88 q 4 18 20 28 l 0 0 q -22 14 -24 40 q -3 44 10 104 l 40 0 q -10 -58 -6 -96 q 2 -22 16 -32 q 20 -12 24 -34 q 8 -44 -6 -98 Z" fill="#1d3d61"/><path d="M126 20 q -10 50 -4 84 q 3 15 16 24 q 14 -8 17 -24 q 6 -40 -4 -84 Z" fill="#2c517c" opacity="0.9"/><path d="M120 158 q -3 40 8 122 l 26 0 q -8 -70 -4 -100 q 1 -14 10 -22 q -20 -12 -40 0 Z" fill="#2c517c" opacity="0.9"/><ellipse cx="146" cy="146" rx="34" ry="20" fill="#0a1626" opacity="0.85"/><path d="M132 136 q 14 20 30 18" stroke="#4a7fb5" stroke-width="6" fill="none" stroke-linecap="round" opacity="0.9"/><path d="M160 132 q -12 18 -26 22" stroke="#5b93c9" stroke-width="5" fill="none" stroke-linecap="round" opacity="0.65" stroke-dasharray="10 7"/><ellipse cx="186" cy="146" rx="12" ry="16" fill="#24466e"/></svg>`,
+        det: { top: '42%', left: '38%', width: '18%', height: '13%' },
+        tag: 'تمزق جزئي · 89.3٪',
+        findings: [
+          { name: 'تمزق جزئي في الرباط الصليبي الأمامي (ACL)', conf: '89.3%', level: 'high' },
+          { name: 'وذمة نقوية عظمية في اللقمة الفخذية', conf: '84.7%', level: 'mid' },
+          { name: 'الغضروف الهلالي الإنسي سليم', conf: '93.8%', level: 'ok' },
+          { name: 'انصباب مفصلي خفيف', conf: '90.1%', level: 'mid' },
+        ],
+        report: `الانطباع الآلي:\nعلامات تمزق جزئي في الرباط الصليبي الأمامي مع وذمة نقوية عظمية مرافقة في اللقمة الفخذية الوحشية، وانصباب مفصلي خفيف. الغضاريف الهلالية سليمة البنية.\n\nالتوصية:\nيُنصح بإحالة الحالة إلى جراحة العظام لتقييم درجة التمزق سريرياً وتحديد الخطة العلاجية (تحفظية أو جراحية).`,
+        time: 'اكتمل التحليل خلال 19 ثانية'
+      }
+    };
+  
+    const LEVEL_COLORS = { high: '#e5484d', mid: '#f5a524', ok: '#17a34a' };
+    const STAGES = [
+      'جارٍ تهيئة النموذج العصبي…',
+      'معالجة الصورة وتحسين التباين…',
+      'استخراج الخصائص العميقة…',
+      'مطابقة الأنماط المرضية…',
+      'تحديد مناطق الاشتباه…',
+      'توليد التقرير الآلي…'
+    ];
+  
+    let currentCase = 'chest';
+    let analyzing = false;
+  
+    const demoImage = document.getElementById('demoImage');
+    const demoViewer = document.getElementById('demoViewer');
+    const demoDet = document.getElementById('demoDet');
+    const demoDetTag = document.getElementById('demoDetTag');
+    const demoProgress = document.getElementById('demoProgress');
+    const barFill = document.getElementById('barFill');
+    const barLabel = document.getElementById('barLabel');
+    const reportBody = document.getElementById('reportBody');
+    const analyzeBtn = document.getElementById('analyzeBtn');
+  
+    function loadCase(key) {
+      currentCase = key;
+      demoImage.innerHTML = CASES[key].svg;
+      demoDet.classList.remove('show');
+      demoProgress.style.display = 'none';
+      reportBody.innerHTML = '<p style="color:var(--ink-soft);font-size:0.93rem;">اضغط «ابدأ التحليل الذكي» لتحليل هذه الحالة.</p>';
+    }
+  
+    document.querySelectorAll('.case-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (analyzing) return;
+        document.querySelectorAll('.case-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        loadCase(btn.dataset.case);
+      });
+    });
+  
+    analyzeBtn.addEventListener('click', () => {
+      if (analyzing) return;
+      analyzing = true;
+      analyzeBtn.disabled = true;
+      const data = CASES[currentCase];
+  
+      demoDet.classList.remove('show');
+      reportBody.innerHTML = '<p style="color:var(--ink-soft);font-size:0.93rem;">جارٍ التحليل…</p>';
+      demoProgress.style.display = 'block';
+      demoViewer.classList.add('scanning');
+      barFill.style.width = '0%';
+  
+      let stage = 0;
+      const total = STAGES.length;
+      const timer = setInterval(() => {
+        barLabel.textContent = STAGES[stage];
+        barFill.style.width = Math.round(((stage + 1) / total) * 100) + '%';
+        stage++;
+        if (stage >= total) {
+          clearInterval(timer);
+          setTimeout(() => showResults(data), 500);
+        }
+      }, 650);
+    });
+  
+    function showResults(data) {
+      demoViewer.classList.remove('scanning');
+      barLabel.textContent = data.time;
+  
+      Object.assign(demoDet.style, data.det);
+      demoDetTag.textContent = data.tag;
+      demoDet.classList.add('show');
+  
+      const findingsHtml = data.findings.map(f => `
+        <div class="finding">
+          <span class="f-name"><span class="f-dot" style="background:${LEVEL_COLORS[f.level]}"></span>${f.name}</span>
+          <span class="f-conf">${f.conf}</span>
+        </div>`).join('');
+  
+      reportBody.innerHTML = `
+        <div class="findings">${findingsHtml}</div>
+        <div class="report-text">${data.report}</div>
+        <div class="report-actions">
+          <button class="mini-btn" onclick="alert('محاكاة توضيحية: في النسخة الفعلية يُصدَّر التقرير بصيغة PDF موقعة.')">⬇ تصدير التقرير PDF</button>
+          <button class="mini-btn" onclick="alert('محاكاة توضيحية: في النسخة الفعلية يُرسل التقرير إلى نظام العيادة عبر HL7/FHIR.')">↗ إرسال إلى نظام العيادة</button>
+        </div>`;
+  
+      analyzing = false;
+      analyzeBtn.disabled = false;
+    }
+  
+    loadCase('chest');
+    ---------- end removed demo ---------- */
+
+    // =====================================================================
+    // Real multi-model API integration
+    // =====================================================================
+    const apiUrlInput = document.getElementById('apiUrl');
+    const apiStatus = document.getElementById('apiStatus');
+    const apiStatusText = document.getElementById('apiStatusText');
+    const recheckBtn = document.getElementById('recheckBtn');
+    const dropzone = document.getElementById('dropzone');
+    const fileInput = document.getElementById('fileInput');
+    const dzInner = document.getElementById('dzInner');
+    const fileMeta = document.getElementById('fileMeta');
+    const realAnalyzeBtn = document.getElementById('realAnalyzeBtn');
+    const realBtnText = document.getElementById('realBtnText');
+    const realResults = document.getElementById('realResults');
+    const modelSelect = document.getElementById('modelSelect');
+    const metricsGrid = document.getElementById('metricsGrid');
+
+    let selectedFile = null;
+    let realBusy = false;
+    let currentModel = 'chest';
+    let modelsMeta = {};   // id -> meta (from /models)
+
+    const apiBase = () => apiUrlInput.value.trim().replace(/\/+$/, '');
+    const pct = v => (v == null ? '—' : (v * 100).toFixed(1) + '٪');
+
+    async function checkHealth() {
+      apiStatus.className = 'api-status';
+      apiStatusText.textContent = 'جارٍ الفحص…';
+      try {
+        const ctrl = new AbortController();
+        const t = setTimeout(() => ctrl.abort(), 4000);
+        const res = await fetch(apiBase() + '/health', { signal: ctrl.signal });
+        clearTimeout(t);
+        const j = await res.json();
+        if (j.status === 'ok') {
+          apiStatus.className = 'api-status on';
+          const ready = Object.values(j.models || {}).filter(Boolean).length;
+          apiStatusText.textContent = `متصل — ${ready} نماذج جاهزة (${(j.device || '').toUpperCase()})`;
+          loadModels();
+          return true;
+        }
+        throw new Error();
+      } catch (e) {
+        apiStatus.className = 'api-status off';
+        apiStatusText.textContent = 'غير متصل — شغّل start_server.bat أولاً';
+        return false;
+      }
+    }
+    recheckBtn.addEventListener('click', checkHealth);
+    apiUrlInput.addEventListener('change', checkHealth);
+
+    // -------- تحميل بطاقات الأداء والإحصاءات من /models --------
+    async function loadModels() {
+      try {
+        const res = await fetch(apiBase() + '/models');
+        const j = await res.json();
+        modelsMeta = {};
+        (j.models || []).forEach(m => { modelsMeta[m.id] = m; });
+        renderMetrics(j.models || []);
+        renderHeroStats();
+        syncModelButtons();
+      } catch (e) { /* keep loading placeholder */ }
+    }
+
+    function renderHeroStats() {
+      const chest = modelsMeta.chest?.metrics;
+      const pneu = modelsMeta.pneumonia?.metrics;
+      const brain = modelsMeta.brain?.metrics;
+      const set = (id, val) => { const el = document.getElementById(id); if (el && val) el.textContent = val; };
+      if (chest?.mean_auc) set('statChest', chest.mean_auc.toFixed(2) + ' AUC');
+      if (pneu?.test_accuracy != null) set('statPneu', pct(pneu.test_accuracy));
+      if (brain?.test_accuracy != null) set('statBrain', pct(brain.test_accuracy));
+      const avail = Object.values(modelsMeta).filter(m => m.available !== false).length;
+      set('statModels', String(avail || 3));
+    }
+
+    function syncModelButtons() {
+      modelSelect.querySelectorAll('.model-btn').forEach(btn => {
+        const meta = modelsMeta[btn.dataset.model];
+        if (meta && meta.available === false) {
+          btn.classList.add('disabled');
+          btn.title = 'هذا النموذج لم يُدرَّب بعد على هذا الخادم';
+        } else {
+          btn.classList.remove('disabled');
+          btn.title = '';
+        }
+      });
+    }
+
+    function renderMetrics(models) {
+      if (!models.length) return;
+      metricsGrid.innerHTML = models.map(metricCard).join('');
+    }
+
+    const EMOJI = {
+      chest: '🫁', pneumonia: '🦠', brain: '🧠', symptoms: '📝', symptoms_ar: '📝',
+      breast: '🎗️', derma: '🩺', blood: '🩸', organc: '🫀', path: '🔬',
+      oct: '👁️', retina: '🔆'
+    };
+
+    // فجوة التعميم = دقة التدريب − دقة الاختبار. كلما صغرت، قلّ الإفراط في التعلّم (overfitting).
+    function gapRow(src) {
+      if (!src || src.train_accuracy == null || src.overfitting_gap == null) return '';
+      const g = src.overfitting_gap;
+      const cls = g <= 0.06 ? 'ok' : (g <= 0.15 ? 'warn' : 'bad');
+      const lbl = g <= 0.06 ? 'تعميم ممتاز' : (g <= 0.15 ? 'تعميم مقبول' : 'فجوة مرتفعة');
+      return `<div class="mr gap-row">
+              <span>فجوة التعميم <small>(تدريب ${pct(src.train_accuracy)})</small></span>
+              <b class="gap-badge ${cls}" title="${lbl}">${(g * 100).toFixed(1)}٪</b>
+            </div>`;
+    }
+
+    // قائمة تقنيات مكافحة الإفراط في التعلّم المطبّقة فعلياً في التدريب
+    function antiOverfitRow(mm) {
+      const list = mm.anti_overfitting;
+      if (!Array.isArray(list) || !list.length) return '';
+      return `<details class="af-details"><summary>🛡 تقنيات مكافحة الإفراط في التعلّم (${list.length})</summary>
+              <ul class="af-list">${list.map(t => `<li>${t}</li>`).join('')}</ul></details>`;
+    }
+
+    // ملاحظة منهجية التقسيم (مثلاً: تسريب البيانات في تقسيم الدماغ وكيف عولج)
+    function splitNote(mm) {
+      if (!mm.split_note) return '';
+      return `<details class="af-details split-note"><summary>🔬 منهجية التقسيم — لماذا هذا الرقم صادق؟</summary>
+              <p class="sn-body">${mm.split_note}</p></details>`;
+    }
+
+    // بطاقة النموذج: الاستخدام المقصود + الحدود (شفافية)
+    function modelCard(m) {
+      if (!m.limits && !m.intended_use) return '';
+      return `<details class="af-details card-details"><summary>🪪 بطاقة النموذج — الاستخدام والحدود</summary>
+              <div class="card-body">
+                ${m.intended_use ? `<p><b>الاستخدام المقصود:</b> ${m.intended_use}</p>` : ''}
+                ${m.limits ? `<p><b>الحدود وأنماط الفشل:</b> ${m.limits}</p>` : ''}
+              </div></details>`;
+    }
+
+    function metricCard(m) {
+      const mm = m.metrics;
+      let big = '—', bigLbl = 'بانتظار التقييم', rows = '';
+      if (!mm) {
+        big = '⏳'; bigLbl = m.available === false ? 'لم يُدرَّب على هذا الخادم بعد' : 'قيد التقييم على مجموعة الاختبار';
+      } else if (m.id === 'symptoms_ar') {
+        const r = mm.router || {};
+        big = pct(r.top3_accuracy);
+        bigLbl = 'إصابة التخصص ضمن أفضل 3 (20 تخصصاً)';
+        const cats = (mm.categories_with_fine_model || []).length;
+        const f = mm.filter || {};
+        // النسبة الصادقة: الرفض على أسئلة غير طبية لم يرها المرشّح إطلاقاً (وليس على مجموعته الأسهل)
+        const hardRej = f.holdout_question_negative_rejection_rate;
+        rows = `<div class="mr"><span>دقة التخصص (الأعلى)</span><b>${pct(r.accuracy)}</b></div>
+              ${gapRow(r)}
+              <div class="mr"><span>مرشّح المدخلات (طبي/غير طبي)</span><b>${pct(f.accuracy)}</b></div>
+              ${hardRej != null ? `<div class="mr"><span>رفض أسئلة غير طبية <small>(اختبار صعب مستقل)</small></span><b>${pct(hardRej)}</b></div>` : ''}
+              <div class="mr"><span>نماذج تشخيص لكل تخصص</span><b>${cats}</b></div>
+              <div class="mr"><span>حجم اختبار المُوجِّه</span><b>${(r.n_test || 0).toLocaleString('en')}</b></div>`;
+      } else if (m.id === 'chest') {
+        big = mm.mean_auc?.toFixed(3) ?? '—';
+        bigLbl = `متوسط AUC على ${Object.keys(mm.per_label_auc || {}).length} حالة مرضية`;
+        const top = Object.entries(mm.per_label_auc || {}).sort((a, b) => b[1].auc - a[1].auc).slice(0, 4);
+        rows = top.map(([k, v]) => `<div class="mr"><span>${v.name_ar}</span><b>${v.auc.toFixed(3)}</b></div>`).join('')
+          + `<div class="mr"><span>حجم مجموعة الاختبار</span><b>${(mm.n_test || 0).toLocaleString('en')}</b></div>`;
+      } else if (m.id === 'pneumonia') {
+        big = pct(mm.test_accuracy);
+        bigLbl = 'الدقة على مجموعة الاختبار المحجوزة';
+        rows = `<div class="mr"><span>AUC</span><b>${mm.test_auc ?? '—'}</b></div>
+              <div class="mr"><span>الحساسية (Sensitivity)</span><b>${pct(mm.test_sensitivity_recall)}</b></div>
+              <div class="mr"><span>النوعية (Specificity)</span><b>${pct(mm.test_specificity)}</b></div>
+              ${gapRow(mm)}
+              <div class="mr"><span>حجم الاختبار</span><b>${mm.n_test}</b></div>`;
+      } else if (m.id === 'brain') {
+        big = pct(mm.test_accuracy);
+        bigLbl = 'دقة التصنيف على مجموعة الاختبار';
+        rows = `<div class="mr"><span>Macro-F1</span><b>${mm.test_macro_f1 ?? '—'}</b></div>
+              <div class="mr"><span>Macro-AUC (OVR)</span><b>${mm.test_auc_macro_ovr ?? '—'}</b></div>
+              ${gapRow(mm)}
+              <div class="mr"><span>عدد الأصناف</span><b>${(mm.classes || []).length}</b></div>
+              <div class="mr"><span>حجم الاختبار</span><b>${mm.n_test}</b></div>`;
+      } else if (mm.test_accuracy != null) {
+        // نماذج MedMNIST العامة الجديدة (ثدي / جلد / دم) — تصنيف متعدد
+        big = pct(mm.test_accuracy);
+        bigLbl = 'دقة التصنيف على مجموعة الاختبار الرسمية';
+        rows = `<div class="mr"><span>Macro-F1</span><b>${mm.test_macro_f1 ?? '—'}</b></div>
+              <div class="mr"><span>${mm.n_classes === 2 ? 'AUC' : 'Macro-AUC (OVR)'}</span><b>${mm.test_auc ?? '—'}</b></div>
+              ${gapRow(mm)}
+              <div class="mr"><span>عدد الأصناف</span><b>${(mm.classes || []).length}</b></div>
+              <div class="mr"><span>حجم الاختبار</span><b>${(mm.n_test || 0).toLocaleString('en')}</b></div>`;
+      }
+      const src = mm ? (mm.dataset || mm.eval_dataset || m.source) : m.source;
+      return `
+      <div class="metric-card">
+        <div class="m-head"><span class="m-emoji">${EMOJI[m.id] || '📊'}</span><h3>${m.title_ar}</h3></div>
+        <div class="m-modality">${m.modality}</div>
+        <div class="big-num">${big}</div>
+        <div class="big-lbl">${bigLbl}</div>
+        <div class="metric-rows">${rows}</div>
+        ${mm ? splitNote(mm) : ''}
+        ${mm ? antiOverfitRow(mm) : ''}
+        ${modelCard(m)}
+        <div class="m-source"><b>المصدر/البيانات:</b> ${src || '—'}</div>
+      </div>`;
+    }
+
+    // -------- اختيار النموذج --------
+    modelSelect.querySelectorAll('.model-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (btn.classList.contains('disabled') || realBusy) return;
+        modelSelect.querySelectorAll('.model-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentModel = btn.dataset.model;
+        realResults.innerHTML = '<p style="color:var(--ink-soft);font-size:0.93rem;">تم اختيار النموذج — ارفع صورة مناسبة ثم اضغط «حلّل الصورة».</p>';
+      });
+    });
+
+    // -------- اختيار الملف (نقر أو سحب وإفلات) --------
+    dropzone.addEventListener('click', () => fileInput.click());
+    fileInput.addEventListener('change', () => { if (fileInput.files[0]) setFile(fileInput.files[0]); });
+    ['dragenter', 'dragover'].forEach(ev => dropzone.addEventListener(ev, e => { e.preventDefault(); dropzone.classList.add('drag'); }));
+    ['dragleave', 'drop'].forEach(ev => dropzone.addEventListener(ev, e => { e.preventDefault(); dropzone.classList.remove('drag'); }));
+    dropzone.addEventListener('drop', e => {
+      const f = e.dataTransfer.files[0];
+      if (f && f.type.startsWith('image/')) setFile(f);
+    });
+
+    function setFile(f) {
+      selectedFile = f;
+      const old = dropzone.querySelector('img.preview');
+      if (old) old.remove();
+      const img = document.createElement('img');
+      img.className = 'preview';
+      img.alt = 'معاينة الصورة المرفوعة';
+      img.src = URL.createObjectURL(f);
+      dropzone.appendChild(img);
+      dzInner.style.display = 'none';
+      fileMeta.textContent = f.name + ' — ' + (f.size / 1024).toFixed(0) + ' KB';
+      realAnalyzeBtn.disabled = false;
+      realResults.innerHTML = '<p style="color:var(--ink-soft);font-size:0.93rem;">الصورة جاهزة — اضغط «حلّل الصورة».</p>';
+    }
+
+    // -------- إرسال الصورة إلى /predict/{model} وعرض النتائج --------
+    realAnalyzeBtn.addEventListener('click', async () => {
+      if (!selectedFile || realBusy) return;
+      realBusy = true;
+      realAnalyzeBtn.disabled = true;
+      const prevHtml = realBtnText.textContent;
+      realBtnText.textContent = 'جارٍ التحليل…';
+      realResults.innerHTML = '<p style="color:var(--ink-soft);font-size:0.93rem;">⏳ الصورة قيد المعالجة في النموذج العصبي…</p>';
+
+      try {
+        const fd = new FormData();
+        fd.append('file', selectedFile, selectedFile.name);
+        const res = await fetch(apiBase() + '/predict/' + currentModel, { method: 'POST', body: fd });
+        if (!res.ok) {
+          let msg = 'HTTP ' + res.status;
+          try { msg = (await res.json()).detail || msg; } catch (_) { }
+          throw new Error(msg);
+        }
+        const data = await res.json();
+        renderRealResults(data);
+      } catch (err) {
+        realResults.innerHTML = `
+        <div class="api-error">
+          <b>تعذّر إتمام التحليل.</b><br>
+          ${err.message && err.message !== 'Failed to fetch' ? 'رسالة الخادم: ' + err.message + '<br>' : ''}
+          تأكد من أن الخادم يعمل: شغّل <code>start_server.bat</code> ثم اضغط «إعادة فحص الاتصال» وحاول مجدداً.
+        </div>`;
+        checkHealth();
+      } finally {
+        realBusy = false;
+        realAnalyzeBtn.disabled = !selectedFile;
+        realBtnText.textContent = prevHtml;
+      }
+    });
+
+    function probColor(p) {
+      if (p >= 50) return '#e5484d';
+      if (p >= 35) return '#f5a524';
+      return '#17a34a';
+    }
+
+    function probRow(f) {
+      return `
+      <div class="prob-row">
+        <div class="prob-head">
+          <span class="p-name">${f.name_ar}${f.name_en ? '<small>' + f.name_en + '</small>' : ''}</span>
+          <span class="p-val" style="color:${probColor(f.probability)}">${f.probability}%</span>
+        </div>
+        <div class="prob-track"><div class="prob-fill" data-w="${f.probability}" style="background:${probColor(f.probability)}"></div></div>
+      </div>`;
+    }
+
+    function metaChips(data) {
+      return `
+      <div class="result-meta">
+        <span class="chip" style="background:var(--teal-100);color:#0b7d76;border-color:#bfe9e6;">⏱ ${data.processing_time_s} ثانية</span>
+        <span class="chip" style="background:#e8f1fd;color:#1f5fb0;border-color:#c9dffa;">${data.model_title_ar || data.model_id}</span>
+        <span class="chip" style="background:#f1f5f9;color:#475569;border-color:#e2e8f0;">${(data.device || '').toUpperCase()}</span>
+      </div>`;
+    }
+    const disclaimerHtml = d => `<p style="margin-top:16px;font-size:0.8rem;color:var(--ink-soft);border-top:1px solid var(--line);padding-top:12px;">${d.disclaimer || ''}</p>`;
+
+    // خريطة Grad-CAM الحرارية — تعليمي: وين ينظر النموذج
+    function heatmapBlock(data) {
+      if (!data.heatmap) return '';
+      return `
+      <div class="heat-wrap">
+        <div class="heat-head">🔥 خريطة الانتباه (Grad-CAM) — أين «نظر» النموذج</div>
+        <div class="heat-imgs"><img class="heat-heat" src="${data.heatmap}" alt="Grad-CAM heatmap"></div>
+        <div class="heat-cap">المناطق الأكثر دفئاً (حمراء) هي الأكثر تأثيراً على قرار النموذج. اسأل الطالب: هل تتوافق مع العلامة المرضية الفعلية؟ (قارنها بالصورة الأصلية في الأعلى)</div>
+      </div>`;
+    }
+
+    // صندوق تعليمي عن التشخيص (للطلاب)
+    function eduBlock(data) {
+      if (!data.edu) return '';
+      return `<div class="edu-box"><b>🎓 للتعلّم:</b> ${data.edu}</div>`;
+    }
+
+    // تنبيه خارج-التوزيع: الصورة قد لا تناسب النموذج / ثقة منخفضة
+    function oodBlock(data) {
+      if (!data.ood || !data.ood.suspect) return '';
+      return `<div class="verdict-banner" style="background:#fff7e8;border:1px solid #f3ddb0;color:#8a6116;">
+      <span class="v-ico">⚠</span><span>${data.ood.message_ar || 'ثقة منخفضة — قد تكون الصورة غير مناسبة لهذا النموذج.'}</span>
+      <span class="v-conf">أعلى احتمال ${(data.ood.max_prob * 100).toFixed(0)}%</span></div>`;
+    }
+
+    function animateBars() {
+      requestAnimationFrame(() => {
+        realResults.querySelectorAll('.prob-fill').forEach(el => { el.style.width = el.dataset.w + '%'; });
+      });
+      const det = realResults.querySelector('details.low-findings');
+      if (det) det.addEventListener('toggle', () => {
+        det.querySelectorAll('.prob-fill').forEach(el => { el.style.width = el.dataset.w + '%'; });
+      }, { once: true });
+    }
+
+    function renderRealResults(data) {
+      if (data.type === 'binary') return renderBinary(data);
+      if (data.type === 'multiclass') return renderMulticlass(data);
+      return renderMultilabel(data);   // chest
+    }
+
+    function renderMultilabel(data) {
+      const positives = data.findings.filter(f => f.positive);
+      const lows = data.findings.filter(f => !f.positive);
+      const positivesHtml = positives.length
+        ? `<div class="grp-title" style="color:#b3282d;"><span class="g-dot" style="background:#e5484d;"></span>موجودات فوق عتبة القرار — يوصى بمراجعتها<span class="grp-count">${positives.length}</span></div>
+         ${positives.map(probRow).join('')}`
+        : `<div class="all-clear">✓ لا توجد أي حالة فوق عتبة قرار النموذج (50٪) في هذه الصورة.</div>`;
+      const lowsHtml = lows.length
+        ? `<details class="low-findings"><summary>عرض بقية الحالات تحت العتبة (${lows.length})</summary>${lows.map(probRow).join('')}</details>` : '';
+      realResults.innerHTML = metaChips(data) + `
+      <div class="explain-box">
+        <b>كيف تُقرأ النسب؟</b> النموذج معاير بحيث تمثل <b>50٪ عتبة القرار</b> (العلامة الرمادية على الأشرطة):
+        قيمة فوق 50٪ تعني أن النموذج يرصد مؤشرات لهذه الحالة أقوى من عتبة اكتشافه — وليست نسبة إصابة مؤكدة.
+      </div>${positivesHtml}${lowsHtml}
+      ${eduBlock(data)}` + disclaimerHtml(data);
+      animateBars();
+    }
+
+    function renderBinary(data) {
+      const pos = data.positive;
+      const conf = data.findings[0]?.probability;
+      realResults.innerHTML = metaChips(data) + oodBlock(data) + `
+      <div class="verdict-banner ${pos ? 'pos' : 'neg'}">
+        <span class="v-ico">${pos ? '⚠' : '✓'}</span>
+        <span>${data.prediction_ar}</span>
+        <span class="v-conf">${conf}%</span>
+      </div>
+      ${heatmapBlock(data)}
+      <div class="explain-box">
+        القرار مبني على عتبة مضبوطة على مجموعة التحقق (${data.decision_threshold_pct}%). القيمة المعروضة هي احتمالية النموذج لوجود التهاب رئوي في الصورة.
+      </div>
+      ${data.findings.map(probRow).join('')}
+      ${eduBlock(data)}` + disclaimerHtml(data);
+      animateBars();
+    }
+
+    function renderMulticlass(data) {
+      // صنف "مقلق" (خبيث/ورم) -> بانر أحمر وتحذير؛ غيره -> بانر محايد أخضر
+      const en = (data.prediction_en || '').toLowerCase();
+      const benign = /no-?tumor|normal|benign|nevi|nevus/.test(en);
+      const concerning = /malignant|melanoma|carcinoma|glioma|meningioma|pituitary|tumor/.test(en) && !benign;
+      const n = data.findings.length;
+      realResults.innerHTML = metaChips(data) + oodBlock(data) + `
+      <div class="verdict-banner ${concerning ? 'pos' : 'neg'}">
+        <span class="v-ico">${concerning ? '⚠' : '✓'}</span>
+        <span>التصنيف الأرجح: ${data.prediction_ar}</span>
+        <span class="v-conf">${data.confidence}%</span>
+      </div>
+      ${heatmapBlock(data)}
+      <div class="explain-box">
+        النموذج يوزّع الاحتمال على كل الأصناف الـ${n} (مجموعها 100٪)؛ الصنف الأعلى هو التصنيف المقترح.
+        ${concerning ? '<b>الصنف المقترح قد يكون خبيثاً — مراجعة عاجلة لطبيب مختص.</b>' : 'راجع الطبيب المختص للتأكيد.'}
+      </div>
+      ${data.findings.map(probRow).join('')}
+      ${eduBlock(data)}` + disclaimerHtml(data);
+      animateBars();
+    }
+
+    // =====================================================================
+    // Symptom text checker
+    // =====================================================================
+    const symptomText = document.getElementById('symptomText');
+    const symptomBtn = document.getElementById('symptomBtn');
+    const symptomBtnText = document.getElementById('symptomBtnText');
+    const symptomResults = document.getElementById('symptomResults');
+    const sExamples = document.getElementById('sExamples');
+
+    sExamples.querySelectorAll('button').forEach(b => b.addEventListener('click', () => {
+      symptomText.value = b.dataset.ex; symptomText.focus();
+    }));
+
+    let symptomBusy = false;
+    symptomBtn.addEventListener('click', async () => {
+      const text = symptomText.value.trim();
+      if (symptomBusy) return;
+      if (text.length < 3) { symptomText.focus(); return; }
+      symptomBusy = true; symptomBtn.disabled = true;
+      const prev = symptomBtnText.textContent; symptomBtnText.textContent = 'جارٍ التحليل…';
+      symptomResults.innerHTML = '<p style="color:var(--ink-soft);font-size:0.93rem;">⏳ يُحلّل النظام وصف الأعراض…</p>';
+      try {
+        const res = await fetch(apiBase() + '/predict/symptoms', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text })
+        });
+        if (!res.ok) {
+          let msg = 'HTTP ' + res.status;
+          try { msg = (await res.json()).detail || msg; } catch (_) { }
+          throw new Error(msg);
+        }
+        renderSymptom(await res.json());
+      } catch (err) {
+        symptomResults.innerHTML = `
+        <div class="api-error"><b>تعذّر التحليل.</b><br>
+        ${err.message && err.message !== 'Failed to fetch' ? 'رسالة الخادم: ' + err.message + '<br>' : ''}
+        تأكد أن الخادم يعمل (<code>start_server.bat</code>) وأن نظام النص مُدرَّب.</div>`;
+      } finally {
+        symptomBusy = false; symptomBtn.disabled = false; symptomBtnText.textContent = prev;
+      }
+    });
+
+    function renderSymptom(data) {
+      // flagged / rejected input (filtering system)
+      if (!data.ok) {
+        const icons = { not_arabic: '🌐', too_short: '✏️', gibberish: '❓', not_medical: '🚫' };
+        const extra = data.medical_score != null ? `<div style="font-size:0.8rem;color:var(--ink-soft);margin-top:8px;">درجة كون النص طبياً: ${(data.medical_score * 100).toFixed(0)}٪</div>` : '';
+        symptomResults.innerHTML = `
+        <div class="verdict-banner" style="background:#fff7e8;border:1px solid #f3ddb0;color:#8a6116;">
+          <span class="v-ico">${icons[data.flag] || '⚠'}</span>
+          <span>${data.message_ar}</span>
+        </div>${extra}
+        <div class="explain-box">مرشّح المدخلات رفض هذا النص بدل إعطاء تشخيص غير موثوق — وهذا سلوك مقصود لرفع الأمان.</div>`;
+        return;
+      }
+
+      const conf = data.specialty_confidence;
+      const dx = data.diagnosis;
+      const catAcc = dx && dx.model_accuracy != null ? (dx.model_accuracy * 100).toFixed(1) + '٪' : '—';
+      const lowConf = data.flag === 'low_confidence';
+
+      // top-3 specialties — ranked bars (the router's top-3 is its strongest signal)
+      const top3 = (data.top3_specialties || []).map((s, i) => `
+      <div class="spec-item${i === 0 ? ' top' : ''}">
+        <span class="spec-rank">${i + 1}</span>
+        <div class="spec-body">
+          <div class="spec-head"><b>${s.category_ar}</b><span>${s.confidence}%</span></div>
+          <div class="spec-track"><div class="spec-fill" data-w="${s.confidence}"></div></div>
+        </div>
+      </div>`).join('');
+
+      // diagnosis block (or specialist-referral note)
+      let dxBlock;
+      if (dx) {
+        const rows = dx.candidates.map(c => probRow({ name_ar: c.name_ar, probability: c.probability })).join('');
+        dxBlock = `
+        <div class="route-path">
+          <div class="rp-step"><small>التخصص المُرجّح</small><b>${data.specialty_ar} · ${conf}%</b></div>
+          <span class="rp-arrow">←</span>
+          <div class="rp-step"><small>التشخيص الأرجح</small><b>${dx.top} · ${dx.confidence}%</b></div>
+          <span class="rp-acc">دقة نموذج التخصص: ${catAcc}</span>
+        </div>
+        ${dx.uncertain ? '<div class="explain-box" style="background:#fff7e8;border-color:#f3ddb0;color:#8a6116;">⚠ ثقة التشخيص منخفضة — اعتبرها احتمالات مبدئية وراجع طبيباً مختصاً.</div>' : ''}
+        ${rows}`;
+      } else {
+        dxBlock = `
+        <div class="route-path">
+          <div class="rp-step"><small>التخصص المُرجّح</small><b>${data.specialty_ar} · ${conf}%</b></div>
+        </div>
+        <div class="explain-box">النظام حدّد التخصص المناسب، ولا يتوفّر بعد نموذج تشخيص دقيق داخل هذا التخصص — يُنصح بمراجعة أخصائي «${data.specialty_ar}».</div>`;
+      }
+
+      symptomResults.innerHTML = `
+      <div class="result-meta">
+        <span class="chip" style="background:var(--teal-100);color:#0b7d76;border-color:#bfe9e6;">⏱ ${data.processing_time_s} ث</span>
+        <span class="chip" style="background:#e8f1fd;color:#1f5fb0;border-color:#c9dffa;">مرشّح المدخلات: ${data.medical_score != null ? (data.medical_score * 100).toFixed(0) + '٪ طبي' : 'مفعّل'}</span>
+      </div>
+      ${lowConf ? `<div class="verdict-banner" style="background:#fff7e8;border:1px solid #f3ddb0;color:#8a6116;"><span class="v-ico">⚠</span><span>${data.message_ar}</span></div>` : ''}
+      <div class="spec-title">أقرب 3 تخصصات <small>الترتيب الصحيح ضمن أفضل 3 يقع ضمن ~90٪ من الحالات</small></div>
+      <div class="spec-rank-list">${top3}</div>
+      ${dxBlock}
+      <p style="margin-top:16px;font-size:0.8rem;color:var(--ink-soft);border-top:1px solid var(--line);padding-top:12px;">${data.disclaimer}</p>`;
+      requestAnimationFrame(() => {
+        symptomResults.querySelectorAll('.prob-fill, .spec-fill').forEach(el => { el.style.width = el.dataset.w + '%'; });
+      });
+    }
+
+    // =====================================================================
+    // Quiz / training mode
+    // =====================================================================
+    const quizModelsEl = document.getElementById('quizModels');
+    const quizWrap = document.getElementById('quizWrap');
+    const quizEmpty = document.getElementById('quizEmpty');
+    const quizScorebar = document.getElementById('quizScorebar');
+    const quizImg = document.getElementById('quizImg');
+    const quizModality = document.getElementById('quizModality');
+    const quizOptions = document.getElementById('quizOptions');
+    const quizReveal = document.getElementById('quizReveal');
+    const quizNextBtn = document.getElementById('quizNext');
+    const scoreYou = document.getElementById('scoreYou');
+    const scoreModel = document.getElementById('scoreModel');
+    let quizModel = null, quizCase = null, quizBusy = false;
+    let sYou = 0, sModel = 0, sTotal = 0;
+
+    function updateScore() {
+      scoreYou.textContent = `${sYou}/${sTotal}`;
+      scoreModel.textContent = `${sModel}/${sTotal}`;
+    }
+    document.getElementById('quizReset').addEventListener('click', () => {
+      sYou = sModel = sTotal = 0; updateScore();
+    });
+
+    async function loadQuizModels() {
+      try {
+        const res = await fetch(apiBase() + '/quiz/models');
+        const j = await res.json();
+        if (!j.models || !j.models.length) return;
+        quizModelsEl.innerHTML = j.models.map(m =>
+          `<button class="quiz-model-btn" data-qmodel="${m.id}">${m.emoji} ${m.title_ar}</button>`).join('');
+        quizModelsEl.querySelectorAll('.quiz-model-btn').forEach(b =>
+          b.addEventListener('click', () => selectQuizModel(b.dataset.qmodel)));
+        quizEmpty.style.display = 'none';
+      } catch (e) { /* server offline — leave the hint */ }
+    }
+
+    function selectQuizModel(mid) {
+      quizModel = mid;
+      quizModelsEl.querySelectorAll('.quiz-model-btn').forEach(b =>
+        b.classList.toggle('active', b.dataset.qmodel === mid));
+      quizScorebar.style.display = 'flex';
+      quizWrap.style.display = 'grid';
+      quizEmpty.style.display = 'none';
+      newQuizCase();
+    }
+
+    async function newQuizCase() {
+      if (!quizModel || quizBusy) return;
+      quizBusy = true;
+      quizReveal.innerHTML = ''; quizNextBtn.style.display = 'none';
+      quizOptions.innerHTML = '<p style="color:var(--ink-soft)">⏳ جارٍ تحميل حالة…</p>';
+      quizImg.removeAttribute('src');
+      try {
+        const res = await fetch(apiBase() + '/quiz/' + quizModel);
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        quizCase = await res.json();
+        quizImg.src = quizCase.image;
+        const title = quizModelsEl.querySelector('.quiz-model-btn.active')?.textContent || '';
+        quizModality.textContent = title.trim();
+        quizOptions.innerHTML = quizCase.options.map(o =>
+          `<button class="quiz-opt" data-cidx="${o.class_idx}">${o.label_ar}</button>`).join('');
+        quizOptions.querySelectorAll('.quiz-opt').forEach(b =>
+          b.addEventListener('click', () => answerQuiz(parseInt(b.dataset.cidx), b)));
+      } catch (e) {
+        quizOptions.innerHTML = `<div class="api-error">تعذّر تحميل الحالة — تأكد أن الخادم يعمل.</div>`;
+      } finally { quizBusy = false; }
+    }
+
+    async function answerQuiz(chosenIdx, btnEl) {
+      if (quizBusy || !quizCase) return;
+      quizBusy = true;
+      quizOptions.querySelectorAll('.quiz-opt').forEach(b => b.disabled = true);
+      quizOptions.innerHTML && (quizReveal.innerHTML = '<p style="color:var(--ink-soft)">⏳ يكشف النموذج…</p>');
+      try {
+        const res = await fetch(apiBase() + '/quiz/reveal', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ model: quizModel, index: quizCase.index, chosen_class_idx: chosenIdx })
+        });
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const d = await res.json();
+        // mark options
+        quizOptions.querySelectorAll('.quiz-opt').forEach(b => {
+          const ci = parseInt(b.dataset.cidx);
+          if (ci === d.true_class_idx) b.classList.add('correct');
+          else if (ci === chosenIdx) b.classList.add('wrong');
+        });
+        // scores
+        sTotal++; if (d.student_correct) sYou++; if (d.model_correct) sModel++; updateScore();
+        const mtag = d.model_correct ? '<span class="mtag ok">أصاب</span>' : '<span class="mtag no">أخطأ</span>';
+        quizReveal.innerHTML = `
+        <div class="quiz-verdict ${d.student_correct ? 'ok' : 'no'}">
+          <span>${d.student_correct ? '✅ إجابة صحيحة!' : '❌ إجابة خاطئة'}</span>
+        </div>
+        <div class="quiz-cmp">
+          <div class="row"><span>الجواب الصحيح</span><b>${d.true_label_ar}</b></div>
+          <div class="row"><span>رأي النموذج ${mtag}</span><b>${d.model_prediction_ar} · ${d.model_confidence ?? '—'}%</b></div>
+        </div>
+        ${d.heatmap ? heatmapBlock(d) : ''}
+        ${d.edu ? eduBlock(d) : ''}`;
+        quizNextBtn.style.display = 'block';
+      } catch (e) {
+        quizReveal.innerHTML = `<div class="api-error">تعذّر كشف الإجابة — تأكد أن الخادم يعمل.</div>`;
+      } finally { quizBusy = false; }
+    }
+    quizNextBtn.addEventListener('click', newQuizCase);
+
+    // =====================================================================
+    // Case library / atlas
+    // =====================================================================
+    const atlasModelsEl = document.getElementById('atlasModels');
+    const atlasGrid = document.getElementById('atlasGrid');
+    const atlasEdu = document.getElementById('atlasEdu');
+    const atlasEmpty = document.getElementById('atlasEmpty');
+
+    async function loadAtlasModels() {
+      try {
+        const j = await (await fetch(apiBase() + '/quiz/models')).json();
+        if (!j.models || !j.models.length) return;
+        atlasModelsEl.innerHTML = j.models.map(m =>
+          `<button class="quiz-model-btn" data-amodel="${m.id}">${m.emoji} ${m.title_ar}</button>`).join('');
+        atlasModelsEl.querySelectorAll('.quiz-model-btn').forEach(b =>
+          b.addEventListener('click', () => loadAtlas(b.dataset.amodel, b)));
+      } catch (e) { }
+    }
+
+    async function loadAtlas(mid, btn) {
+      atlasModelsEl.querySelectorAll('.quiz-model-btn').forEach(b => b.classList.toggle('active', b === btn));
+      atlasEmpty.style.display = 'none';
+      atlasGrid.innerHTML = '<p style="color:var(--ink-soft);grid-column:1/-1;text-align:center;">⏳ جارٍ تحضير الأمثلة…</p>';
+      atlasEdu.style.display = 'none';
+      try {
+        const d = await (await fetch(apiBase() + '/cases/' + mid)).json();
+        if (d.edu) { atlasEdu.innerHTML = `<b>🎓 ${d.title_ar}:</b> ${d.edu}`; atlasEdu.style.display = 'block'; }
+        atlasGrid.innerHTML = d.cases.map(c => `
+        <div class="atlas-card">
+          <div class="ac-imgs">
+            <div><img src="${c.image}" alt=""><div class="ac-cap">الأصل</div></div>
+            <div><img src="${c.heatmap || c.image}" alt=""><div class="ac-cap">الانتباه</div></div>
+          </div>
+          <div class="ac-body">
+            <div class="ac-label">${c.class_ar}</div>
+            <div class="ac-model">النموذج: ${c.model_prediction_ar} · ${c.model_confidence ?? '—'}%
+              <span class="ac-tag ${c.model_correct ? 'ok' : 'no'}">${c.model_correct ? 'أصاب' : 'أخطأ'}</span></div>
+          </div>
+        </div>`).join('');
+      } catch (e) {
+        atlasGrid.innerHTML = '<div class="api-error" style="grid-column:1/-1;">تعذّر تحميل الأمثلة — تأكد أن الخادم يعمل.</div>';
+      }
+    }
+
+    // =====================================================================
+    // Report-writing practice
+    // =====================================================================
+    const reportModelsEl = document.getElementById('reportModels');
+    const reportWrap = document.getElementById('reportWrap');
+    const reportEmpty = document.getElementById('reportEmpty');
+    const reportImg = document.getElementById('reportImg');
+    const reportModality = document.getElementById('reportModality');
+    const rFindings = document.getElementById('rFindings');
+    const rImpression = document.getElementById('rImpression');
+    const reportSubmit = document.getElementById('reportSubmit');
+    const reportNew = document.getElementById('reportNew');
+    const reportResult = document.getElementById('reportResult');
+    let reportModel = null, reportCase = null, reportBusy = false;
+
+    async function loadReportModels() {
+      try {
+        const j = await (await fetch(apiBase() + '/quiz/models')).json();
+        if (!j.models || !j.models.length) return;
+        reportModelsEl.innerHTML = j.models.map(m =>
+          `<button class="quiz-model-btn" data-rmodel="${m.id}">${m.emoji} ${m.title_ar}</button>`).join('');
+        reportModelsEl.querySelectorAll('.quiz-model-btn').forEach(b =>
+          b.addEventListener('click', () => {
+            reportModel = b.dataset.rmodel;
+            reportModelsEl.querySelectorAll('.quiz-model-btn').forEach(x => x.classList.toggle('active', x === b));
+            newReportCase();
+          }));
+      } catch (e) { }
+    }
+
+    async function newReportCase() {
+      if (!reportModel) return;
+      reportEmpty.style.display = 'none'; reportWrap.style.display = 'grid';
+      reportResult.innerHTML = ''; reportNew.style.display = 'none';
+      rFindings.value = ''; rImpression.value = ''; rFindings.disabled = false; rImpression.disabled = false;
+      reportSubmit.style.display = 'flex';
+      reportImg.removeAttribute('src');
+      try {
+        reportCase = await (await fetch(apiBase() + '/report/' + reportModel)).json();
+        reportImg.src = reportCase.image;
+        reportModality.textContent = reportCase.title_ar + ' · ' + reportCase.modality;
+      } catch (e) { reportResult.innerHTML = '<div class="api-error">تعذّر تحميل الحالة.</div>'; }
+    }
+
+    reportSubmit.addEventListener('click', async () => {
+      if (reportBusy || !reportCase) return;
+      if ((rFindings.value + rImpression.value).trim().length < 3) { rFindings.focus(); return; }
+      reportBusy = true; reportSubmit.disabled = true;
+      reportResult.innerHTML = '<p style="color:var(--ink-soft)">⏳ يُقيّم تقريرك…</p>';
+      try {
+        const d = await (await fetch(apiBase() + '/report/grade', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ model: reportModel, index: reportCase.index, findings: rFindings.value, impression: rImpression.value })
+        })).json();
+        const checks = d.checklist.map(c =>
+          `<div class="rc"><span>${c.passed ? '✅' : '⬜'}</span><span>${c.item_ar}</span></div>`).join('');
+        reportResult.innerHTML = `
+        <div class="verdict-banner ${d.score >= d.max_score - 1 ? 'neg' : 'pos'}" style="margin-top:14px;">
+          <span class="v-ico">📝</span><span>نتيجتك في بنية التقرير</span><span class="v-conf">${d.score}/${d.max_score}</span>
+        </div>
+        <div class="report-check">${checks}</div>
+        <div class="report-ref">
+          <b>التقرير المرجعي:</b><br>
+          <b>المُوجودات:</b> ${d.reference.findings_ar}<br>
+          <b>الانطباع:</b> ${d.reference.impression_ar}<br>
+          <b>التوصية:</b> ${d.reference.recommendation_ar}<br>
+          <span style="color:#0b7d76;">التشخيص الصحيح: ${d.true_label_ar} · رأي النموذج: ${d.model_prediction_ar} (${d.model_confidence ?? '—'}%)</span>
+        </div>
+        ${d.heatmap ? heatmapBlock(d) : ''}
+        ${d.edu ? eduBlock(d) : ''}`;
+        rFindings.disabled = true; rImpression.disabled = true; reportSubmit.style.display = 'none'; reportNew.style.display = 'flex';
+      } catch (e) { reportResult.innerHTML = '<div class="api-error">تعذّر التقييم — تأكد أن الخادم يعمل.</div>'; }
+      finally { reportBusy = false; reportSubmit.disabled = false; }
+    });
+    reportNew.addEventListener('click', newReportCase);
+
+    checkHealth();
+    loadQuizModels();
+    loadAtlasModels();
+    loadReportModels();
+  </script>
+</body>
+
+</html>

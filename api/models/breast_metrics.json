@@ -1,0 +1,45 @@
+{
+  "model": "breast_resnet18",
+  "dataset_key": "breast",
+  "medmnist": "breastmnist",
+  "modality": "The BreastMNIST is based on a dataset of 780 breast ultrasound images. It is categorized into 3 classes: normal, benign,",
+  "task": "2-class classification",
+  "anti_overfitting": [
+    "transfer learning (ImageNet ResNet-18)",
+    "augmentation (crop/flip/jitter/rotate)",
+    "dropout=0.3",
+    "label_smoothing=0.05",
+    "weight_decay=1e-4",
+    "cosine LR",
+    "early stopping (patience=4) on val loss",
+    "class weights"
+  ],
+  "input_size": 64,
+  "classes": [
+    "malignant",
+    "normal, benign"
+  ],
+  "n_classes": 2,
+  "n_train": 546,
+  "n_val": 78,
+  "n_test": 156,
+  "test_accuracy": 0.8077,
+  "train_accuracy": 0.9029,
+  "overfitting_gap": 0.0952,
+  "test_macro_f1": 0.7716,
+  "test_auc": 0.8682,
+  "mean_confidence": 0.8412,
+  "confusion_matrix": [
+    [
+      32,
+      10
+    ],
+    [
+      20,
+      94
+    ]
+  ],
+  "trained_at": "2026-07-19 02:26:03",
+  "train_seconds": 136.9,
+  "device": "cpu"
+}

@@ -1,0 +1,63 @@
+{
+  "model": "brain_tumor_mri_resnet18_v3_strongaug",
+  "modality": "brain MRI",
+  "dataset": "Brain Tumor MRI (Hemg) — grouped leak-free split (same as v2)",
+  "fix": "v3 strengthens augmentation (rotation 25, random-resized-crop, jitter 0.3, blur, random-erasing) to close the robustness gap external validation found on augmented images.",
+  "anti_overfitting": [
+    "transfer learning",
+    "brain-region cropping",
+    "STRONG augmentation (v3)",
+    "dropout=0.3",
+    "label_smoothing=0.05",
+    "weight_decay=1e-4",
+    "cosine LR",
+    "early stop patience=5",
+    "class weights"
+  ],
+  "split": "GROUPED 70/15/15 by dHash cluster (Hamming<=5), seed=0 (identical to v2)",
+  "input_size": 128,
+  "classes": [
+    "glioma",
+    "meningioma",
+    "notumor",
+    "pituitary"
+  ],
+  "n_train": 5675,
+  "n_val": 649,
+  "n_test": 699,
+  "test_accuracy": 0.9843,
+  "train_accuracy": 0.9961,
+  "overfitting_gap": 0.0119,
+  "test_auc_macro_ovr": 0.9996,
+  "test_macro_f1": 0.9844,
+  "mean_confidence": 0.9482,
+  "confusion_matrix": [
+    [
+      126,
+      1,
+      0,
+      2
+    ],
+    [
+      0,
+      198,
+      1,
+      1
+    ],
+    [
+      0,
+      1,
+      195,
+      0
+    ],
+    [
+      0,
+      3,
+      2,
+      169
+    ]
+  ],
+  "trained_at": "2026-07-18 19:28:02",
+  "train_seconds": 5626.9,
+  "device": "cpu"
+}

@@ -1,0 +1,31 @@
+{
+  "labels": [
+    "cardiology",
+    "cosmetic_surgery",
+    "dentistry",
+    "dermatology",
+    "endocrine",
+    "ent",
+    "gastroenterology",
+    "general_medicine",
+    "general_surgery",
+    "gynecology",
+    "hematology",
+    "internal_medicine",
+    "musculoskeletal",
+    "oncology",
+    "ophthalmology",
+    "pediatrics",
+    "psych_neuro",
+    "respiratory",
+    "sexual_health",
+    "urology"
+  ],
+  "model_name": "UBC-NLP/MARBERT",
+  "eval": {
+    "top1": 0.7563405181206229,
+    "top3": 0.9358468756374515,
+    "train_acc": 0.8844,
+    "gap": 0.1280594818793771
+  }
+}

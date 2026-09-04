@@ -1,0 +1,19 @@
+{
+  "question": "Is the held-out brain test set contaminated by near-duplicate slices from train?",
+  "method": "dHash (64-bit perceptual hash), Hamming distance from each TEST image to nearest TRAIN image",
+  "split": "per-image stratified 70/15/15, seed=0 (identical to train_brain_v2.py)",
+  "n_total": 7023,
+  "n_train": 4919,
+  "n_test": 1052,
+  "exact_duplicate_hash_in_train": 231,
+  "exact_duplicate_rate": 0.2196,
+  "near_duplicate_le3_count": 454,
+  "near_duplicate_le3_rate": 0.4316,
+  "near_duplicate_le5_count": 698,
+  "near_duplicate_le5_rate": 0.6635,
+  "min_hamming_mean": 4.18,
+  "min_hamming_median": 4.0,
+  "caveat": "Dataset ships no patient IDs, so a per-patient split is impossible. A high near-duplicate rate means the reported accuracy is an optimistic upper bound rather than a patient-level generalization estimate.",
+  "checked_at": "2026-07-16 15:11:38",
+  "seconds": 31.0
+}

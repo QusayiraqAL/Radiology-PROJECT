@@ -1,0 +1,42 @@
+{
+  "model": "pneumonia_v2_resnet18_fullres",
+  "task": "binary (normal vs pneumonia)",
+  "modality": "chest X-ray",
+  "dataset": "PneumoniaMNIST-224 (MedMNIST; real Kermany-2018 chest X-rays at 224px)",
+  "anti_overfitting": [
+    "transfer learning (ImageNet ResNet-18)",
+    "augmentation (crop/zoom/shear/flip/brightness)",
+    "dropout=0.3 head",
+    "label_smoothing=0.05",
+    "weight_decay=1e-4",
+    "cosine LR decay",
+    "early stopping (patience=3) + best-checkpoint on val loss",
+    "class weights (balanced)"
+  ],
+  "input_size": 224,
+  "n_train": 4708,
+  "n_val": 524,
+  "n_test": 624,
+  "decision_threshold": 0.3,
+  "train_accuracy": 0.9945,
+  "overfitting_gap": 0.0313,
+  "test_accuracy": 0.9631,
+  "test_auc": 0.9941,
+  "test_sensitivity_recall": 0.9923,
+  "test_specificity": 0.9145,
+  "test_precision": 0.9509,
+  "test_f1": 0.9711,
+  "confusion_matrix": {
+    "tn": 214,
+    "fp": 20,
+    "fn": 3,
+    "tp": 387
+  },
+  "labels": {
+    "0": "normal",
+    "1": "pneumonia"
+  },
+  "trained_at": "2026-07-16 16:46:27",
+  "train_seconds": 6458.3,
+  "device": "cpu"
+}

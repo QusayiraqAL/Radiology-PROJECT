@@ -1,0 +1,12 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Xet Storage is enabled for this repo, but the 'hf_xet' package is not installed. Falling back to regular HTTP download. For better performance, install the package with: `pip install huggingface_hub[hf_xet]` or `pip install hf_xet`
+Xet Storage is enabled for this repo, but the 'hf_xet' package is not installed. Falling back to regular HTTP download. For better performance, install the package with: `pip install huggingface_hub[hf_xet]` or `pip install hf_xet`
+Xet Storage is enabled for this repo, but the 'hf_xet' package is not installed. Falling back to regular HTTP download. For better performance, install the package with: `pip install huggingface_hub[hf_xet]` or `pip install hf_xet`
+Xet Storage is enabled for this repo, but the 'hf_xet' package is not installed. Falling back to regular HTTP download. For better performance, install the package with: `pip install huggingface_hub[hf_xet]` or `pip install hf_xet`
+  news skipped: No columns to parse from file
+  hard negatives: hsseinmz/arcd/train-00000-of-00001.parquet -> 693
+  hard negatives: hsseinmz/arcd/validation-00000-of-00001.parquet -> 702
+  hard negatives: google/xquad/validation-00000-of-00001.parquet -> 1190
+[filter v2] positives=50000 soft_neg=40000 hard_neg=2502
+[RESULT] {"accuracy": 0.9967, "medical_recall": 0.9965, "nonmedical_rejection_rate": 0.997, "holdout_question_negative_rejection_rate": 0.9824}
+FILTER_V2_DONE

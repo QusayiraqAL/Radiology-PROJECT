@@ -1,0 +1,22 @@
+{
+  "per_image_split": {
+    "n_train": 4919,
+    "n_test": 1052,
+    "exact_dup_rate": 0.2196,
+    "near3_rate": 0.4316,
+    "near5_rate": 0.6635,
+    "mean_min_hamming": 4.18
+  },
+  "grouped_split": {
+    "n_train": 5675,
+    "n_test": 699,
+    "exact_dup_rate": 0.0,
+    "near3_rate": 0.0,
+    "near5_rate": 0.0,
+    "mean_min_hamming": 8.29
+  },
+  "n_clusters": 2766,
+  "n_images": 7023,
+  "largest_cluster": 2456,
+  "singleton_clusters": 2029
+}

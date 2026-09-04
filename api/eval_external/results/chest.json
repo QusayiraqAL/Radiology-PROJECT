@@ -1,0 +1,92 @@
+{
+  "model": "chest_xray_densenet121_torchxrayvision (pretrained)",
+  "modality": "chest X-ray",
+  "task": "14-label multi-label pathology",
+  "dataset": "ChestMNIST test (NIH ChestX-ray14, 128px) — fresh 2500 slice, indices 6000+",
+  "is_external_source": true,
+  "note": "Model is pretrained and never saw MedMNIST; this slice also excludes the prior 6000-image internal eval.",
+  "metric_primary": "per-label ROC-AUC (multi-label; confusion matrix is the any-finding binarization)",
+  "classes": [
+    "no_finding",
+    "finding"
+  ],
+  "class_names_ar": [
+    "لا مؤشر",
+    "يوجد مؤشر"
+  ],
+  "per_label_auc": {
+    "Atelectasis": {
+      "auc": 0.787,
+      "positives": 259,
+      "name_ar": "انخماص"
+    },
+    "Cardiomegaly": {
+      "auc": 0.8629,
+      "positives": 68,
+      "name_ar": "تضخم القلب"
+    },
+    "Effusion": {
+      "auc": 0.8426,
+      "positives": 304,
+      "name_ar": "انصباب جنبي"
+    },
+    "Infiltration": {
+      "auc": 0.652,
+      "positives": 412,
+      "name_ar": "ارتشاح"
+    },
+    "Mass": {
+      "auc": 0.7938,
+      "positives": 129,
+      "name_ar": "كتلة"
+    },
+    "Nodule": {
+      "auc": 0.7063,
+      "positives": 170,
+      "name_ar": "عقيدة"
+    },
+    "Pneumonia": {
+      "auc": 0.6912,
+      "positives": 25,
+      "name_ar": "التهاب رئوي"
+    },
+    "Pneumothorax": {
+      "auc": 0.7524,
+      "positives": 119,
+      "name_ar": "استرواح صدري"
+    },
+    "Consolidation": {
+      "auc": 0.8122,
+      "positives": 108,
+      "name_ar": "تصلّد"
+    },
+    "Edema": {
+      "auc": 0.8462,
+      "positives": 43,
+      "name_ar": "وذمة"
+    },
+    "Emphysema": {
+      "auc": 0.6736,
+      "positives": 48,
+      "name_ar": "نفاخ"
+    },
+    "Fibrosis": {
+      "auc": 0.7218,
+      "positives": 41,
+      "name_ar": "تليّف"
+    },
+    "Pleural_Thickening": {
+      "auc": 0.7005,
+      "positives": 90,
+      "name_ar": "تسمّك جنبي"
+    },
+    "Hernia": {
+      "auc": 0.9224,
+      "positives": 8,
+      "name_ar": "فتق"
+    }
+  },
+  "mean_auc": 0.7689,
+  "n_test": 2500,
+  "accuracy": 0.51
+}

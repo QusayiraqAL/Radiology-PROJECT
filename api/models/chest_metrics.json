@@ -1,0 +1,100 @@
+{
+  "model": "chest_xray_densenet121_torchxrayvision",
+  "task": "14-label chest X-ray pathology (external validation)",
+  "modality": "chest X-ray",
+  "eval_dataset": "ChestMNIST test split (MedMNIST v2; NIH ChestX-ray14), 128px source",
+  "n_test": 6000,
+  "n_test_full": 22433,
+  "eval_resolution": "128px resized to 224 (model native)",
+  "mean_auc": 0.7525,
+  "per_label_auc": {
+    "Atelectasis": {
+      "name_ar": "انخماص رئوي",
+      "auc": 0.758,
+      "positives": 666,
+      "n": 6000
+    },
+    "Cardiomegaly": {
+      "name_ar": "تضخم القلب",
+      "auc": 0.8675,
+      "positives": 165,
+      "n": 6000
+    },
+    "Effusion": {
+      "name_ar": "انصباب جنبي",
+      "auc": 0.8396,
+      "positives": 726,
+      "n": 6000
+    },
+    "Infiltration": {
+      "name_ar": "ارتشاح رئوي",
+      "auc": 0.6501,
+      "positives": 1035,
+      "n": 6000
+    },
+    "Mass": {
+      "name_ar": "كتلة",
+      "auc": 0.7524,
+      "positives": 265,
+      "n": 6000
+    },
+    "Nodule": {
+      "name_ar": "عقيدة رئوية",
+      "auc": 0.6793,
+      "positives": 362,
+      "n": 6000
+    },
+    "Pneumonia": {
+      "name_ar": "التهاب رئوي",
+      "auc": 0.6472,
+      "positives": 65,
+      "n": 6000
+    },
+    "Pneumothorax": {
+      "name_ar": "استرواح صدري",
+      "auc": 0.7375,
+      "positives": 286,
+      "n": 6000
+    },
+    "Consolidation": {
+      "name_ar": "تصلّد رئوي",
+      "auc": 0.7732,
+      "positives": 258,
+      "n": 6000
+    },
+    "Edema": {
+      "name_ar": "وذمة رئوية",
+      "auc": 0.8498,
+      "positives": 99,
+      "n": 6000
+    },
+    "Emphysema": {
+      "name_ar": "نفاخ رئوي",
+      "auc": 0.6378,
+      "positives": 158,
+      "n": 6000
+    },
+    "Fibrosis": {
+      "name_ar": "تليف رئوي",
+      "auc": 0.6989,
+      "positives": 93,
+      "n": 6000
+    },
+    "Pleural_Thickening": {
+      "name_ar": "تسمّك جنبي",
+      "auc": 0.6853,
+      "positives": 198,
+      "n": 6000
+    },
+    "Hernia": {
+      "name_ar": "فتق حجابي",
+      "auc": 0.9589,
+      "positives": 16,
+      "n": 6000
+    }
+  },
+  "note": "Pretrained model externally validated on 6000 real NIH ChestX-ray14 test images (128px upscaled to 224). AUC computed per label where both classes present. This is a conservative real measurement (source images downsampled by MedMNIST).",
+  "validated_at": "2026-07-12 20:50:43",
+  "eval_seconds": 1528.6,
+  "device": "cpu"
+}

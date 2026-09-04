@@ -1,0 +1,16 @@
+{
+  "question": "Does the filter's reported non-medical rejection rate hold on question-form non-medical text?",
+  "why_it_matters": "Training negatives were reviews + news (declarative) while all positives were questions, so the reported rate may reflect a question/statement shortcut.",
+  "claimed_nonmedical_rejection_rate_on_own_testset": 0.997,
+  "measured_rejection_rate_on_hard_question_negatives": 0.8333,
+  "n_hard_negatives": 12,
+  "hard_negatives_leaked_through": 2,
+  "medical_pass_rate": 1.0,
+  "threshold": 0.5,
+  "leaked_examples": [
+    "كيف اتعلم البرمجة بلغة بايثون من الصفر وما هي افضل الدورات",
+    "كيف افتح حساب بنكي جديد وما هي الاوراق المطلوبة"
+  ],
+  "mitigation_in_place": "The router abstains below 30% confidence, so leaked non-medical text still surfaces a low-confidence warning rather than a confident diagnosis.",
+  "checked_at": "2026-07-16 16:35:54"
+}

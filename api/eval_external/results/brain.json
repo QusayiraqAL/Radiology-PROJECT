@@ -1,0 +1,37 @@
+{
+  "model": "brain_tumor_mri_resnet18_v2_cropped",
+  "modality": "brain MRI",
+  "task": "4-class tumor classification",
+  "dataset": "leak-free held-out (Hemg) + PranomVignesh novel-vs-train (dHash>5)",
+  "is_external_source": true,
+  "monoculture_note": "All public 4-class brain-MRI sets are the same ~7023-image pool (Simezu identical; PranomVignesh = Roboflow re-export). A fully independent cohort does not exist publicly; composition is reported.",
+  "test_composition": {
+    "heldout": 699,
+    "prano_novel": 1801
+  },
+  "accuracy_by_source": {
+    "heldout": {
+      "n": 699,
+      "accuracy": 0.9886
+    },
+    "prano_novel": {
+      "n": 1801,
+      "accuracy": 0.658
+    }
+  },
+  "classes": [
+    "glioma",
+    "meningioma",
+    "notumor",
+    "pituitary"
+  ],
+  "class_names_ar": [
+    "ورم دبقي",
+    "ورم سحائي",
+    "لا ورم",
+    "ورم نخامية"
+  ],
+  "n_test": 2500,
+  "accuracy": 0.7504,
+  "mean_confidence": 0.8819
+}

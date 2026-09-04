@@ -1,0 +1,18 @@
+{
+  "model": "arabic_input_filter (medical vs non-medical)",
+  "n_positives": 50000,
+  "n_negatives": 50000,
+  "threshold": 0.5,
+  "accuracy": 0.9976,
+  "medical_precision": 0.9979,
+  "medical_recall": 0.9973,
+  "nonmedical_rejection_rate": 0.9979,
+  "confusion": {
+    "tn": 7484,
+    "fp": 16,
+    "fn": 20,
+    "tp": 7480
+  },
+  "trained_at": "2026-07-12 22:26:59",
+  "train_seconds": 68.4
+}

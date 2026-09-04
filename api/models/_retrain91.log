@@ -1,0 +1,8 @@
+
+==============================================================================
+=== retrain_below91 start 2026-09-04 03:50:36 | 7 job(s) ===
+
+----- JOB breast | 03:50:36 -----
+[breast_v2] breastmnist size=224 classes=2 device=cuda binary=False
+[breast_v2] train=546 val=78 test=156 | test balance=[42, 114]
+  ep  1/40 [A(head)] loss=nan val_loss=nan val_acc=0.2692 val_bacc=0.5000

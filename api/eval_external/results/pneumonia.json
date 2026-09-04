@@ -1,0 +1,28 @@
+{
+  "model": "pneumonia_v2_resnet18 (trained on Kermann pediatric)",
+  "modality": "chest X-ray",
+  "task": "binary normal vs pneumonia",
+  "dataset": "ChestMNIST / NIH ChestX-ray14 (ADULT) — cross-distribution, never trained on",
+  "is_external_source": true,
+  "domain_shift_note": "Trained on PEDIATRIC Kermany; tested on ADULT NIH. In-domain test (Kermany) was acc 0.963 / spec 0.915. The gap here is genuine domain shift.",
+  "decision_threshold": 0.30000000000000004,
+  "classes": [
+    "normal",
+    "pneumonia"
+  ],
+  "class_names_ar": [
+    "طبيعي",
+    "التهاب رئوي"
+  ],
+  "n_test": 2500,
+  "accuracy": 0.5788,
+  "auc": 0.6936,
+  "sensitivity": 0.7025,
+  "specificity": 0.5655,
+  "confusion": {
+    "tn": 1277,
+    "fp": 981,
+    "fn": 72,
+    "tp": 170
+  }
+}

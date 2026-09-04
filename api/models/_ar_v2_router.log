@@ -1,0 +1,6 @@
+[router] train=166673 test=29414 classes=20 alpha=5e-05 ensemble=False
+[router] train=0.8459 test=0.7053 gap=+0.141 top3=0.9011 macroF1=0.7065 (427s)
+[router-only] reusing 12 existing category models
+
+[RESULT] router test=0.7053 (train=0.8459 gap=+0.141) top3=0.9011 | 12 category models 0.612..0.910
+AR_TRAIN_V2_DONE

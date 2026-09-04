@@ -1,0 +1,75 @@
+{
+  "model": "retina_resnet18",
+  "dataset_key": "retina",
+  "medmnist": "retinamnist",
+  "modality": "The RetinaMNIST is based on the DeepDRiD challenge, which provides a dataset of 1,600 retina fundus images. The task is ",
+  "task": "5-class classification",
+  "anti_overfitting": [
+    "transfer learning (ImageNet ResNet-18)",
+    "augmentation (crop/flip/jitter/rotate)",
+    "dropout=0.3",
+    "label_smoothing=0.05",
+    "weight_decay=1e-4",
+    "cosine LR",
+    "early stopping (patience=6) on val loss",
+    "class weights"
+  ],
+  "input_size": 64,
+  "classes": [
+    "0",
+    "1",
+    "2",
+    "3",
+    "4"
+  ],
+  "n_classes": 5,
+  "n_train": 1080,
+  "n_val": 120,
+  "n_test": 400,
+  "test_accuracy": 0.495,
+  "train_accuracy": 0.55,
+  "overfitting_gap": 0.055,
+  "test_macro_f1": 0.395,
+  "test_auc": 0.772,
+  "mean_confidence": 0.5713,
+  "confusion_matrix": [
+    [
+      126,
+      22,
+      18,
+      4,
+      4
+    ],
+    [
+      11,
+      26,
+      8,
+      0,
+      1
+    ],
+    [
+      12,
+      42,
+      23,
+      8,
+      7
+    ],
+    [
+      2,
+      8,
+      21,
+      14,
+      23
+    ],
+    [
+      2,
+      4,
+      4,
+      1,
+      9
+    ]
+  ],
+  "trained_at": "2026-07-19 18:22:46",
+  "train_seconds": 215.6,
+  "device": "cpu"
+}

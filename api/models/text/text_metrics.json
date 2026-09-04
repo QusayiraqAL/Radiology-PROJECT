@@ -1,0 +1,89 @@
+{
+  "system": "text_symptom_to_disease",
+  "modality": "clinical text (symptom description)",
+  "dataset": "gretelai/symptom_to_diagnosis (real NL symptom text, 22 diagnoses)",
+  "architecture": "hierarchical: category router + one dedicated model per category",
+  "n_train": 853,
+  "n_test": 212,
+  "n_diseases": 22,
+  "n_categories": 6,
+  "router_accuracy": 0.9717,
+  "end_to_end_accuracy": 0.9575,
+  "flat_reference_accuracy": 0.9623,
+  "per_category_accuracy_min": 0.963,
+  "per_category_accuracy_max": 1.0,
+  "per_category": {
+    "cardio_metabolic": {
+      "accuracy": 1.0,
+      "macro_f1": 1.0,
+      "n_train": 120,
+      "n_test": 30,
+      "diseases": [
+        "diabetes",
+        "hypertension",
+        "varicose veins"
+      ]
+    },
+    "dermatological": {
+      "accuracy": 1.0,
+      "macro_f1": 1.0,
+      "n_train": 199,
+      "n_test": 47,
+      "diseases": [
+        "allergy",
+        "drug reaction",
+        "fungal infection",
+        "impetigo",
+        "psoriasis"
+      ]
+    },
+    "gastrointestinal": {
+      "accuracy": 0.963,
+      "macro_f1": 0.9666,
+      "n_train": 109,
+      "n_test": 27,
+      "diseases": [
+        "gastroesophageal reflux disease",
+        "jaundice",
+        "peptic ulcer disease"
+      ]
+    },
+    "infectious": {
+      "accuracy": 0.9792,
+      "macro_f1": 0.9789,
+      "n_train": 197,
+      "n_test": 48,
+      "diseases": [
+        "chicken pox",
+        "dengue",
+        "malaria",
+        "typhoid",
+        "urinary tract infection"
+      ]
+    },
+    "musculoskeletal_neuro": {
+      "accuracy": 1.0,
+      "macro_f1": 1.0,
+      "n_train": 112,
+      "n_test": 30,
+      "diseases": [
+        "arthritis",
+        "cervical spondylosis",
+        "migraine"
+      ]
+    },
+    "respiratory": {
+      "accuracy": 0.9667,
+      "macro_f1": 0.9666,
+      "n_train": 116,
+      "n_test": 30,
+      "diseases": [
+        "bronchial asthma",
+        "common cold",
+        "pneumonia"
+      ]
+    }
+  },
+  "trained_at": "2026-07-12 21:24:18",
+  "train_seconds": 8.6
+}

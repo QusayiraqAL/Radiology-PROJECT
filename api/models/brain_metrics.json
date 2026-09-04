@@ -1,0 +1,75 @@
+{
+  "model": "brain_tumor_mri_resnet18",
+  "task": "4-class tumor classification",
+  "modality": "brain MRI",
+  "dataset": "Brain Tumor MRI Dataset (HuggingFace Hemg/Brain-Tumor-MRI-Dataset) — real brain MRI slices",
+  "split": "stratified seeded 70/15/15 (held-out test)",
+  "input_size": 128,
+  "classes": [
+    "glioma",
+    "meningioma",
+    "notumor",
+    "pituitary"
+  ],
+  "n_train": 4919,
+  "n_val": 1052,
+  "n_test": 1052,
+  "test_accuracy": 0.9895,
+  "test_auc_macro_ovr": 0.9994,
+  "test_macro_f1": 0.9891,
+  "per_class": {
+    "glioma": {
+      "sensitivity_recall": 0.9877,
+      "precision": 0.9917,
+      "f1": 0.9897,
+      "support": 243
+    },
+    "meningioma": {
+      "sensitivity_recall": 0.9837,
+      "precision": 0.9758,
+      "f1": 0.9798,
+      "support": 246
+    },
+    "notumor": {
+      "sensitivity_recall": 0.9967,
+      "precision": 0.9967,
+      "f1": 0.9967,
+      "support": 300
+    },
+    "pituitary": {
+      "sensitivity_recall": 0.9886,
+      "precision": 0.9924,
+      "f1": 0.9905,
+      "support": 263
+    }
+  },
+  "confusion_matrix": [
+    [
+      240,
+      2,
+      0,
+      1
+    ],
+    [
+      2,
+      242,
+      1,
+      1
+    ],
+    [
+      0,
+      1,
+      299,
+      0
+    ],
+    [
+      0,
+      3,
+      0,
+      260
+    ]
+  ],
+  "trained_at": "2026-07-12 20:24:19",
+  "train_seconds": 6851.5,
+  "device": "cpu"
+}

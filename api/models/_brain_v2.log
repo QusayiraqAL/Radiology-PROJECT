@@ -1,0 +1,30 @@
+[data] decoding + hashing + CROPPING brain images (one pass) ...
+[data] n=7023 classes=['glioma', 'meningioma', 'notumor', 'pituitary']
+[split] 7023 images -> 2766 dedup clusters | train=5675 val=649 test=699 (grouped, leak-free)
+  epoch 1/12 loss=0.5578 val_loss=0.4429 val_acc=0.8243
+  epoch 2/12 loss=0.3695 val_loss=0.3008 val_acc=0.8998
+  epoch 3/12 loss=0.3307 val_loss=0.2535 val_acc=0.9245
+  epoch 4/12 loss=0.3130 val_loss=0.1446 val_acc=0.9584
+  epoch 5/12 loss=0.2741 val_loss=0.1610 val_acc=0.9507
+  epoch 6/12 loss=0.2679 val_loss=0.1345 val_acc=0.9569
+  epoch 7/12 loss=0.2499 val_loss=0.1384 val_acc=0.9569
+  epoch 8/12 loss=0.2332 val_loss=0.1256 val_acc=0.9630
+  epoch 9/12 loss=0.2292 val_loss=0.1283 val_acc=0.9676
+  epoch 10/12 loss=0.2209 val_loss=0.1165 val_acc=0.9723
+  epoch 11/12 loss=0.2193 val_loss=0.1184 val_acc=0.9661
+  epoch 12/12 loss=0.2180 val_loss=0.1177 val_acc=0.9676
+
+[classification_report]
+               precision    recall  f1-score   support
+
+      glioma       0.99      0.99      0.99       129
+  meningioma       0.99      0.98      0.99       200
+     notumor       1.00      0.99      0.99       196
+   pituitary       0.98      0.99      0.99       174
+
+    accuracy                           0.99       699
+   macro avg       0.99      0.99      0.99       699
+weighted avg       0.99      0.99      0.99       699
+
+[RESULT] v2 test_acc=0.9900 train_acc=0.9989 gap=+0.0090 macroAUC=0.9993 mean_conf=0.9550
+BRAIN_V2_DONE

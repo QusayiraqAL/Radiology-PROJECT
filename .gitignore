@@ -1,0 +1,36 @@
+# --- Python environments -------------------------------------------------
+api/venv/
+api/venv_gpu/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.ipynb_checkpoints/
+
+# --- Datasets (re-downloadable: MedMNIST/HuggingFace fetch them on demand) --
+api/data/
+api/eval_external/_dl/
+
+# --- Trained weights ------------------------------------------------------
+# 44 MB each; ~12 of them. Not in git — every one is reproducible from the
+# training script + seed recorded in its *_metrics.json. Ship them as a
+# GitHub Release asset if they need to travel.
+*.pt
+*.pth
+*.joblib
+*.safetensors
+*.bin
+
+# --- Kept on purpose ------------------------------------------------------
+# models/*_metrics.json and models/*.log ARE tracked: they are the evidence
+# behind every number in the README and in TRAINING_LOG.md.
+!api/models/*_metrics.json
+!api/models/*.log
+
+# --- OS / editor ----------------------------------------------------------
+Thumbs.db
+desktop.ini
+.DS_Store
+*.swp
+
+# --- machine-local Claude Code permissions (absolute paths, not portable) ---
+.claude/settings.local.json

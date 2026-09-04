@@ -1,0 +1,63 @@
+{
+  "model": "oct_resnet18",
+  "dataset_key": "oct",
+  "medmnist": "octmnist",
+  "modality": "The OCTMNIST is based on a prior dataset of 109,309 valid optical coherence tomography (OCT) images for retinal diseases",
+  "task": "4-class classification",
+  "anti_overfitting": [
+    "transfer learning (ImageNet ResNet-18)",
+    "augmentation (crop/flip/jitter/rotate)",
+    "dropout=0.3",
+    "label_smoothing=0.05",
+    "weight_decay=1e-4",
+    "cosine LR",
+    "early stopping (patience=4) on val loss",
+    "class weights"
+  ],
+  "input_size": 64,
+  "classes": [
+    "choroidal neovascularization",
+    "diabetic macular edema",
+    "drusen",
+    "normal"
+  ],
+  "n_classes": 4,
+  "n_train": 20000,
+  "n_val": 10832,
+  "n_test": 1000,
+  "test_accuracy": 0.775,
+  "train_accuracy": 0.8719,
+  "overfitting_gap": 0.0969,
+  "test_macro_f1": 0.7477,
+  "test_auc": 0.9668,
+  "mean_confidence": 0.8566,
+  "confusion_matrix": [
+    [
+      247,
+      0,
+      0,
+      3
+    ],
+    [
+      35,
+      213,
+      0,
+      2
+    ],
+    [
+      124,
+      2,
+      72,
+      52
+    ],
+    [
+      5,
+      1,
+      1,
+      243
+    ]
+  ],
+  "trained_at": "2026-07-19 18:18:59",
+  "train_seconds": 4856.0,
+  "device": "cpu"
+}

@@ -1,0 +1,123 @@
+{
+  "model": "blood_resnet18",
+  "dataset_key": "blood",
+  "medmnist": "bloodmnist",
+  "modality": "The BloodMNIST is based on a dataset of individual normal cells, captured from individuals without infection, hematologi",
+  "task": "8-class classification",
+  "anti_overfitting": [
+    "transfer learning (ImageNet ResNet-18)",
+    "augmentation (crop/flip/jitter/rotate)",
+    "dropout=0.3",
+    "label_smoothing=0.05",
+    "weight_decay=1e-4",
+    "cosine LR",
+    "early stopping (patience=4) on val loss",
+    "class weights"
+  ],
+  "input_size": 64,
+  "classes": [
+    "basophil",
+    "eosinophil",
+    "erythroblast",
+    "immature granulocytes(myelocytes, metamyelocytes and promyelocytes)",
+    "lymphocyte",
+    "monocyte",
+    "neutrophil",
+    "platelet"
+  ],
+  "n_classes": 8,
+  "n_train": 11959,
+  "n_val": 1712,
+  "n_test": 3421,
+  "test_accuracy": 0.9787,
+  "train_accuracy": 0.9844,
+  "overfitting_gap": 0.0057,
+  "test_macro_f1": 0.9777,
+  "test_auc": 0.9987,
+  "mean_confidence": 0.9224,
+  "confusion_matrix": [
+    [
+      238,
+      0,
+      0,
+      6,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      624,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      1,
+      0,
+      306,
+      1,
+      0,
+      0,
+      3,
+      0
+    ],
+    [
+      2,
+      0,
+      2,
+      555,
+      0,
+      3,
+      17,
+      0
+    ],
+    [
+      0,
+      1,
+      5,
+      4,
+      230,
+      1,
+      0,
+      2
+    ],
+    [
+      1,
+      0,
+      0,
+      10,
+      2,
+      271,
+      0,
+      0
+    ],
+    [
+      0,
+      1,
+      0,
+      10,
+      0,
+      1,
+      654,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      470
+    ]
+  ],
+  "trained_at": "2026-07-19 03:07:36",
+  "train_seconds": 2481.3,
+  "device": "cpu"
+}

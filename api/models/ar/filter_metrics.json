@@ -1,0 +1,22 @@
+{
+  "model": "arabic_input_filter_v2 (medical vs non-medical, hard-negative trained)",
+  "fix": "v1 negatives were declarative (reviews+news) while all positives were questions, so v1 partly learned 'is it a question?'. Measured non-medical rejection on question-form text was 0.333 despite a claimed 0.998. v2 adds REAL Arabic Wikipedia questions (ARCD + XQuAD-ar) as hard negatives.",
+  "n_positives": 50000,
+  "n_negatives_declarative": 40000,
+  "n_negatives_question_form": 1876,
+  "threshold": 0.5,
+  "accuracy": 0.9967,
+  "medical_precision": 0.9975,
+  "medical_recall": 0.9965,
+  "nonmedical_rejection_rate": 0.997,
+  "holdout_question_negative_rejection_rate": 0.9824,
+  "n_holdout_question_negatives": 626,
+  "confusion": {
+    "tn": 6263,
+    "fp": 19,
+    "fn": 26,
+    "tp": 7474
+  },
+  "trained_at": "2026-07-16 16:34:59",
+  "train_seconds": 142.8
+}

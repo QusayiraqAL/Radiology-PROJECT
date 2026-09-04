@@ -1,0 +1,560 @@
+{
+  "generated_at": "2026-07-16 22:45:12",
+  "models": {
+    "chest": {
+      "model": "chest_xray_densenet121_torchxrayvision",
+      "task": "14-label chest X-ray pathology (external validation)",
+      "modality": "chest X-ray",
+      "eval_dataset": "ChestMNIST test split (MedMNIST v2; NIH ChestX-ray14), 128px source",
+      "n_test": 6000,
+      "n_test_full": 22433,
+      "eval_resolution": "128px resized to 224 (model native)",
+      "mean_auc": 0.7525,
+      "per_label_auc": {
+        "Atelectasis": {
+          "name_ar": "انخماص رئوي",
+          "auc": 0.758,
+          "positives": 666,
+          "n": 6000
+        },
+        "Cardiomegaly": {
+          "name_ar": "تضخم القلب",
+          "auc": 0.8675,
+          "positives": 165,
+          "n": 6000
+        },
+        "Effusion": {
+          "name_ar": "انصباب جنبي",
+          "auc": 0.8396,
+          "positives": 726,
+          "n": 6000
+        },
+        "Infiltration": {
+          "name_ar": "ارتشاح رئوي",
+          "auc": 0.6501,
+          "positives": 1035,
+          "n": 6000
+        },
+        "Mass": {
+          "name_ar": "كتلة",
+          "auc": 0.7524,
+          "positives": 265,
+          "n": 6000
+        },
+        "Nodule": {
+          "name_ar": "عقيدة رئوية",
+          "auc": 0.6793,
+          "positives": 362,
+          "n": 6000
+        },
+        "Pneumonia": {
+          "name_ar": "التهاب رئوي",
+          "auc": 0.6472,
+          "positives": 65,
+          "n": 6000
+        },
+        "Pneumothorax": {
+          "name_ar": "استرواح صدري",
+          "auc": 0.7375,
+          "positives": 286,
+          "n": 6000
+        },
+        "Consolidation": {
+          "name_ar": "تصلّد رئوي",
+          "auc": 0.7732,
+          "positives": 258,
+          "n": 6000
+        },
+        "Edema": {
+          "name_ar": "وذمة رئوية",
+          "auc": 0.8498,
+          "positives": 99,
+          "n": 6000
+        },
+        "Emphysema": {
+          "name_ar": "نفاخ رئوي",
+          "auc": 0.6378,
+          "positives": 158,
+          "n": 6000
+        },
+        "Fibrosis": {
+          "name_ar": "تليف رئوي",
+          "auc": 0.6989,
+          "positives": 93,
+          "n": 6000
+        },
+        "Pleural_Thickening": {
+          "name_ar": "تسمّك جنبي",
+          "auc": 0.6853,
+          "positives": 198,
+          "n": 6000
+        },
+        "Hernia": {
+          "name_ar": "فتق حجابي",
+          "auc": 0.9589,
+          "positives": 16,
+          "n": 6000
+        }
+      },
+      "note": "Pretrained model externally validated on 6000 real NIH ChestX-ray14 test images (128px upscaled to 224). AUC computed per label where both classes present. This is a conservative real measurement (source images downsampled by MedMNIST).",
+      "validated_at": "2026-07-12 20:50:43",
+      "eval_seconds": 1528.6,
+      "device": "cpu",
+      "_metrics_file": "chest_metrics.json"
+    },
+    "pneumonia": {
+      "model": "pneumonia_v2_resnet18_fullres",
+      "task": "binary (normal vs pneumonia)",
+      "modality": "chest X-ray",
+      "dataset": "PneumoniaMNIST-224 (MedMNIST; real Kermany-2018 chest X-rays at 224px)",
+      "anti_overfitting": [
+        "transfer learning (ImageNet ResNet-18)",
+        "augmentation (crop/zoom/shear/flip/brightness)",
+        "dropout=0.3 head",
+        "label_smoothing=0.05",
+        "weight_decay=1e-4",
+        "cosine LR decay",
+        "early stopping (patience=3) + best-checkpoint on val loss",
+        "class weights (balanced)"
+      ],
+      "input_size": 224,
+      "n_train": 4708,
+      "n_val": 524,
+      "n_test": 624,
+      "decision_threshold": 0.3,
+      "train_accuracy": 0.9945,
+      "overfitting_gap": 0.0313,
+      "test_accuracy": 0.9631,
+      "test_auc": 0.9941,
+      "test_sensitivity_recall": 0.9923,
+      "test_specificity": 0.9145,
+      "test_precision": 0.9509,
+      "test_f1": 0.9711,
+      "confusion_matrix": {
+        "tn": 214,
+        "fp": 20,
+        "fn": 3,
+        "tp": 387
+      },
+      "labels": {
+        "0": "normal",
+        "1": "pneumonia"
+      },
+      "trained_at": "2026-07-16 16:46:27",
+      "train_seconds": 6458.3,
+      "device": "cpu",
+      "_metrics_file": "pneumonia_v2_metrics.json"
+    },
+    "brain": {
+      "model": "brain_tumor_mri_resnet18_v2_cropped",
+      "modality": "brain MRI",
+      "dataset": "Brain Tumor MRI (HuggingFace) — with brain-region cropping (notebook technique)",
+      "technique_added": "crop_brain_region + stronger augmentation (from user's notebooks)",
+      "anti_overfitting": [
+        "transfer learning (ImageNet ResNet-18)",
+        "brain-region cropping (removes scanner borders/labels)",
+        "augmentation (rotate/flip/brightness/translate/scale)",
+        "dropout=0.3 head",
+        "label_smoothing=0.05",
+        "weight_decay=1e-4",
+        "cosine LR decay",
+        "early stopping (patience=4) + best-checkpoint on val LOSS",
+        "class weights (balanced)"
+      ],
+      "split": "GROUPED 70/15/15 by near-duplicate cluster (dHash Hamming<=5), seed=0 — no image in test has a near-twin in train (measured 0.0% at every threshold)",
+      "split_note": "v1 used a per-IMAGE split where 22% of test images had an EXACT perceptual-hash twin in train and 66% had a near-twin (check_brain_leakage.py). This v2 number is measured on a grouped split with 0% duplicates. The accuracy did NOT drop (98.95% -> 99.00%), so the contamination was real but was not what drove the score — the model genuinely separates these classes. We only know that because we checked: an uninvestigated score on a 66%-duplicated split proves nothing.",
+      "input_size": 128,
+      "classes": [
+        "glioma",
+        "meningioma",
+        "notumor",
+        "pituitary"
+      ],
+      "n_train": 5675,
+      "n_val": 649,
+      "n_test": 699,
+      "test_accuracy": 0.99,
+      "train_accuracy": 0.9989,
+      "overfitting_gap": 0.009,
+      "test_auc_macro_ovr": 0.9993,
+      "test_macro_f1": 0.9901,
+      "mean_confidence": 0.955,
+      "confusion_matrix": [
+        [
+          128,
+          1,
+          0,
+          0
+        ],
+        [
+          1,
+          197,
+          0,
+          2
+        ],
+        [
+          0,
+          0,
+          194,
+          2
+        ],
+        [
+          0,
+          1,
+          0,
+          173
+        ]
+      ],
+      "n_clusters": 2766,
+      "trained_at": "2026-07-16 22:42:57",
+      "train_seconds": 21372.2,
+      "device": "cpu",
+      "v1_comparison": {
+        "v1_test_accuracy": 0.9895,
+        "v1_split": "per-image (contaminated)",
+        "v1_n_test": 1052,
+        "v2_test_accuracy": 0.99,
+        "v2_split": "grouped, 0% duplicates",
+        "v2_n_test": 699,
+        "verdict": "leakage was real but not score-driving; v1 number held up"
+      },
+      "_metrics_file": "brain_v2_metrics.json"
+    },
+    "symptoms_ar": {
+      "system": "arabic_symptom_to_disease_v3",
+      "modality": "clinical text (Arabic)",
+      "datasets": "hajerbchn/arabic-medical-qa + MAQA + Shifaa (real Arabic, >=200k aggregate)",
+      "architecture": "specialty router (20, SGD modified_huber) + per-category diagnosis models (calibrated LinearSVC)",
+      "anti_overfitting": [
+        "router L2 alpha=5e-05 chosen by a measured sweep, not guessed: 2e-5 -> 5e-5 cut the train/test gap 0.215 -> 0.141 while top-3 ROSE 0.893 -> 0.901",
+        "per-category: calibrated LinearSVC C=0.1 from a measured sweep (C=1.0 -> 0.1 cut the gap 0.361 -> 0.280 and raised accuracy 0.638 -> 0.647)",
+        "rejected by measurement: the soft-vote ensemble raised top-3 by only +0.0025 but cost -0.010 top-1, and SGD on the small per-category sets memorized (train=1.000)",
+        "class_weight=balanced (all models)",
+        "min_df=3 feature pruning",
+        "per-diagnosis min support=20",
+        "train/test gap measured and published for every model"
+      ],
+      "categories": {
+        "general_surgery": "جراحة عامة",
+        "endocrine": "الغدد الصماء",
+        "internal_medicine": "الأمراض الباطنية",
+        "respiratory": "الجهاز التنفسي",
+        "cardiology": "القلب والشرايين",
+        "general_medicine": "الطب العام",
+        "gynecology": "أمراض النساء",
+        "hematology": "أمراض الدم",
+        "dermatology": "الأمراض الجلدية",
+        "cosmetic_surgery": "جراحة التجميل",
+        "gastroenterology": "الجهاز الهضمي",
+        "ent": "الأنف والأذن والحنجرة",
+        "urology": "المسالك البولية والتناسلية",
+        "ophthalmology": "أمراض العيون",
+        "musculoskeletal": "العضلات والعظام والمفاصل",
+        "psych_neuro": "النفسية والعصبية",
+        "sexual_health": "الصحة الجنسية",
+        "oncology": "الأورام",
+        "pediatrics": "طب الأطفال",
+        "dentistry": "طب الأسنان"
+      },
+      "router": {
+        "n_train": 166673,
+        "n_test": 29414,
+        "n_classes": 20,
+        "accuracy": 0.7053,
+        "train_accuracy": 0.8459,
+        "overfitting_gap": 0.1406,
+        "top3_accuracy": 0.9011,
+        "macro_f1": 0.7065,
+        "alpha": 5e-05,
+        "ensemble": false
+      },
+      "per_category": {
+        "dermatology": {
+          "n_train": 5321,
+          "n_test": 1331,
+          "n_diagnoses": 34,
+          "accuracy": 0.6469,
+          "train_accuracy": 0.9267,
+          "overfitting_gap": 0.2798,
+          "macro_f1": 0.5434,
+          "diagnoses": [
+            "أخرى",
+            "أنواع البشرة",
+            "الأكياس الدهنية تحت الجلد",
+            "الإكزيما",
+            "التينيا البيضاء والملونة",
+            "الثآليل",
+            "الجدري",
+            "الجرب",
+            "الحزاز",
+            "الحكة",
+            "الخطوط الجلدية البيضاء والحمراء والقاتمة",
+            "الدمامل والحبوب والفطريات في الجسم",
+            "الدوالي الجلدية",
+            "الذئبة الحمراء",
+            "الزوائد الجلدية واللحمية",
+            "الصدفية",
+            "الطفح الجلدي والتسلخات",
+            "العلامات المميزة في الجلد",
+            "المسامير اللحمية",
+            "الندب والتقرحات",
+            "الهربس الهربز",
+            "تعرق البدن عموما",
+            "تعرق اليدين والرجلين",
+            "تغير رائحة الجسم",
+            "تغير لون الجلد",
+            "تقشر وتشقق القدمين",
+            "حب الشباب وآثاره",
+            "حساسية الجلد",
+            "علاج الجلد بالليزر",
+            "مشاكل الأظفار",
+            "مشاكل السرة",
+            "مشاكل الشعر",
+            "مشاكل الوجه الجلدية",
+            "مشاكل فروة الرأس"
+          ]
+        },
+        "endocrine": {
+          "n_train": 786,
+          "n_test": 197,
+          "n_diagnoses": 6,
+          "accuracy": 0.868,
+          "train_accuracy": 0.9733,
+          "overfitting_gap": 0.1053,
+          "macro_f1": 0.6601,
+          "diagnoses": [
+            "الغدة الدرقية",
+            "الغدة النخامية",
+            "الغدد العرقية",
+            "الغدد اللمفاوية",
+            "الغدد عمومًا",
+            "الهرمونات وأثر اضطرابها"
+          ]
+        },
+        "ent": {
+          "n_train": 4456,
+          "n_test": 1115,
+          "n_diagnoses": 6,
+          "accuracy": 0.8879,
+          "train_accuracy": 0.9666,
+          "overfitting_gap": 0.0787,
+          "macro_f1": 0.7958,
+          "diagnoses": [
+            "آلام الرأس",
+            "الأنف والأذن والحنجرة",
+            "الدوخة والدوار",
+            "العيون",
+            "مشاكل الرأس الأخرى",
+            "مشاكل الفم والأسنان"
+          ]
+        },
+        "general_medicine": {
+          "n_train": 8520,
+          "n_test": 2130,
+          "n_diagnoses": 20,
+          "accuracy": 0.7174,
+          "train_accuracy": 0.9043,
+          "overfitting_gap": 0.187,
+          "macro_f1": 0.4574,
+          "diagnoses": [
+            "أخرى",
+            "أدوية عامة",
+            "أدوية نفسية وعصبية",
+            "ارتفاع حرارة الجسم الحمى",
+            "الأمراض المعدية وغير المعدية",
+            "التخلص من آثار الأدوية",
+            "التداوي وما يتعلق بالطب والأطباء",
+            "التنميل والنبضات",
+            "الرياضة وصحة البدن",
+            "الصحة الغذائية",
+            "العلاج بالأعشاب",
+            "العلاج بالرقية",
+            "الوراثة وأثرها في ظهور الأمراض",
+            "تأثير التقنيات الحديثة على الجسم",
+            "صحة عامة",
+            "ضوابط ومحاذير تعاطي الأدوية",
+            "فحوص طبية وتحاليل",
+            "مستحضرات طبيعية وأعشاب",
+            "مشاكل النمو وعلامات البلوغ",
+            "مشاكل الوزن"
+          ]
+        },
+        "general_surgery": {
+          "n_train": 260,
+          "n_test": 65,
+          "n_diagnoses": 3,
+          "accuracy": 0.8,
+          "train_accuracy": 0.9885,
+          "overfitting_gap": 0.1885,
+          "macro_f1": 0.7908,
+          "diagnoses": [
+            "الحروق وجراحتها",
+            "جراحة التجميل",
+            "مشاكل الجراحة العامة"
+          ]
+        },
+        "gynecology": {
+          "n_train": 7196,
+          "n_test": 1799,
+          "n_diagnoses": 3,
+          "accuracy": 0.8477,
+          "train_accuracy": 0.919,
+          "overfitting_gap": 0.0713,
+          "macro_f1": 0.6538,
+          "diagnoses": [
+            "أمراض النساء",
+            "الحمل ومشاكله",
+            "عمليات جراحية للنساء"
+          ]
+        },
+        "hematology": {
+          "n_train": 1811,
+          "n_test": 453,
+          "n_diagnoses": 6,
+          "accuracy": 0.883,
+          "train_accuracy": 0.9757,
+          "overfitting_gap": 0.0927,
+          "macro_f1": 0.7279,
+          "diagnoses": [
+            "أمراض الدم",
+            "الأورام الحميدة والخبيثة",
+            "السكري",
+            "الضغط",
+            "برودة الأطراف",
+            "مرض السرطان"
+          ]
+        },
+        "internal_medicine": {
+          "n_train": 6108,
+          "n_test": 1527,
+          "n_diagnoses": 7,
+          "accuracy": 0.7996,
+          "train_accuracy": 0.9216,
+          "overfitting_gap": 0.122,
+          "macro_f1": 0.7692,
+          "diagnoses": [
+            "أمراض الأمعاء",
+            "أمراض البلعوم والمريء",
+            "أمراض الصدر",
+            "أمراض القلب والأوعية الدموية",
+            "أمراض الكبد والطحال",
+            "أمراض المعدة",
+            "مشاكل القولون"
+          ]
+        },
+        "musculoskeletal": {
+          "n_train": 3968,
+          "n_test": 993,
+          "n_diagnoses": 6,
+          "accuracy": 0.9094,
+          "train_accuracy": 0.9751,
+          "overfitting_gap": 0.0657,
+          "macro_f1": 0.4564,
+          "diagnoses": [
+            "أخرى",
+            "الشد العضلي وآلام العضلات",
+            "العظام",
+            "تمزق العضلات والفتاق",
+            "جراحة العظام",
+            "ضعف وضمور العضلات والتهاباتها"
+          ]
+        },
+        "pediatrics": {
+          "n_train": 978,
+          "n_test": 245,
+          "n_diagnoses": 16,
+          "accuracy": 0.6122,
+          "train_accuracy": 0.9785,
+          "overfitting_gap": 0.3663,
+          "macro_f1": 0.5499,
+          "diagnoses": [
+            "أخرى",
+            "إصابة الأطفال عند الولادة",
+            "الإسهال الشديد عند الأطفال",
+            "الإمساك عند الأطفال",
+            "العناية بالطفل الرضيع وتغذيته",
+            "تأخر المشي عند الأطفال",
+            "تطعيم وتحصين الطفل",
+            "تغذية الأطفال عموما",
+            "فقدان الشهية عند الطفل",
+            "كثرة البكاء عند الطفل",
+            "كثرة القيء عند الأطفال",
+            "مشاكل الأنف عند الأطفال",
+            "مشاكل الخصية عند الأطفال",
+            "مشاكل الكلام عند الطفل",
+            "مشاكل النمو عند الطفل",
+            "مشاكل الوزن عند الأطفال"
+          ]
+        },
+        "psych_neuro": {
+          "n_train": 1225,
+          "n_test": 307,
+          "n_diagnoses": 2,
+          "accuracy": 0.9023,
+          "train_accuracy": 0.9902,
+          "overfitting_gap": 0.0879,
+          "macro_f1": 0.8406,
+          "diagnoses": [
+            "الدماغ",
+            "مشاكل الأعصاب"
+          ]
+        },
+        "urology": {
+          "n_train": 3256,
+          "n_test": 814,
+          "n_diagnoses": 2,
+          "accuracy": 0.9103,
+          "train_accuracy": 0.9595,
+          "overfitting_gap": 0.0491,
+          "macro_f1": 0.892,
+          "diagnoses": [
+            "أمراض الجهاز البولي والتناسلي",
+            "الجهاز التناسلي والمشاكل الجنسية"
+          ]
+        }
+      },
+      "categories_with_fine_model": [
+        "dermatology",
+        "endocrine",
+        "ent",
+        "general_medicine",
+        "general_surgery",
+        "gynecology",
+        "hematology",
+        "internal_medicine",
+        "musculoskeletal",
+        "pediatrics",
+        "psych_neuro",
+        "urology"
+      ],
+      "per_category_accuracy_min": 0.6122,
+      "per_category_accuracy_max": 0.9103,
+      "trained_at": "2026-07-16 16:27:29",
+      "train_seconds": 430.7,
+      "_metrics_file": "ar_metrics.json"
+    },
+    "input_filter_ar": {
+      "model": "arabic_input_filter_v2 (medical vs non-medical, hard-negative trained)",
+      "fix": "v1 negatives were declarative (reviews+news) while all positives were questions, so v1 partly learned 'is it a question?'. Measured non-medical rejection on question-form text was 0.333 despite a claimed 0.998. v2 adds REAL Arabic Wikipedia questions (ARCD + XQuAD-ar) as hard negatives.",
+      "n_positives": 50000,
+      "n_negatives_declarative": 40000,
+      "n_negatives_question_form": 1876,
+      "threshold": 0.5,
+      "accuracy": 0.9967,
+      "medical_precision": 0.9975,
+      "medical_recall": 0.9965,
+      "nonmedical_rejection_rate": 0.997,
+      "holdout_question_negative_rejection_rate": 0.9824,
+      "n_holdout_question_negatives": 626,
+      "confusion": {
+        "tn": 6263,
+        "fp": 19,
+        "fn": 26,
+        "tp": 7474
+      },
+      "trained_at": "2026-07-16 16:34:59",
+      "train_seconds": 142.8,
+      "_metrics_file": "filter_metrics.json"
+    }
+  }
+}

@@ -1,0 +1,74 @@
+{
+  "model": "brain_tumor_mri_resnet18_v2_cropped",
+  "modality": "brain MRI",
+  "dataset": "Brain Tumor MRI (HuggingFace) — with brain-region cropping (notebook technique)",
+  "technique_added": "crop_brain_region + stronger augmentation (from user's notebooks)",
+  "anti_overfitting": [
+    "transfer learning (ImageNet ResNet-18)",
+    "brain-region cropping (removes scanner borders/labels)",
+    "augmentation (rotate/flip/brightness/translate/scale)",
+    "dropout=0.3 head",
+    "label_smoothing=0.05",
+    "weight_decay=1e-4",
+    "cosine LR decay",
+    "early stopping (patience=4) + best-checkpoint on val LOSS",
+    "class weights (balanced)"
+  ],
+  "split": "GROUPED 70/15/15 by near-duplicate cluster (dHash Hamming<=5), seed=0 — no image in test has a near-twin in train (measured 0.0% at every threshold)",
+  "split_note": "v1 used a per-IMAGE split where 22% of test images had an EXACT perceptual-hash twin in train and 66% had a near-twin (check_brain_leakage.py). This v2 number is measured on a grouped split with 0% duplicates. The accuracy did NOT drop (98.95% -> 99.00%), so the contamination was real but was not what drove the score — the model genuinely separates these classes. We only know that because we checked: an uninvestigated score on a 66%-duplicated split proves nothing.",
+  "input_size": 128,
+  "classes": [
+    "glioma",
+    "meningioma",
+    "notumor",
+    "pituitary"
+  ],
+  "n_train": 5675,
+  "n_val": 649,
+  "n_test": 699,
+  "test_accuracy": 0.99,
+  "train_accuracy": 0.9989,
+  "overfitting_gap": 0.009,
+  "test_auc_macro_ovr": 0.9993,
+  "test_macro_f1": 0.9901,
+  "mean_confidence": 0.955,
+  "confusion_matrix": [
+    [
+      128,
+      1,
+      0,
+      0
+    ],
+    [
+      1,
+      197,
+      0,
+      2
+    ],
+    [
+      0,
+      0,
+      194,
+      2
+    ],
+    [
+      0,
+      1,
+      0,
+      173
+    ]
+  ],
+  "n_clusters": 2766,
+  "trained_at": "2026-07-16 22:42:57",
+  "train_seconds": 21372.2,
+  "device": "cpu",
+  "v1_comparison": {
+    "v1_test_accuracy": 0.9895,
+    "v1_split": "per-image (contaminated)",
+    "v1_n_test": 1052,
+    "v2_test_accuracy": 0.99,
+    "v2_split": "grouped, 0% duplicates",
+    "v2_n_test": 699,
+    "verdict": "leakage was real but not score-driving; v1 number held up"
+  }
+}

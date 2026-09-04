@@ -1,0 +1,30 @@
+{
+  "model": "pneumonia_xray_smallcnn",
+  "task": "binary (normal vs pneumonia)",
+  "modality": "chest X-ray",
+  "dataset": "PneumoniaMNIST (MedMNIST v2; Kermany 2018 pediatric CXR)",
+  "input_size": 64,
+  "n_train": 4708,
+  "n_val": 524,
+  "n_test": 624,
+  "decision_threshold": 0.95,
+  "test_accuracy": 0.8974,
+  "test_auc": 0.9584,
+  "test_sensitivity_recall": 0.9923,
+  "test_specificity": 0.7393,
+  "test_precision": 0.8638,
+  "test_f1": 0.9236,
+  "confusion_matrix": {
+    "tn": 173,
+    "fp": 61,
+    "fn": 3,
+    "tp": 387
+  },
+  "labels": {
+    "0": "normal",
+    "1": "pneumonia"
+  },
+  "trained_at": "2026-07-12 18:16:50",
+  "train_seconds": 1145.5,
+  "device": "cpu"
+}

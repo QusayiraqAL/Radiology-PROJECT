@@ -1,0 +1,23 @@
+[data] loading PneumoniaMNIST-224 (real Kermany chest X-rays) ...
+[data] train=4708 val=524 test=624 | test class balance=[234, 390]
+  epoch 1/8 loss=0.2919 val_loss=0.1531 val_acc=0.9523
+  epoch 2/8 loss=0.2420 val_loss=0.1241 val_acc=0.9599
+  epoch 3/8 loss=0.2302 val_loss=0.1232 val_acc=0.9637
+  epoch 4/8 loss=0.2205 val_loss=0.1943 val_acc=0.9370
+  epoch 5/8 loss=0.2060 val_loss=0.1140 val_acc=0.9733
+  epoch 6/8 loss=0.2014 val_loss=0.1494 val_acc=0.9485
+  epoch 7/8 loss=0.1988 val_loss=0.0933 val_acc=0.9771
+  epoch 8/8 loss=0.1932 val_loss=0.0885 val_acc=0.9809
+
+[classification_report]
+               precision    recall  f1-score   support
+
+      NORMAL       0.99      0.91      0.95       234
+   PNEUMONIA       0.95      0.99      0.97       390
+
+    accuracy                           0.96       624
+   macro avg       0.97      0.95      0.96       624
+weighted avg       0.96      0.96      0.96       624
+
+[RESULT] {"test_accuracy": 0.9631, "test_auc": 0.9941, "test_sensitivity_recall": 0.9923, "test_specificity": 0.9145, "train_accuracy": 0.9945, "overfitting_gap": 0.0313}
+PNEU_V2_DONE
