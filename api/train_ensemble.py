@@ -125,24 +125,73 @@ def main():
     pv, pt = np.mean(pv_all, 0), np.mean(pt_all, 0)
     n_cls = pt.shape[1]
 
+    # WHICH CLASS INDEX IS THE DISEASE. Do not assume 1. A `_bin` run remaps labels so that
+    # disease=1, but a plain `DATASET=breastmnist` run (which run_followups.sh does) keeps
+    # BreastMNIST's native order ['malignant', 'normal, benign'] — disease sits at index 0,
+    # and p[:, 1] is P(benign). Assuming 1 raises no error; it silently tunes the threshold
+    # to detect HEALTH. Measured on breast_v2: that cost 4 extra missed cancers (33 -> 29)
+    # while the accuracy number went UP. See TRAINING_LOG.md step 14.
+    POS = 0 if (not BINARY and DATASET == "breastmnist") else 1
+    NEG = 1 - POS
+    if n_cls == 2:
+        log("[ens] disease class = index %d (%s)" % (POS, classes[POS]))
+
+    def pred_at(score, t):
+        return np.where(score >= t, POS, NEG)
+
     # Threshold tuning (binary only), chosen on VAL and then applied unchanged to test.
     thr, acc_val_default, acc_val_tuned = 0.5, accuracy_score(yva, pv.argmax(1)), None
     if n_cls == 2:
         grid = np.arange(0.05, 0.96, 0.01)
-        accs = [accuracy_score(yva, (pv[:, 1] >= t).astype(int)) for t in grid]
+        accs = [accuracy_score(yva, pred_at(pv[:, POS], t)) for t in grid]
         thr = float(grid[int(np.argmax(accs))]); acc_val_tuned = float(max(accs))
-        pred = (pt[:, 1] >= thr).astype(int)
+        pred = pred_at(pt[:, POS], thr)
         log("[ens] threshold tuned on val: %.2f (val acc %.4f -> %.4f)"
             % (thr, acc_val_default, acc_val_tuned))
     else:
         pred = pt.argmax(1)
 
+    # A screening model is not judged by accuracy alone. Missing a referable case costs far
+    # more than a false alarm, so for binary tasks we ALSO report the operating point that
+    # reaches >=90% sensitivity on val — chosen on val, measured on test, published next to
+    # the accuracy-optimal point rather than instead of it.
+    screening = None
+    if n_cls == 2:
+        grid = np.arange(0.02, 0.99, 0.01)
+        ok = [t for t in grid
+              if ((pv[:, POS] >= t)[yva == POS]).mean() >= 0.90] if (yva == POS).any() else []
+        if ok:
+            t_scr = float(max(ok))          # highest threshold still hitting 90% sensitivity
+            p_scr = pred_at(pt[:, POS], t_scr)
+            tn, fp, fn, tp = confusion_matrix((yte == POS).astype(int),
+                                              (p_scr == POS).astype(int),
+                                              labels=[0, 1]).ravel()
+            screening = {
+                "threshold": round(t_scr, 3),
+                "positive_class_index": int(POS),
+                "selected_on": "validation split, lowest threshold meeting >=0.90 sensitivity",
+                "test_sensitivity": round(float(tp / max(tp + fn, 1)), 4),
+                "test_specificity": round(float(tn / max(tn + fp, 1)), 4),
+                "test_accuracy": round(float(accuracy_score(yte, p_scr)), 4),
+                "disease_caught": "%d/%d" % (int(tp), int(tp + fn)),
+                "test_confusion_matrix_[[tn,fp],[fn,tp]]": [[int(tn), int(fp)],
+                                                            [int(fn), int(tp)]],
+                "note": ("Screening trades specificity for sensitivity on purpose: a missed "
+                         "referable case is worse than a false alarm. Use this operating point "
+                         "for triage, the accuracy-optimal one for benchmark comparison."),
+            }
+            log("[ens] screening point: thr=%.2f -> test sens=%.4f spec=%.4f acc=%.4f"
+                % (t_scr, screening["test_sensitivity"], screening["test_specificity"],
+                   screening["test_accuracy"]))
+
     acc_argmax = accuracy_score(yte, pt.argmax(1))
     acc_final = accuracy_score(yte, pred)
-    try:
-        auc = (roc_auc_score(yte, pt[:, 1]) if n_cls == 2
-               else roc_auc_score(yte, pt, multi_class="ovr", average="macro"))
-    except Exception:
+    try:                       # renormalize first — see the note in train_medmnist_v2.py
+        pt_n = pt / np.clip(pt.sum(1, keepdims=True), 1e-12, None)
+        auc = (roc_auc_score(yte, pt_n[:, 1]) if n_cls == 2
+               else roc_auc_score(yte, pt_n, multi_class="ovr", average="macro"))
+    except Exception as e:
+        log("[ens] [warn] AUC could not be computed: %s: %s" % (type(e).__name__, e))
         auc = float("nan")
 
     solo = [float(accuracy_score(yte, p.argmax(1))) for p in pt_all]
@@ -169,6 +218,7 @@ def main():
         "test_auc": None if np.isnan(auc) else round(float(auc), 4),
         "confusion_matrix": confusion_matrix(yte, pred).tolist(),
         "ensemble_gain_over_mean_member": round(float(acc_final - np.mean(solo)), 4),
+        "screening_operating_point": screening,
         "trained_at": time.strftime("%Y-%m-%d %H:%M:%S"),
         "train_seconds": round(time.time() - t0, 1), "device": T.DEVICE,
         "test_split": "full official MedMNIST test split (never subsampled, never tuned on)",

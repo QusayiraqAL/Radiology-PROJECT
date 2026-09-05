@@ -1,0 +1,294 @@
+{
+  "model": "derma_v2_resnet18_v2",
+  "dataset_key": "derma_v2",
+  "medmnist": "dermamnist",
+  "modality": "The DermaMNIST is based on the HAM10000, a large collection of multi-source dermatoscopic images of common pigmented ski",
+  "task": "7-class classification",
+  "binary_task": false,
+  "recipe_v2": [
+    "224px input (v1 used 64px)",
+    "two-stage: frozen-backbone head warmup then full fine-tune",
+    "checkpoint selected on val ACCURACY (v1 used val loss)",
+    "test-time augmentation (hflip)",
+    "AdamW + cosine LR",
+    "stronger augmentation + random erasing",
+    "dropout=0.4",
+    "label_smoothing=0.05",
+    "class weights",
+    "mixed precision"
+  ],
+  "input_size": 224,
+  "classes": [
+    "actinic keratoses and intraepithelial carcinoma",
+    "basal cell carcinoma",
+    "benign keratosis-like lesions",
+    "dermatofibroma",
+    "melanoma",
+    "melanocytic nevi",
+    "vascular lesions"
+  ],
+  "n_classes": 7,
+  "n_train": 7007,
+  "n_val": 1003,
+  "n_test": 2005,
+  "val_subsampled_for_selection": false,
+  "test_split": "full official MedMNIST test split (never subsampled)",
+  "test_accuracy": 0.807,
+  "train_accuracy": 0.8776,
+  "overfitting_gap": 0.0706,
+  "test_balanced_accuracy": 0.8245,
+  "test_macro_f1": 0.7175,
+  "test_auc": 0.9615,
+  "mean_confidence": NaN,
+  "tta_used": true,
+  "test_accuracy_no_tta": 0.8045,
+  "test_accuracy_with_tta": 0.807,
+  "confusion_matrix": [
+    [
+      44,
+      9,
+      8,
+      1,
+      4,
+      0,
+      0
+    ],
+    [
+      2,
+      89,
+      5,
+      1,
+      2,
+      3,
+      1
+    ],
+    [
+      9,
+      6,
+      186,
+      1,
+      12,
+      6,
+      0
+    ],
+    [
+      0,
+      0,
+      1,
+      22,
+      0,
+      0,
+      0
+    ],
+    [
+      11,
+      3,
+      19,
+      2,
+      154,
+      29,
+      5
+    ],
+    [
+      19,
+      25,
+      68,
+      14,
+      112,
+      1096,
+      7
+    ],
+    [
+      1,
+      0,
+      0,
+      1,
+      0,
+      0,
+      27
+    ]
+  ],
+  "epoch_history": [
+    {
+      "epoch": 1,
+      "stage": "A(head)",
+      "train_loss": 2.3111,
+      "val_loss": 1.8797,
+      "val_acc": 0.2941,
+      "val_balanced_acc": 0.4539
+    },
+    {
+      "epoch": 2,
+      "stage": "A(head)",
+      "train_loss": 2.0861,
+      "val_loss": 1.5171,
+      "val_acc": 0.4367,
+      "val_balanced_acc": 0.5186
+    },
+    {
+      "epoch": 3,
+      "stage": "A(head)",
+      "train_loss": 2.037,
+      "val_loss": 1.6815,
+      "val_acc": 0.344,
+      "val_balanced_acc": 0.5131
+    },
+    {
+      "epoch": 4,
+      "stage": "B(full)",
+      "train_loss": 1.9406,
+      "val_loss": 1.2746,
+      "val_acc": 0.5244,
+      "val_balanced_acc": 0.5502
+    },
+    {
+      "epoch": 5,
+      "stage": "B(full)",
+      "train_loss": 1.7324,
+      "val_loss": 1.2258,
+      "val_acc": 0.5912,
+      "val_balanced_acc": 0.5984
+    },
+    {
+      "epoch": 6,
+      "stage": "B(full)",
+      "train_loss": 1.6405,
+      "val_loss": 1.2855,
+      "val_acc": 0.5643,
+      "val_balanced_acc": 0.6371
+    },
+    {
+      "epoch": 7,
+      "stage": "B(full)",
+      "train_loss": 1.6113,
+      "val_loss": 1.3673,
+      "val_acc": 0.5703,
+      "val_balanced_acc": 0.5285
+    },
+    {
+      "epoch": 8,
+      "stage": "B(full)",
+      "train_loss": 1.5896,
+      "val_loss": 1.2115,
+      "val_acc": 0.6181,
+      "val_balanced_acc": 0.706
+    },
+    {
+      "epoch": 9,
+      "stage": "B(full)",
+      "train_loss": 1.4963,
+      "val_loss": 1.3531,
+      "val_acc": 0.5942,
+      "val_balanced_acc": 0.6841
+    },
+    {
+      "epoch": 10,
+      "stage": "B(full)",
+      "train_loss": 1.4675,
+      "val_loss": 1.1053,
+      "val_acc": 0.6999,
+      "val_balanced_acc": 0.6724
+    },
+    {
+      "epoch": 11,
+      "stage": "B(full)",
+      "train_loss": 1.4445,
+      "val_loss": 1.0805,
+      "val_acc": 0.7348,
+      "val_balanced_acc": 0.7319
+    },
+    {
+      "epoch": 12,
+      "stage": "B(full)",
+      "train_loss": 1.3806,
+      "val_loss": 1.0568,
+      "val_acc": 0.7139,
+      "val_balanced_acc": 0.7624
+    },
+    {
+      "epoch": 13,
+      "stage": "B(full)",
+      "train_loss": 1.3386,
+      "val_loss": 1.094,
+      "val_acc": 0.6959,
+      "val_balanced_acc": 0.7336
+    },
+    {
+      "epoch": 14,
+      "stage": "B(full)",
+      "train_loss": 1.3131,
+      "val_loss": 0.9964,
+      "val_acc": 0.7647,
+      "val_balanced_acc": 0.7571
+    },
+    {
+      "epoch": 15,
+      "stage": "B(full)",
+      "train_loss": 1.2586,
+      "val_loss": 1.0112,
+      "val_acc": 0.7458,
+      "val_balanced_acc": 0.755
+    },
+    {
+      "epoch": 16,
+      "stage": "B(full)",
+      "train_loss": 1.2556,
+      "val_loss": 1.0003,
+      "val_acc": 0.7617,
+      "val_balanced_acc": 0.8155
+    },
+    {
+      "epoch": 17,
+      "stage": "B(full)",
+      "train_loss": 1.1894,
+      "val_loss": 0.9325,
+      "val_acc": 0.8006,
+      "val_balanced_acc": 0.7827
+    },
+    {
+      "epoch": 18,
+      "stage": "B(full)",
+      "train_loss": 1.166,
+      "val_loss": 0.9672,
+      "val_acc": 0.7727,
+      "val_balanced_acc": 0.7955
+    },
+    {
+      "epoch": 19,
+      "stage": "B(full)",
+      "train_loss": 1.1381,
+      "val_loss": 0.9311,
+      "val_acc": 0.7966,
+      "val_balanced_acc": 0.7624
+    },
+    {
+      "epoch": 20,
+      "stage": "B(full)",
+      "train_loss": 1.1272,
+      "val_loss": 0.9464,
+      "val_acc": 0.7896,
+      "val_balanced_acc": 0.7885
+    },
+    {
+      "epoch": 21,
+      "stage": "B(full)",
+      "train_loss": 1.0982,
+      "val_loss": 0.9218,
+      "val_acc": 0.7896,
+      "val_balanced_acc": 0.7645
+    },
+    {
+      "epoch": 22,
+      "stage": "B(full)",
+      "train_loss": 1.0945,
+      "val_loss": 0.9511,
+      "val_acc": 0.7936,
+      "val_balanced_acc": 0.782
+    }
+  ],
+  "trained_at": "2026-09-04 05:53:41",
+  "train_seconds": 4851.6,
+  "device": "cuda",
+  "seed": 0,
+  "test_auc_source": "backfilled by verify_retrain_gains.py — the training run's AUC failed on the fp16 sum-to-1 check"
+}

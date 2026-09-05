@@ -1,0 +1,249 @@
+{
+  "model": "breast_v2_hybrid",
+  "dataset_key": "breast_v2",
+  "medmnist": "breastmnist",
+  "question": "do classical heads on CNN features beat the CNN's own softmax?",
+  "protocol": "model, hyperparameters and threshold all selected on the validation split; the test split was measured once, at the end",
+  "cnn_baseline": {
+    "val_accuracy": 0.9615,
+    "test_accuracy": 0.8782,
+    "test_auc": 0.9244,
+    "default_argmax": {
+      "positive_class_index": 0,
+      "sensitivity": 0.7857,
+      "specificity": 0.9123,
+      "disease_caught": "33/42",
+      "confusion_matrix_[[tn,fp],[fn,tp]]": [
+        [
+          104,
+          10
+        ],
+        [
+          9,
+          33
+        ]
+      ]
+    }
+  },
+  "selected": {
+    "features": "cnn",
+    "head": "logreg C=0.01",
+    "val_accuracy": 0.9744,
+    "test_accuracy": 0.8782
+  },
+  "delta_vs_cnn": 0.0,
+  "test_balanced_accuracy": 0.8415,
+  "test_macro_f1": 0.8441,
+  "all_val_results": [
+    {
+      "features": "cnn",
+      "head": "logreg C=0.01",
+      "val_accuracy": 0.9744
+    },
+    {
+      "features": "cnn",
+      "head": "logreg C=0.1",
+      "val_accuracy": 0.9744
+    },
+    {
+      "features": "cnn",
+      "head": "logreg C=1",
+      "val_accuracy": 0.9744
+    },
+    {
+      "features": "cnn",
+      "head": "svm-rbf C=0.1",
+      "val_accuracy": 0.9744
+    },
+    {
+      "features": "cnn",
+      "head": "svm-rbf C=1",
+      "val_accuracy": 0.9744
+    },
+    {
+      "features": "cnn",
+      "head": "svm-rbf C=10",
+      "val_accuracy": 0.9744
+    },
+    {
+      "features": "cnn",
+      "head": "rf depth=None",
+      "val_accuracy": 0.9744
+    },
+    {
+      "features": "cnn",
+      "head": "rf depth=8",
+      "val_accuracy": 0.9744
+    },
+    {
+      "features": "cnn",
+      "head": "hgb lr=0.05",
+      "val_accuracy": 0.9744
+    },
+    {
+      "features": "cnn",
+      "head": "hgb lr=0.1",
+      "val_accuracy": 0.9744
+    },
+    {
+      "features": "both",
+      "head": "logreg C=0.01",
+      "val_accuracy": 0.9744
+    },
+    {
+      "features": "both",
+      "head": "logreg C=0.1",
+      "val_accuracy": 0.9744
+    },
+    {
+      "features": "both",
+      "head": "logreg C=1",
+      "val_accuracy": 0.9744
+    },
+    {
+      "features": "both",
+      "head": "logreg C=10",
+      "val_accuracy": 0.9744
+    },
+    {
+      "features": "both",
+      "head": "svm-rbf C=0.1",
+      "val_accuracy": 0.9744
+    },
+    {
+      "features": "both",
+      "head": "svm-rbf C=1",
+      "val_accuracy": 0.9744
+    },
+    {
+      "features": "both",
+      "head": "svm-rbf C=10",
+      "val_accuracy": 0.9744
+    },
+    {
+      "features": "both",
+      "head": "rf depth=None",
+      "val_accuracy": 0.9744
+    },
+    {
+      "features": "both",
+      "head": "rf depth=8",
+      "val_accuracy": 0.9744
+    },
+    {
+      "features": "both",
+      "head": "hgb lr=0.05",
+      "val_accuracy": 0.9744
+    },
+    {
+      "features": "both",
+      "head": "hgb lr=0.1",
+      "val_accuracy": 0.9744
+    },
+    {
+      "features": "cnn",
+      "head": "logreg C=10",
+      "val_accuracy": 0.9615
+    },
+    {
+      "features": "texture",
+      "head": "svm-rbf C=10",
+      "val_accuracy": 0.8846
+    },
+    {
+      "features": "texture",
+      "head": "rf depth=None",
+      "val_accuracy": 0.8718
+    },
+    {
+      "features": "texture",
+      "head": "rf depth=8",
+      "val_accuracy": 0.859
+    },
+    {
+      "features": "texture",
+      "head": "hgb lr=0.1",
+      "val_accuracy": 0.8462
+    },
+    {
+      "features": "texture",
+      "head": "svm-rbf C=1",
+      "val_accuracy": 0.8333
+    },
+    {
+      "features": "texture",
+      "head": "hgb lr=0.05",
+      "val_accuracy": 0.8333
+    },
+    {
+      "features": "texture",
+      "head": "logreg C=0.1",
+      "val_accuracy": 0.8205
+    },
+    {
+      "features": "texture",
+      "head": "svm-rbf C=0.1",
+      "val_accuracy": 0.8205
+    },
+    {
+      "features": "texture",
+      "head": "logreg C=1",
+      "val_accuracy": 0.8077
+    },
+    {
+      "features": "texture",
+      "head": "logreg C=10",
+      "val_accuracy": 0.8077
+    },
+    {
+      "features": "texture",
+      "head": "logreg C=0.01",
+      "val_accuracy": 0.7821
+    }
+  ],
+  "n_train": 546,
+  "n_val": 78,
+  "n_test": 156,
+  "test_split": "full official MedMNIST test split (never subsampled, never tuned on)",
+  "device": "cpu",
+  "seed": 0,
+  "trained_at": "2026-09-05 05:19:14",
+  "test_auc": 0.947,
+  "threshold_accuracy_optimal": {
+    "threshold": 0.395,
+    "test_accuracy": 0.8846,
+    "positive_class_index": 0,
+    "sensitivity": 0.8095,
+    "specificity": 0.9123,
+    "disease_caught": "34/42",
+    "confusion_matrix_[[tn,fp],[fn,tp]]": [
+      [
+        104,
+        10
+      ],
+      [
+        8,
+        34
+      ]
+    ]
+  },
+  "threshold_screening_min_sens_0.90": {
+    "threshold": 0.885,
+    "test_accuracy": 0.8782,
+    "positive_class_index": 0,
+    "sensitivity": 0.6429,
+    "specificity": 0.9649,
+    "disease_caught": "27/42",
+    "confusion_matrix_[[tn,fp],[fn,tp]]": [
+      [
+        110,
+        4
+      ],
+      [
+        15,
+        27
+      ]
+    ]
+  },
+  "threshold_note": "The accuracy-optimal point is for benchmark comparison only. On a screening task it can raise accuracy while catching FEWER diseased cases - measured here - so the screening point is the one a triage tool should serve."
+}

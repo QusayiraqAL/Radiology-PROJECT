@@ -1,0 +1,217 @@
+{
+  "model": "retina_bin_s3_resnet18_v2",
+  "dataset_key": "retina_bin_s3",
+  "medmnist": "retinamnist",
+  "modality": "The RetinaMNIST is based on the DeepDRiD challenge, which provides a dataset of 1,600 retina fundus images. The task is ",
+  "task": "referable diabetic retinopathy (grade >= 2)",
+  "binary_task": true,
+  "recipe_v2": [
+    "224px input (v1 used 64px)",
+    "two-stage: frozen-backbone head warmup then full fine-tune",
+    "checkpoint selected on val ACCURACY (v1 used val loss)",
+    "TTA evaluated, did not help - not used",
+    "AdamW + cosine LR",
+    "stronger augmentation + random erasing",
+    "dropout=0.4",
+    "label_smoothing=0.05",
+    "class weights",
+    "mixed precision"
+  ],
+  "input_size": 224,
+  "classes": [
+    "non-referable (grade 0-1)",
+    "referable DR (grade 2-4)"
+  ],
+  "n_classes": 2,
+  "n_train": 1080,
+  "n_val": 120,
+  "n_test": 400,
+  "val_subsampled_for_selection": false,
+  "test_split": "full official MedMNIST test split (never subsampled)",
+  "test_accuracy": 0.8475,
+  "train_accuracy": 0.912,
+  "overfitting_gap": 0.0645,
+  "test_balanced_accuracy": 0.8533,
+  "test_macro_f1": 0.8474,
+  "test_auc": 0.9251,
+  "mean_confidence": 0.8729,
+  "tta_used": false,
+  "test_accuracy_no_tta": 0.8475,
+  "test_accuracy_with_tta": 0.845,
+  "confusion_matrix": [
+    [
+      175,
+      45
+    ],
+    [
+      16,
+      164
+    ]
+  ],
+  "epoch_history": [
+    {
+      "epoch": 1,
+      "stage": "A(head)",
+      "train_loss": 0.7541,
+      "val_loss": 0.6054,
+      "val_acc": 0.6667,
+      "val_balanced_acc": 0.6835
+    },
+    {
+      "epoch": 2,
+      "stage": "A(head)",
+      "train_loss": 0.6053,
+      "val_loss": 0.6051,
+      "val_acc": 0.7167,
+      "val_balanced_acc": 0.7424
+    },
+    {
+      "epoch": 3,
+      "stage": "A(head)",
+      "train_loss": 0.5945,
+      "val_loss": 0.5046,
+      "val_acc": 0.7833,
+      "val_balanced_acc": 0.798
+    },
+    {
+      "epoch": 4,
+      "stage": "A(head)",
+      "train_loss": 0.5679,
+      "val_loss": 0.5377,
+      "val_acc": 0.7417,
+      "val_balanced_acc": 0.7635
+    },
+    {
+      "epoch": 5,
+      "stage": "B(full)",
+      "train_loss": 0.5538,
+      "val_loss": 0.5083,
+      "val_acc": 0.825,
+      "val_balanced_acc": 0.8274
+    },
+    {
+      "epoch": 6,
+      "stage": "B(full)",
+      "train_loss": 0.4326,
+      "val_loss": 0.4219,
+      "val_acc": 0.825,
+      "val_balanced_acc": 0.8224
+    },
+    {
+      "epoch": 7,
+      "stage": "B(full)",
+      "train_loss": 0.4294,
+      "val_loss": 0.3966,
+      "val_acc": 0.8417,
+      "val_balanced_acc": 0.8342
+    },
+    {
+      "epoch": 8,
+      "stage": "B(full)",
+      "train_loss": 0.3648,
+      "val_loss": 0.3237,
+      "val_acc": 0.8667,
+      "val_balanced_acc": 0.862
+    },
+    {
+      "epoch": 9,
+      "stage": "B(full)",
+      "train_loss": 0.352,
+      "val_loss": 0.4987,
+      "val_acc": 0.8167,
+      "val_balanced_acc": 0.8047
+    },
+    {
+      "epoch": 10,
+      "stage": "B(full)",
+      "train_loss": 0.3439,
+      "val_loss": 0.3549,
+      "val_acc": 0.8167,
+      "val_balanced_acc": 0.8114
+    },
+    {
+      "epoch": 11,
+      "stage": "B(full)",
+      "train_loss": 0.3104,
+      "val_loss": 0.3378,
+      "val_acc": 0.8583,
+      "val_balanced_acc": 0.8594
+    },
+    {
+      "epoch": 12,
+      "stage": "B(full)",
+      "train_loss": 0.3239,
+      "val_loss": 0.3428,
+      "val_acc": 0.85,
+      "val_balanced_acc": 0.8468
+    },
+    {
+      "epoch": 13,
+      "stage": "B(full)",
+      "train_loss": 0.294,
+      "val_loss": 0.4348,
+      "val_acc": 0.825,
+      "val_balanced_acc": 0.8342
+    },
+    {
+      "epoch": 14,
+      "stage": "B(full)",
+      "train_loss": 0.2943,
+      "val_loss": 0.5209,
+      "val_acc": 0.825,
+      "val_balanced_acc": 0.814
+    },
+    {
+      "epoch": 15,
+      "stage": "B(full)",
+      "train_loss": 0.2863,
+      "val_loss": 0.3814,
+      "val_acc": 0.8583,
+      "val_balanced_acc": 0.8611
+    },
+    {
+      "epoch": 16,
+      "stage": "B(full)",
+      "train_loss": 0.2678,
+      "val_loss": 0.4423,
+      "val_acc": 0.8417,
+      "val_balanced_acc": 0.8392
+    },
+    {
+      "epoch": 17,
+      "stage": "B(full)",
+      "train_loss": 0.2592,
+      "val_loss": 0.545,
+      "val_acc": 0.8083,
+      "val_balanced_acc": 0.7921
+    },
+    {
+      "epoch": 18,
+      "stage": "B(full)",
+      "train_loss": 0.259,
+      "val_loss": 0.4002,
+      "val_acc": 0.8417,
+      "val_balanced_acc": 0.8325
+    },
+    {
+      "epoch": 19,
+      "stage": "B(full)",
+      "train_loss": 0.2593,
+      "val_loss": 0.4002,
+      "val_acc": 0.85,
+      "val_balanced_acc": 0.8468
+    },
+    {
+      "epoch": 20,
+      "stage": "B(full)",
+      "train_loss": 0.2253,
+      "val_loss": 0.5022,
+      "val_acc": 0.825,
+      "val_balanced_acc": 0.8224
+    }
+  ],
+  "trained_at": "2026-09-05 04:53:08",
+  "train_seconds": 77268.5,
+  "device": "cuda",
+  "seed": 3
+}

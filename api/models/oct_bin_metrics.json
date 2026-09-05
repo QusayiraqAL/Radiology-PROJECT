@@ -1,0 +1,215 @@
+{
+  "model": "oct_bin_resnet18_v2",
+  "dataset_key": "oct_bin",
+  "medmnist": "octmnist",
+  "modality": "The OCTMNIST is based on a prior dataset of 109,309 valid optical coherence tomography (OCT) images for retinal diseases",
+  "task": "retinal disease vs normal OCT",
+  "binary_task": true,
+  "recipe_v2": [
+    "128px input (v1 used 64px)",
+    "two-stage: frozen-backbone head warmup then full fine-tune",
+    "checkpoint selected on val ACCURACY (v1 used val loss)",
+    "test-time augmentation (hflip)",
+    "AdamW + cosine LR",
+    "stronger augmentation + random erasing",
+    "dropout=0.3",
+    "label_smoothing=0.05",
+    "class weights",
+    "mixed precision"
+  ],
+  "input_size": 128,
+  "classes": [
+    "normal",
+    "disease (CNV/DME/drusen)"
+  ],
+  "n_classes": 2,
+  "n_train": 40000,
+  "n_val": 3000,
+  "n_test": 1000,
+  "val_subsampled_for_selection": true,
+  "test_split": "full official MedMNIST test split (never subsampled)",
+  "test_accuracy": 0.992,
+  "train_accuracy": 0.9835,
+  "overfitting_gap": -0.0075,
+  "test_balanced_accuracy": 0.994,
+  "test_macro_f1": 0.9881,
+  "test_auc": 0.9978,
+  "mean_confidence": 0.9621,
+  "tta_used": true,
+  "test_accuracy_no_tta": 0.988,
+  "test_accuracy_with_tta": 0.991,
+  "confusion_matrix": [
+    [
+      250,
+      0
+    ],
+    [
+      9,
+      741
+    ]
+  ],
+  "epoch_history": [
+    {
+      "epoch": 1,
+      "stage": "A(head)",
+      "train_loss": 0.534,
+      "val_loss": 0.4047,
+      "val_acc": 0.8153,
+      "val_balanced_acc": 0.8153
+    },
+    {
+      "epoch": 2,
+      "stage": "A(head)",
+      "train_loss": 0.5156,
+      "val_loss": 0.3891,
+      "val_acc": 0.827,
+      "val_balanced_acc": 0.827
+    },
+    {
+      "epoch": 3,
+      "stage": "B(full)",
+      "train_loss": 0.2355,
+      "val_loss": 0.1408,
+      "val_acc": 0.9503,
+      "val_balanced_acc": 0.9503
+    },
+    {
+      "epoch": 4,
+      "stage": "B(full)",
+      "train_loss": 0.1987,
+      "val_loss": 0.0837,
+      "val_acc": 0.977,
+      "val_balanced_acc": 0.977
+    },
+    {
+      "epoch": 5,
+      "stage": "B(full)",
+      "train_loss": 0.1894,
+      "val_loss": 0.0934,
+      "val_acc": 0.974,
+      "val_balanced_acc": 0.974
+    },
+    {
+      "epoch": 6,
+      "stage": "B(full)",
+      "train_loss": 0.1827,
+      "val_loss": 0.0887,
+      "val_acc": 0.9763,
+      "val_balanced_acc": 0.9763
+    },
+    {
+      "epoch": 7,
+      "stage": "B(full)",
+      "train_loss": 0.1784,
+      "val_loss": 0.0837,
+      "val_acc": 0.9793,
+      "val_balanced_acc": 0.9793
+    },
+    {
+      "epoch": 8,
+      "stage": "B(full)",
+      "train_loss": 0.1729,
+      "val_loss": 0.0863,
+      "val_acc": 0.98,
+      "val_balanced_acc": 0.98
+    },
+    {
+      "epoch": 9,
+      "stage": "B(full)",
+      "train_loss": 0.1694,
+      "val_loss": 0.0733,
+      "val_acc": 0.9833,
+      "val_balanced_acc": 0.9833
+    },
+    {
+      "epoch": 10,
+      "stage": "B(full)",
+      "train_loss": 0.1659,
+      "val_loss": 0.0841,
+      "val_acc": 0.979,
+      "val_balanced_acc": 0.979
+    },
+    {
+      "epoch": 11,
+      "stage": "B(full)",
+      "train_loss": 0.162,
+      "val_loss": 0.0728,
+      "val_acc": 0.9833,
+      "val_balanced_acc": 0.9833
+    },
+    {
+      "epoch": 12,
+      "stage": "B(full)",
+      "train_loss": 0.1622,
+      "val_loss": 0.0741,
+      "val_acc": 0.9833,
+      "val_balanced_acc": 0.9833
+    }
+  ],
+  "trained_at": "2026-09-05 06:42:36",
+  "train_seconds": 2158.2,
+  "device": "cuda",
+  "seed": 0,
+  "threshold_tuning": {
+    "method": "thresholds chosen on the validation split only, then measured once on the untouched test split; no retraining",
+    "default_0.5": {
+      "accuracy": 0.991,
+      "positive_class_index": 1,
+      "sensitivity": 0.988,
+      "specificity": 1.0,
+      "disease_caught": "741/750",
+      "macro_f1": 0.9881,
+      "confusion_matrix_[[tn,fp],[fn,tp]]": [
+        [
+          250,
+          0
+        ],
+        [
+          9,
+          741
+        ]
+      ]
+    },
+    "accuracy_optimal": {
+      "threshold": 0.44,
+      "accuracy": 0.992,
+      "positive_class_index": 1,
+      "sensitivity": 0.9893,
+      "specificity": 1.0,
+      "disease_caught": "742/750",
+      "macro_f1": 0.9894,
+      "confusion_matrix_[[tn,fp],[fn,tp]]": [
+        [
+          250,
+          0
+        ],
+        [
+          8,
+          742
+        ]
+      ]
+    },
+    "screening_min_sensitivity_0.90": {
+      "threshold": 0.965,
+      "accuracy": 0.914,
+      "positive_class_index": 1,
+      "sensitivity": 0.8853,
+      "specificity": 1.0,
+      "disease_caught": "664/750",
+      "macro_f1": 0.8962,
+      "confusion_matrix_[[tn,fp],[fn,tp]]": [
+        [
+          250,
+          0
+        ],
+        [
+          86,
+          664
+        ]
+      ]
+    },
+    "note": "Serve the screening point for triage and quote the accuracy point for benchmark comparison. Missing a positive is not equal to a false alarm."
+  },
+  "test_accuracy_argmax_0.5": 0.991,
+  "test_accuracy_source": "val-tuned decision threshold 0.440"
+}

@@ -1,0 +1,341 @@
+{
+  "model": "breast_v2_resnet18_v2",
+  "dataset_key": "breast_v2",
+  "medmnist": "breastmnist",
+  "modality": "The BreastMNIST is based on a dataset of 780 breast ultrasound images. It is categorized into 3 classes: normal, benign,",
+  "task": "2-class classification",
+  "binary_task": false,
+  "recipe_v2": [
+    "224px input (v1 used 64px)",
+    "two-stage: frozen-backbone head warmup then full fine-tune",
+    "checkpoint selected on val ACCURACY (v1 used val loss)",
+    "TTA evaluated, did not help - not used",
+    "AdamW + cosine LR",
+    "stronger augmentation + random erasing",
+    "dropout=0.4",
+    "label_smoothing=0.05",
+    "class weights",
+    "mixed precision"
+  ],
+  "input_size": 224,
+  "classes": [
+    "malignant",
+    "normal, benign"
+  ],
+  "n_classes": 2,
+  "n_train": 546,
+  "n_val": 78,
+  "n_test": 156,
+  "val_subsampled_for_selection": false,
+  "test_split": "full official MedMNIST test split (never subsampled)",
+  "test_accuracy": 0.8782,
+  "train_accuracy": 0.9615,
+  "overfitting_gap": 0.0833,
+  "test_balanced_accuracy": 0.849,
+  "test_macro_f1": 0.8464,
+  "test_auc": 0.9244,
+  "mean_confidence": 0.9142,
+  "tta_used": false,
+  "test_accuracy_no_tta": 0.8782,
+  "test_accuracy_with_tta": 0.8654,
+  "confusion_matrix": [
+    [
+      33,
+      9
+    ],
+    [
+      10,
+      104
+    ]
+  ],
+  "epoch_history": [
+    {
+      "epoch": 1,
+      "stage": "A(head)",
+      "train_loss": 0.8133,
+      "val_loss": 0.6388,
+      "val_acc": 0.5897,
+      "val_balanced_acc": 0.4637
+    },
+    {
+      "epoch": 2,
+      "stage": "A(head)",
+      "train_loss": 0.7631,
+      "val_loss": 0.8086,
+      "val_acc": 0.4359,
+      "val_balanced_acc": 0.599
+    },
+    {
+      "epoch": 3,
+      "stage": "A(head)",
+      "train_loss": 0.694,
+      "val_loss": 0.7248,
+      "val_acc": 0.4744,
+      "val_balanced_acc": 0.6103
+    },
+    {
+      "epoch": 4,
+      "stage": "A(head)",
+      "train_loss": 0.6408,
+      "val_loss": 0.5341,
+      "val_acc": 0.7949,
+      "val_balanced_acc": 0.7243
+    },
+    {
+      "epoch": 5,
+      "stage": "B(full)",
+      "train_loss": 0.669,
+      "val_loss": 1.3928,
+      "val_acc": 0.7308,
+      "val_balanced_acc": 0.5
+    },
+    {
+      "epoch": 6,
+      "stage": "B(full)",
+      "train_loss": 0.553,
+      "val_loss": 0.3284,
+      "val_acc": 0.8333,
+      "val_balanced_acc": 0.7055
+    },
+    {
+      "epoch": 7,
+      "stage": "B(full)",
+      "train_loss": 0.5143,
+      "val_loss": 0.2505,
+      "val_acc": 0.8974,
+      "val_balanced_acc": 0.8997
+    },
+    {
+      "epoch": 8,
+      "stage": "B(full)",
+      "train_loss": 0.4913,
+      "val_loss": 0.2927,
+      "val_acc": 0.8974,
+      "val_balanced_acc": 0.9148
+    },
+    {
+      "epoch": 9,
+      "stage": "B(full)",
+      "train_loss": 0.455,
+      "val_loss": 0.2582,
+      "val_acc": 0.9359,
+      "val_balanced_acc": 0.9411
+    },
+    {
+      "epoch": 10,
+      "stage": "B(full)",
+      "train_loss": 0.3947,
+      "val_loss": 1.444,
+      "val_acc": 0.4615,
+      "val_balanced_acc": 0.6316
+    },
+    {
+      "epoch": 11,
+      "stage": "B(full)",
+      "train_loss": 0.3947,
+      "val_loss": 0.2074,
+      "val_acc": 0.9231,
+      "val_balanced_acc": 0.9023
+    },
+    {
+      "epoch": 12,
+      "stage": "B(full)",
+      "train_loss": 0.3671,
+      "val_loss": 0.3305,
+      "val_acc": 0.8974,
+      "val_balanced_acc": 0.9298
+    },
+    {
+      "epoch": 13,
+      "stage": "B(full)",
+      "train_loss": 0.3349,
+      "val_loss": 0.2526,
+      "val_acc": 0.9359,
+      "val_balanced_acc": 0.911
+    },
+    {
+      "epoch": 14,
+      "stage": "B(full)",
+      "train_loss": 0.348,
+      "val_loss": 0.396,
+      "val_acc": 0.8462,
+      "val_balanced_acc": 0.8947
+    },
+    {
+      "epoch": 15,
+      "stage": "B(full)",
+      "train_loss": 0.3215,
+      "val_loss": 0.2342,
+      "val_acc": 0.8846,
+      "val_balanced_acc": 0.906
+    },
+    {
+      "epoch": 16,
+      "stage": "B(full)",
+      "train_loss": 0.3081,
+      "val_loss": 0.1594,
+      "val_acc": 0.9615,
+      "val_balanced_acc": 0.9737
+    },
+    {
+      "epoch": 17,
+      "stage": "B(full)",
+      "train_loss": 0.3077,
+      "val_loss": 0.344,
+      "val_acc": 0.8974,
+      "val_balanced_acc": 0.9298
+    },
+    {
+      "epoch": 18,
+      "stage": "B(full)",
+      "train_loss": 0.288,
+      "val_loss": 0.2083,
+      "val_acc": 0.9487,
+      "val_balanced_acc": 0.9649
+    },
+    {
+      "epoch": 19,
+      "stage": "B(full)",
+      "train_loss": 0.2865,
+      "val_loss": 0.2532,
+      "val_acc": 0.9231,
+      "val_balanced_acc": 0.9323
+    },
+    {
+      "epoch": 20,
+      "stage": "B(full)",
+      "train_loss": 0.2578,
+      "val_loss": 0.2341,
+      "val_acc": 0.9231,
+      "val_balanced_acc": 0.9474
+    },
+    {
+      "epoch": 21,
+      "stage": "B(full)",
+      "train_loss": 0.2648,
+      "val_loss": 0.2568,
+      "val_acc": 0.9103,
+      "val_balanced_acc": 0.9236
+    },
+    {
+      "epoch": 22,
+      "stage": "B(full)",
+      "train_loss": 0.246,
+      "val_loss": 0.1984,
+      "val_acc": 0.9487,
+      "val_balanced_acc": 0.9649
+    },
+    {
+      "epoch": 23,
+      "stage": "B(full)",
+      "train_loss": 0.2501,
+      "val_loss": 0.1804,
+      "val_acc": 0.9359,
+      "val_balanced_acc": 0.9261
+    },
+    {
+      "epoch": 24,
+      "stage": "B(full)",
+      "train_loss": 0.2425,
+      "val_loss": 0.2235,
+      "val_acc": 0.9231,
+      "val_balanced_acc": 0.9173
+    },
+    {
+      "epoch": 25,
+      "stage": "B(full)",
+      "train_loss": 0.249,
+      "val_loss": 0.1898,
+      "val_acc": 0.9359,
+      "val_balanced_acc": 0.9411
+    },
+    {
+      "epoch": 26,
+      "stage": "B(full)",
+      "train_loss": 0.2246,
+      "val_loss": 0.2476,
+      "val_acc": 0.9359,
+      "val_balanced_acc": 0.9561
+    },
+    {
+      "epoch": 27,
+      "stage": "B(full)",
+      "train_loss": 0.215,
+      "val_loss": 0.2055,
+      "val_acc": 0.9231,
+      "val_balanced_acc": 0.9474
+    },
+    {
+      "epoch": 28,
+      "stage": "B(full)",
+      "train_loss": 0.2109,
+      "val_loss": 0.2847,
+      "val_acc": 0.8974,
+      "val_balanced_acc": 0.9298
+    }
+  ],
+  "trained_at": "2026-09-04 04:01:58",
+  "train_seconds": 429.6,
+  "device": "cuda",
+  "seed": 0,
+  "threshold_tuning": {
+    "method": "thresholds chosen on the validation split only, then measured once on the untouched test split; no retraining",
+    "default_0.5": {
+      "accuracy": 0.8782,
+      "positive_class_index": 0,
+      "sensitivity": 0.7857,
+      "specificity": 0.9123,
+      "disease_caught": "33/42",
+      "macro_f1": 0.8464,
+      "confusion_matrix_[[tn,fp],[fn,tp]]": [
+        [
+          104,
+          10
+        ],
+        [
+          9,
+          33
+        ]
+      ]
+    },
+    "accuracy_optimal": {
+      "threshold": 0.74,
+      "accuracy": 0.8718,
+      "positive_class_index": 0,
+      "sensitivity": 0.6667,
+      "specificity": 0.9474,
+      "disease_caught": "28/42",
+      "macro_f1": 0.826,
+      "confusion_matrix_[[tn,fp],[fn,tp]]": [
+        [
+          108,
+          6
+        ],
+        [
+          14,
+          28
+        ]
+      ]
+    },
+    "screening_min_sensitivity_0.90": {
+      "threshold": 0.9,
+      "accuracy": 0.859,
+      "positive_class_index": 0,
+      "sensitivity": 0.5714,
+      "specificity": 0.9649,
+      "disease_caught": "24/42",
+      "macro_f1": 0.7974,
+      "confusion_matrix_[[tn,fp],[fn,tp]]": [
+        [
+          110,
+          4
+        ],
+        [
+          18,
+          24
+        ]
+      ]
+    },
+    "note": "Serve the screening point for triage and quote the accuracy point for benchmark comparison. Missing a positive is not equal to a false alarm."
+  }
+}

@@ -1,8 +1,833 @@
 
 ==============================================================================
-=== retrain_below91 start 2026-09-04 03:50:36 | 7 job(s) ===
+=== retrain_below91 start 2026-09-04 03:54:37 | 7 job(s) ===
 
------ JOB breast | 03:50:36 -----
+----- JOB breast | 03:54:37 -----
 [breast_v2] breastmnist size=224 classes=2 device=cuda binary=False
 [breast_v2] train=546 val=78 test=156 | test balance=[42, 114]
-  ep  1/40 [A(head)] loss=nan val_loss=nan val_acc=0.2692 val_bacc=0.5000
+  ep  1/40 [A(head)] loss=0.8133 val_loss=0.6388 val_acc=0.5897 val_bacc=0.4637
+  ep  2/40 [A(head)] loss=0.7631 val_loss=0.8086 val_acc=0.4359 val_bacc=0.5990
+  ep  3/40 [A(head)] loss=0.6940 val_loss=0.7248 val_acc=0.4744 val_bacc=0.6103
+  ep  4/40 [A(head)] loss=0.6408 val_loss=0.5341 val_acc=0.7949 val_bacc=0.7243
+  ep  5/40 [B(full)] loss=0.6690 val_loss=1.3928 val_acc=0.7308 val_bacc=0.5000
+  ep  6/40 [B(full)] loss=0.5530 val_loss=0.3284 val_acc=0.8333 val_bacc=0.7055
+  ep  7/40 [B(full)] loss=0.5143 val_loss=0.2505 val_acc=0.8974 val_bacc=0.8997
+  ep  8/40 [B(full)] loss=0.4913 val_loss=0.2927 val_acc=0.8974 val_bacc=0.9148
+  ep  9/40 [B(full)] loss=0.4550 val_loss=0.2582 val_acc=0.9359 val_bacc=0.9411
+  ep 10/40 [B(full)] loss=0.3947 val_loss=1.4440 val_acc=0.4615 val_bacc=0.6316
+  ep 11/40 [B(full)] loss=0.3947 val_loss=0.2074 val_acc=0.9231 val_bacc=0.9023
+  ep 12/40 [B(full)] loss=0.3671 val_loss=0.3305 val_acc=0.8974 val_bacc=0.9298
+  ep 13/40 [B(full)] loss=0.3349 val_loss=0.2526 val_acc=0.9359 val_bacc=0.9110
+  ep 14/40 [B(full)] loss=0.3480 val_loss=0.3960 val_acc=0.8462 val_bacc=0.8947
+  ep 15/40 [B(full)] loss=0.3215 val_loss=0.2342 val_acc=0.8846 val_bacc=0.9060
+  ep 16/40 [B(full)] loss=0.3081 val_loss=0.1594 val_acc=0.9615 val_bacc=0.9737
+  ep 17/40 [B(full)] loss=0.3077 val_loss=0.3440 val_acc=0.8974 val_bacc=0.9298
+  ep 18/40 [B(full)] loss=0.2880 val_loss=0.2083 val_acc=0.9487 val_bacc=0.9649
+  ep 19/40 [B(full)] loss=0.2865 val_loss=0.2532 val_acc=0.9231 val_bacc=0.9323
+  ep 20/40 [B(full)] loss=0.2578 val_loss=0.2341 val_acc=0.9231 val_bacc=0.9474
+  ep 21/40 [B(full)] loss=0.2648 val_loss=0.2568 val_acc=0.9103 val_bacc=0.9236
+  ep 22/40 [B(full)] loss=0.2460 val_loss=0.1984 val_acc=0.9487 val_bacc=0.9649
+  ep 23/40 [B(full)] loss=0.2501 val_loss=0.1804 val_acc=0.9359 val_bacc=0.9261
+  ep 24/40 [B(full)] loss=0.2425 val_loss=0.2235 val_acc=0.9231 val_bacc=0.9173
+  ep 25/40 [B(full)] loss=0.2490 val_loss=0.1898 val_acc=0.9359 val_bacc=0.9411
+  ep 26/40 [B(full)] loss=0.2246 val_loss=0.2476 val_acc=0.9359 val_bacc=0.9561
+  ep 27/40 [B(full)] loss=0.2150 val_loss=0.2055 val_acc=0.9231 val_bacc=0.9474
+  ep 28/40 [B(full)] loss=0.2109 val_loss=0.2847 val_acc=0.8974 val_bacc=0.9298
+  [early stop] patience 12
+
+[report]
+                 precision    recall  f1-score   support
+
+     malignant       0.77      0.79      0.78        42
+normal, benign       0.92      0.91      0.92       114
+
+      accuracy                           0.88       156
+     macro avg       0.84      0.85      0.85       156
+  weighted avg       0.88      0.88      0.88       156
+
+[RESULT] breast_v2 test_acc=0.8782 train_acc=0.9615 gap=+0.0833 macroF1=0.8464 auc=0.9244 tta=False
+BREAST_V2_DONE
+----- JOB breast rc=0 in 444.3s -----
+
+----- JOB retina | 04:02:01 -----
+[retina_v2] retinamnist size=224 classes=5 device=cuda binary=False
+[retina_v2] train=1080 val=120 test=400 | test balance=[174, 46, 92, 68, 20]
+  ep  1/40 [A(head)] loss=1.7837 val_loss=1.6226 val_acc=0.2750 val_bacc=0.3035
+  ep  2/40 [A(head)] loss=1.5817 val_loss=1.4997 val_acc=0.3750 val_bacc=0.4042
+  ep  3/40 [A(head)] loss=1.5549 val_loss=1.2830 val_acc=0.5417 val_bacc=0.4667
+  ep  4/40 [A(head)] loss=1.4983 val_loss=1.3673 val_acc=0.4583 val_bacc=0.4896
+  ep  5/40 [B(full)] loss=1.4809 val_loss=1.3128 val_acc=0.4833 val_bacc=0.4775
+  ep  6/40 [B(full)] loss=1.3858 val_loss=1.2343 val_acc=0.5417 val_bacc=0.5196
+  ep  7/40 [B(full)] loss=1.2128 val_loss=1.2447 val_acc=0.5083 val_bacc=0.5308
+  ep  8/40 [B(full)] loss=1.1859 val_loss=0.9147 val_acc=0.6250 val_bacc=0.5187
+  ep  9/40 [B(full)] loss=1.1039 val_loss=1.0255 val_acc=0.5917 val_bacc=0.5311
+  ep 10/40 [B(full)] loss=1.0492 val_loss=1.1595 val_acc=0.5833 val_bacc=0.6052
+  ep 11/40 [B(full)] loss=0.9600 val_loss=1.1567 val_acc=0.6083 val_bacc=0.6237
+  ep 12/40 [B(full)] loss=0.9658 val_loss=0.9490 val_acc=0.6167 val_bacc=0.5010
+  ep 13/40 [B(full)] loss=0.9530 val_loss=1.1370 val_acc=0.5583 val_bacc=0.5339
+  ep 14/40 [B(full)] loss=0.9234 val_loss=1.3785 val_acc=0.5500 val_bacc=0.6020
+  ep 15/40 [B(full)] loss=0.8474 val_loss=1.2223 val_acc=0.6083 val_bacc=0.5797
+  ep 16/40 [B(full)] loss=0.8289 val_loss=1.6151 val_acc=0.5000 val_bacc=0.4712
+  ep 17/40 [B(full)] loss=0.7721 val_loss=1.1573 val_acc=0.6333 val_bacc=0.5915
+  ep 18/40 [B(full)] loss=0.7531 val_loss=1.1412 val_acc=0.6500 val_bacc=0.6722
+  ep 19/40 [B(full)] loss=0.7320 val_loss=1.0379 val_acc=0.5917 val_bacc=0.5388
+  ep 20/40 [B(full)] loss=0.6909 val_loss=1.0838 val_acc=0.6333 val_bacc=0.6139
+  ep 21/40 [B(full)] loss=0.6601 val_loss=1.2626 val_acc=0.6333 val_bacc=0.5638
+  ep 22/40 [B(full)] loss=0.6393 val_loss=1.0181 val_acc=0.6500 val_bacc=0.5561
+  ep 23/40 [B(full)] loss=0.6160 val_loss=1.0807 val_acc=0.6083 val_bacc=0.4873
+  ep 24/40 [B(full)] loss=0.5922 val_loss=1.0893 val_acc=0.6500 val_bacc=0.5330
+  ep 25/40 [B(full)] loss=0.5604 val_loss=1.1134 val_acc=0.6500 val_bacc=0.5466
+  ep 26/40 [B(full)] loss=0.5796 val_loss=1.1361 val_acc=0.6167 val_bacc=0.5375
+  ep 27/40 [B(full)] loss=0.5823 val_loss=1.2015 val_acc=0.5917 val_bacc=0.5366
+  ep 28/40 [B(full)] loss=0.5169 val_loss=1.2783 val_acc=0.5667 val_bacc=0.4585
+  ep 29/40 [B(full)] loss=0.5082 val_loss=1.2582 val_acc=0.6000 val_bacc=0.5095
+  ep 30/40 [B(full)] loss=0.5110 val_loss=1.1930 val_acc=0.6417 val_bacc=0.6105
+  [early stop] patience 12
+
+[report]
+               precision    recall  f1-score   support
+
+           0       0.85      0.71      0.78       174
+           1       0.32      0.54      0.40        46
+           2       0.55      0.36      0.43        92
+           3       0.60      0.72      0.66        68
+           4       0.35      0.60      0.44        20
+
+    accuracy                           0.61       400
+   macro avg       0.53      0.59      0.54       400
+weighted avg       0.65      0.61      0.62       400
+
+[RESULT] retina_v2 test_acc=0.6075 train_acc=0.8250 gap=+0.2175 macroF1=0.5423 auc=0.8541 tta=True
+RETINA_V2_DONE
+----- JOB retina rc=0 in 992.7s -----
+
+----- JOB retina_bin | 04:18:34 -----
+[retina_bin] retinamnist size=224 classes=2 device=cuda binary=True
+[retina_bin] train=1080 val=120 test=400 | test balance=[220, 180]
+  ep  1/40 [A(head)] loss=0.7250 val_loss=0.8041 val_acc=0.4750 val_bacc=0.5227
+  ep  2/40 [A(head)] loss=0.6130 val_loss=0.5663 val_acc=0.7667 val_bacc=0.7879
+  ep  3/40 [A(head)] loss=0.5785 val_loss=0.5033 val_acc=0.7750 val_bacc=0.7837
+  ep  4/40 [A(head)] loss=0.5444 val_loss=0.4949 val_acc=0.7917 val_bacc=0.8022
+  ep  5/40 [B(full)] loss=0.5947 val_loss=0.7190 val_acc=0.7250 val_bacc=0.6978
+  ep  6/40 [B(full)] loss=0.4631 val_loss=0.7308 val_acc=0.6833 val_bacc=0.7088
+  ep  7/40 [B(full)] loss=0.4097 val_loss=0.4418 val_acc=0.8083 val_bacc=0.8072
+  ep  8/40 [B(full)] loss=0.3632 val_loss=0.4068 val_acc=0.8167 val_bacc=0.8199
+  ep  9/40 [B(full)] loss=0.3601 val_loss=0.5669 val_acc=0.8250 val_bacc=0.8190
+  ep 10/40 [B(full)] loss=0.3444 val_loss=0.3647 val_acc=0.8417 val_bacc=0.8359
+  ep 11/40 [B(full)] loss=0.3061 val_loss=0.4451 val_acc=0.8083 val_bacc=0.8123
+  ep 12/40 [B(full)] loss=0.3073 val_loss=0.3245 val_acc=0.8500 val_bacc=0.8535
+  ep 13/40 [B(full)] loss=0.3078 val_loss=0.3315 val_acc=0.8667 val_bacc=0.8636
+  ep 14/40 [B(full)] loss=0.3015 val_loss=0.3961 val_acc=0.8667 val_bacc=0.8620
+  ep 15/40 [B(full)] loss=0.2892 val_loss=0.3954 val_acc=0.7833 val_bacc=0.7896
+  ep 16/40 [B(full)] loss=0.2643 val_loss=0.3203 val_acc=0.8917 val_bacc=0.8847
+  ep 17/40 [B(full)] loss=0.2461 val_loss=0.3982 val_acc=0.8583 val_bacc=0.8476
+  ep 18/40 [B(full)] loss=0.2414 val_loss=0.3827 val_acc=0.8750 val_bacc=0.8712
+  ep 19/40 [B(full)] loss=0.2452 val_loss=0.4422 val_acc=0.8250 val_bacc=0.8258
+  ep 20/40 [B(full)] loss=0.2532 val_loss=0.3969 val_acc=0.8583 val_bacc=0.8493
+  ep 21/40 [B(full)] loss=0.2272 val_loss=0.3773 val_acc=0.8750 val_bacc=0.8662
+  ep 22/40 [B(full)] loss=0.2306 val_loss=0.3728 val_acc=0.8917 val_bacc=0.8864
+  ep 23/40 [B(full)] loss=0.2126 val_loss=0.3852 val_acc=0.8750 val_bacc=0.8678
+  ep 24/40 [B(full)] loss=0.2239 val_loss=0.3550 val_acc=0.8750 val_bacc=0.8678
+  ep 25/40 [B(full)] loss=0.2039 val_loss=0.3733 val_acc=0.8583 val_bacc=0.8476
+  ep 26/40 [B(full)] loss=0.1838 val_loss=0.3193 val_acc=0.8833 val_bacc=0.8771
+  ep 27/40 [B(full)] loss=0.1862 val_loss=0.3946 val_acc=0.8667 val_bacc=0.8636
+  ep 28/40 [B(full)] loss=0.1846 val_loss=0.3818 val_acc=0.8667 val_bacc=0.8636
+  [early stop] patience 12
+
+[report]
+                            precision    recall  f1-score   support
+
+non-referable (grade 0-1)       0.86      0.94      0.90       220
+ referable DR (grade 2-4)       0.91      0.82      0.86       180
+
+                 accuracy                           0.88       400
+                macro avg       0.89      0.88      0.88       400
+             weighted avg       0.88      0.88      0.88       400
+
+[RESULT] retina_bin test_acc=0.8825 train_acc=0.9722 gap=+0.0897 macroF1=0.8799 auc=0.9556 tta=True
+RETINA_BIN_DONE
+----- JOB retina_bin rc=0 in 845.8s -----
+
+----- JOB derma | 04:32:40 -----
+[derma_v2] dermamnist size=224 classes=7 device=cuda binary=False
+[mem] train split -> memmap C:\Users\so\Desktop\AI-Powered Radiology Hub\api\data\medmnist\_memmap\dermamnist_train_224.npy (1.05 GB)
+[mem] val split -> memmap C:\Users\so\Desktop\AI-Powered Radiology Hub\api\data\medmnist\_memmap\dermamnist_val_224.npy (0.15 GB)
+[mem] test split -> memmap C:\Users\so\Desktop\AI-Powered Radiology Hub\api\data\medmnist\_memmap\dermamnist_test_224.npy (0.30 GB)
+[derma_v2] train=7007 val=1003 test=2005 | test balance=[66, 103, 220, 23, 223, 1341, 29]
+  ep  1/22 [A(head)] loss=2.3111 val_loss=1.8797 val_acc=0.2941 val_bacc=0.4539
+  ep  2/22 [A(head)] loss=2.0861 val_loss=1.5171 val_acc=0.4367 val_bacc=0.5186
+  ep  3/22 [A(head)] loss=2.0370 val_loss=1.6815 val_acc=0.3440 val_bacc=0.5131
+  ep  4/22 [B(full)] loss=1.9406 val_loss=1.2746 val_acc=0.5244 val_bacc=0.5502
+  ep  5/22 [B(full)] loss=1.7324 val_loss=1.2258 val_acc=0.5912 val_bacc=0.5984
+  ep  6/22 [B(full)] loss=1.6405 val_loss=1.2855 val_acc=0.5643 val_bacc=0.6371
+  ep  7/22 [B(full)] loss=1.6113 val_loss=1.3673 val_acc=0.5703 val_bacc=0.5285
+  ep  8/22 [B(full)] loss=1.5896 val_loss=1.2115 val_acc=0.6181 val_bacc=0.7060
+  ep  9/22 [B(full)] loss=1.4963 val_loss=1.3531 val_acc=0.5942 val_bacc=0.6841
+  ep 10/22 [B(full)] loss=1.4675 val_loss=1.1053 val_acc=0.6999 val_bacc=0.6724
+  ep 11/22 [B(full)] loss=1.4445 val_loss=1.0805 val_acc=0.7348 val_bacc=0.7319
+  ep 12/22 [B(full)] loss=1.3806 val_loss=1.0568 val_acc=0.7139 val_bacc=0.7624
+  ep 13/22 [B(full)] loss=1.3386 val_loss=1.0940 val_acc=0.6959 val_bacc=0.7336
+  ep 14/22 [B(full)] loss=1.3131 val_loss=0.9964 val_acc=0.7647 val_bacc=0.7571
+  ep 15/22 [B(full)] loss=1.2586 val_loss=1.0112 val_acc=0.7458 val_bacc=0.7550
+  ep 16/22 [B(full)] loss=1.2556 val_loss=1.0003 val_acc=0.7617 val_bacc=0.8155
+  ep 17/22 [B(full)] loss=1.1894 val_loss=0.9325 val_acc=0.8006 val_bacc=0.7827
+  ep 18/22 [B(full)] loss=1.1660 val_loss=0.9672 val_acc=0.7727 val_bacc=0.7955
+  ep 19/22 [B(full)] loss=1.1381 val_loss=0.9311 val_acc=0.7966 val_bacc=0.7624
+  ep 20/22 [B(full)] loss=1.1272 val_loss=0.9464 val_acc=0.7896 val_bacc=0.7885
+  ep 21/22 [B(full)] loss=1.0982 val_loss=0.9218 val_acc=0.7896 val_bacc=0.7645
+  ep 22/22 [B(full)] loss=1.0945 val_loss=0.9511 val_acc=0.7936 val_bacc=0.7820
+
+[report]
+                                                  precision    recall  f1-score   support
+
+actinic keratoses and intraepithelial carcinoma       0.51      0.67      0.58        66
+                           basal cell carcinoma       0.67      0.86      0.76       103
+                  benign keratosis-like lesions       0.65      0.85      0.73       220
+                                 dermatofibroma       0.52      0.96      0.68        23
+                                       melanoma       0.54      0.69      0.61       223
+                               melanocytic nevi       0.97      0.82      0.89      1341
+                               vascular lesions       0.68      0.93      0.78        29
+
+                                       accuracy                           0.81      2005
+                                      macro avg       0.65      0.82      0.72      2005
+                                   weighted avg       0.85      0.81      0.82      2005
+
+[RESULT] derma_v2 test_acc=0.8070 train_acc=0.8776 gap=+0.0706 macroF1=0.7175 auc=None tta=True
+DERMA_V2_DONE
+----- JOB derma rc=0 in 4866.7s -----
+
+----- JOB derma_bin | 05:53:46 -----
+[derma_bin] dermamnist size=224 classes=2 device=cuda binary=True
+[mem] train split -> memmap C:\Users\so\Desktop\AI-Powered Radiology Hub\api\data\medmnist\_memmap\dermamnist_train_224.npy (1.05 GB)
+[mem] val split -> memmap C:\Users\so\Desktop\AI-Powered Radiology Hub\api\data\medmnist\_memmap\dermamnist_val_224.npy (0.15 GB)
+[mem] test split -> memmap C:\Users\so\Desktop\AI-Powered Radiology Hub\api\data\medmnist\_memmap\dermamnist_test_224.npy (0.30 GB)
+[derma_bin] train=7007 val=1003 test=2005 | test balance=[1613, 392]
+  ep  1/22 [A(head)] loss=0.6526 val_loss=0.6562 val_acc=0.6500 val_bacc=0.7594
+  ep  2/22 [A(head)] loss=0.5864 val_loss=0.4912 val_acc=0.7507 val_bacc=0.7756
+  ep  3/22 [A(head)] loss=0.5934 val_loss=0.5178 val_acc=0.7448 val_bacc=0.7873
+  ep  4/22 [B(full)] loss=0.5787 val_loss=0.5797 val_acc=0.6969 val_bacc=0.7827
+  ep  5/22 [B(full)] loss=0.5200 val_loss=0.4502 val_acc=0.7607 val_bacc=0.8049
+  ep  6/22 [B(full)] loss=0.5075 val_loss=0.3904 val_acc=0.8026 val_bacc=0.8020
+  ep  7/22 [B(full)] loss=0.4981 val_loss=0.3351 val_acc=0.8475 val_bacc=0.7739
+  ep  8/22 [B(full)] loss=0.4907 val_loss=0.3404 val_acc=0.8604 val_bacc=0.7626
+  ep  9/22 [B(full)] loss=0.4795 val_loss=0.4367 val_acc=0.8026 val_bacc=0.8271
+  ep 10/22 [B(full)] loss=0.4600 val_loss=0.4292 val_acc=0.8185 val_bacc=0.8003
+  ep 11/22 [B(full)] loss=0.4593 val_loss=0.3498 val_acc=0.8435 val_bacc=0.7289
+  ep 12/22 [B(full)] loss=0.4390 val_loss=0.3684 val_acc=0.8195 val_bacc=0.8241
+  ep 13/22 [B(full)] loss=0.4282 val_loss=0.3213 val_acc=0.8694 val_bacc=0.8339
+  ep 14/22 [B(full)] loss=0.4155 val_loss=0.3373 val_acc=0.8654 val_bacc=0.8236
+  ep 15/22 [B(full)] loss=0.4025 val_loss=0.3117 val_acc=0.8794 val_bacc=0.8246
+  ep 16/22 [B(full)] loss=0.3862 val_loss=0.3108 val_acc=0.8814 val_bacc=0.8316
+  ep 17/22 [B(full)] loss=0.3673 val_loss=0.3469 val_acc=0.8714 val_bacc=0.8602
+  ep 18/22 [B(full)] loss=0.3567 val_loss=0.3171 val_acc=0.8784 val_bacc=0.8491
+  ep 19/22 [B(full)] loss=0.3399 val_loss=0.3211 val_acc=0.8843 val_bacc=0.8625
+  ep 20/22 [B(full)] loss=0.3331 val_loss=0.3207 val_acc=0.8824 val_bacc=0.8554
+  ep 21/22 [B(full)] loss=0.3294 val_loss=0.3204 val_acc=0.8833 val_bacc=0.8522
+  ep 22/22 [B(full)] loss=0.3194 val_loss=0.2975 val_acc=0.8953 val_bacc=0.8519
+
+[report]
+                                             precision    recall  f1-score   support
+
+                   benign (bkl/df/nv/vasc)       0.95      0.92      0.94      1613
+malignant or pre-malignant (akiec/bcc/mel)       0.72      0.80      0.76       392
+
+                                  accuracy                           0.90      2005
+                                 macro avg       0.83      0.86      0.85      2005
+                              weighted avg       0.90      0.90      0.90      2005
+
+[RESULT] derma_bin test_acc=0.8998 train_acc=0.9680 gap=+0.0683 macroF1=0.8466 auc=None tta=False
+DERMA_BIN_DONE
+----- JOB derma_bin rc=0 in 4253.1s -----
+
+----- JOB oct | 07:04:39 -----
+[oct_v2] octmnist size=128 classes=4 device=cuda binary=False
+[mem] train split -> memmap C:\Users\so\Desktop\AI-Powered Radiology Hub\api\data\medmnist\_memmap\octmnist_train_128.npy (1.60 GB)
+[mem] val split -> memmap C:\Users\so\Desktop\AI-Powered Radiology Hub\api\data\medmnist\_memmap\octmnist_val_128.npy (0.18 GB)
+[oct_v2] subsampled train -> 37754
+[oct_v2] val subsampled -> 3000 (VAL_MAX, model selection only)
+[oct_v2] train=37754 val=3000 test=1000 | test balance=[250, 250, 250, 250]
+  ep  1/14 [A(head)] loss=nan val_loss=nan val_acc=0.2500 val_bacc=0.2500
+[FATAL] non-finite training loss at epoch 1 — aborting. Retry with AMP=0 to rule out fp16 overflow.
+----- JOB oct rc=1 in 737.9s -----
+
+----- JOB oct_bin | 07:16:57 -----
+[oct_bin] octmnist size=128 classes=2 device=cuda binary=True
+[mem] train split -> memmap C:\Users\so\Desktop\AI-Powered Radiology Hub\api\data\medmnist\_memmap\octmnist_train_128.npy (1.60 GB)
+[mem] val split -> memmap C:\Users\so\Desktop\AI-Powered Radiology Hub\api\data\medmnist\_memmap\octmnist_val_128.npy (0.18 GB)
+[oct_bin] subsampled train -> 40000
+[oct_bin] val subsampled -> 3000 (VAL_MAX, model selection only)
+[oct_bin] train=40000 val=3000 test=1000 | test balance=[250, 750]
+  ep  1/12 [A(head)] loss=nan val_loss=nan val_acc=0.5000 val_bacc=0.5000
+[FATAL] non-finite training loss at epoch 1 — aborting. Retry with AMP=0 to rule out fp16 overflow.
+----- JOB oct_bin rc=1 in 283.2s -----
+=== retrain_below91 end 2026-09-04 07:21:40 ===
+[oct_bin] octmnist size=128 classes=2 device=cuda binary=True
+
+[ens] ---- training member seed=0 -> breast_s0 ----
+[mem] train split -> memmap C:\Users\so\Desktop\AI-Powered Radiology Hub\api\data\medmnist\_memmap\octmnist_train_128.npy (1.60 GB)
+[breast_s0] breastmnist size=224 classes=2 device=cuda binary=False
+[breast_s0] train=546 val=78 test=156 | test balance=[42, 114]
+[mem] val split -> memmap C:\Users\so\Desktop\AI-Powered Radiology Hub\api\data\medmnist\_memmap\octmnist_val_128.npy (0.18 GB)
+[oct_bin] subsampled train -> 40000
+Traceback (most recent call last):
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\train_medmnist_v2.py", line 378, in <module>
+    main()
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\train_medmnist_v2.py", line 221, in main
+    Xva, yva = np.asarray(src[keep]), yva[keep]
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\venv_gpu\lib\site-packages\numpy\_core\memmap.py", line 358, in __getitem__
+    res = super().__getitem__(index)
+numpy._core._exceptions._ArrayMemoryError: Unable to allocate 46.9 MiB for an array with shape (3000, 128, 128) and data type uint8
+  ep  1/40 [A(head)] loss=0.8133 val_loss=0.6388 val_acc=0.5897 val_bacc=0.4637
+  ep  2/40 [A(head)] loss=0.7631 val_loss=0.8086 val_acc=0.4359 val_bacc=0.5990
+  ep  3/40 [A(head)] loss=0.6940 val_loss=0.7248 val_acc=0.4744 val_bacc=0.6103
+device=cuda  min_sensitivity=0.90
+
+breast_v2    checkpoint has no 'medmnist' field, skipping
+Traceback (most recent call last):
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\venv_gpu\lib\site-packages\medmnist\dataset.py", line 106, in download
+    download_url(
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\venv_gpu\lib\site-packages\torchvision\datasets\utils.py", line 114, in download_url
+    if check_integrity(fpath, md5):
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\venv_gpu\lib\site-packages\torchvision\datasets\utils.py", line 58, in check_integrity
+    return check_md5(fpath, md5)
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\venv_gpu\lib\site-packages\torchvision\datasets\utils.py", line 50, in check_md5
+    return md5 == calculate_md5(fpath, **kwargs)
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\venv_gpu\lib\site-packages\torchvision\datasets\utils.py", line 44, in calculate_md5
+    while chunk := f.read(chunk_size):
+MemoryError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\tune_threshold.py", line 184, in <module>
+    main()
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\tune_threshold.py", line 177, in main
+    out = [r for r in (tune(k) for k in keys) if r]
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\tune_threshold.py", line 177, in <listcomp>
+    out = [r for r in (tune(k) for k in keys) if r]
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\tune_threshold.py", line 177, in <genexpr>
+    out = [r for r in (tune(k) for k in keys) if r]
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\tune_threshold.py", line 109, in tune
+    Xte, yte = split_of(dataset, "test", size, bp)
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\tune_threshold.py", line 76, in split_of
+    ds = DataClass(split=split, download=True, size=size, root=DATA_ROOT)
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\venv_gpu\lib\site-packages\medmnist\dataset.py", line 56, in __init__
+    self.download()
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\venv_gpu\lib\site-packages\medmnist\dataset.py", line 113, in download
+    raise RuntimeError(
+RuntimeError: 
+                Automatic download failed! Please download dermamnist_224.npz manually.
+                1. [Optional] Check your network connection: 
+                    Go to https://github.com/MedMNIST/MedMNIST/ and find the Zenodo repository
+                2. Download the npz file from the Zenodo repository or its Zenodo data link: 
+                    https://zenodo.org/records/10519652/files/dermamnist_224.npz?download=1
+                3. [Optional] Verify the MD5: 
+                    8974907d8e169bef5f5b96bc506ae45d
+                4. Put the npz file under your MedMNIST root folder: 
+                    C:\Users\so\Desktop\AI-Powered Radiology Hub\api\data\medmnist
+                
+  ep  4/40 [A(head)] loss=0.6408 val_loss=0.5341 val_acc=0.7949 val_bacc=0.7243
+
+[ens] ---- training member seed=0 -> breast_s0 ----
+[breast_s0] breastmnist size=224 classes=2 device=cuda binary=False
+[breast_s0] train=546 val=78 test=156 | test balance=[42, 114]
+  ep  5/40 [B(full)] loss=0.6690 val_loss=1.3928 val_acc=0.7308 val_bacc=0.5000
+[ens] member seed=0 FAILED rc=3221225477
+
+[ens] ---- training member seed=1 -> breast_s1 ----
+[breast_s1] breastmnist size=224 classes=2 device=cuda binary=False
+[breast_s1] train=546 val=78 test=156 | test balance=[42, 114]
+fatal   : Memory allocation failure
+Traceback (most recent call last):
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\train_medmnist_v2.py", line 382, in <module>
+    main()
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\train_medmnist_v2.py", line 276, in main
+    for xb, yb in tl:
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\venv_gpu\lib\site-packages\torch\utils\data\dataloader.py", line 733, in __next__
+    data = self._next_data()
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\venv_gpu\lib\site-packages\torch\utils\data\dataloader.py", line 791, in _next_data
+    data = _utils.pin_memory.pin_memory(data, self._pin_memory_device)
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\venv_gpu\lib\site-packages\torch\utils\data\_utils\pin_memory.py", line 100, in pin_memory
+    clone[i] = pin_memory(item, device)
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\venv_gpu\lib\site-packages\torch\utils\data\_utils\pin_memory.py", line 66, in pin_memory
+    return data.pin_memory(device)
+RuntimeError: CUDA error: unknown error
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
+[ens] member seed=1 FAILED rc=1
+
+[ens] ---- training member seed=2 -> breast_s2 ----
+  ep  6/40 [B(full)] loss=0.5530 val_loss=0.3284 val_acc=0.8333 val_bacc=0.7055
+[breast_s2] breastmnist size=224 classes=2 device=cuda binary=False
+[breast_s2] train=546 val=78 test=156 | test balance=[42, 114]
+[ens] member seed=2 FAILED rc=3221225477
+
+[ens] ---- training member seed=3 -> breast_s3 ----
+[breast_s3] breastmnist size=224 classes=2 device=cuda binary=False
+[breast_s3] train=546 val=78 test=156 | test balance=[42, 114]
+[ens] member seed=3 FAILED rc=3221225477
+
+[ens] ---- training member seed=4 -> breast_s4 ----
+  ep  7/40 [B(full)] loss=0.5143 val_loss=0.2505 val_acc=0.8974 val_bacc=0.8997
+[breast_s4] breastmnist size=224 classes=2 device=cuda binary=False
+[breast_s4] train=546 val=78 test=156 | test balance=[42, 114]
+fatal   : Memory allocation failure
+Traceback (most recent call last):
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\train_medmnist_v2.py", line 382, in <module>
+    main()
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\train_medmnist_v2.py", line 276, in main
+    for xb, yb in tl:
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\venv_gpu\lib\site-packages\torch\utils\data\dataloader.py", line 733, in __next__
+    data = self._next_data()
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\venv_gpu\lib\site-packages\torch\utils\data\dataloader.py", line 791, in _next_data
+    data = _utils.pin_memory.pin_memory(data, self._pin_memory_device)
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\venv_gpu\lib\site-packages\torch\utils\data\_utils\pin_memory.py", line 100, in pin_memory
+    clone[i] = pin_memory(item, device)
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\venv_gpu\lib\site-packages\torch\utils\data\_utils\pin_memory.py", line 66, in pin_memory
+    return data.pin_memory(device)
+RuntimeError: CUDA error: unknown error
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
+[ens] member seed=4 FAILED rc=1
+
+[ens] ---- training member seed=0 -> retina_bin_s0 ----
+  ep  8/40 [B(full)] loss=0.4913 val_loss=0.2927 val_acc=0.8974 val_bacc=0.9148
+[retina_bin_s0] retinamnist size=224 classes=2 device=cuda binary=True
+[mem] train split -> memmap C:\Users\so\Desktop\AI-Powered Radiology Hub\api\data\medmnist\_memmap\retinamnist_train_224.npy (0.16 GB)
+[retina_bin_s0] train=1080 val=120 test=400 | test balance=[220, 180]
+fatal   : Memory allocation failure
+Traceback (most recent call last):
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\train_medmnist_v2.py", line 382, in <module>
+    main()
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\train_medmnist_v2.py", line 276, in main
+    for xb, yb in tl:
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\venv_gpu\lib\site-packages\torch\utils\data\dataloader.py", line 733, in __next__
+    data = self._next_data()
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\venv_gpu\lib\site-packages\torch\utils\data\dataloader.py", line 791, in _next_data
+    data = _utils.pin_memory.pin_memory(data, self._pin_memory_device)
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\venv_gpu\lib\site-packages\torch\utils\data\_utils\pin_memory.py", line 100, in pin_memory
+    clone[i] = pin_memory(item, device)
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\venv_gpu\lib\site-packages\torch\utils\data\_utils\pin_memory.py", line 66, in pin_memory
+    return data.pin_memory(device)
+RuntimeError: CUDA error: unknown error
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
+[ens] member seed=0 FAILED rc=1
+
+[ens] ---- training member seed=1 -> retina_bin_s1 ----
+  ep  9/40 [B(full)] loss=0.4550 val_loss=0.2582 val_acc=0.9359 val_bacc=0.9411
+[retina_bin_s1] retinamnist size=224 classes=2 device=cuda binary=True
+Traceback (most recent call last):
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\train_medmnist_v2.py", line 382, in <module>
+    main()
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\train_medmnist_v2.py", line 200, in main
+    Xtr, ytr = load_split("train"); Xva, yva = load_split("val"); Xte, yte = load_split("test")
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\train_medmnist_v2.py", line 130, in load_split
+    ds = DataClass(split=split, download=True, size=SIZE, root=DATA_ROOT)
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\venv_gpu\lib\site-packages\medmnist\dataset.py", line 76, in __init__
+    self.imgs = npz_file[f"{self.split}_images"]
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\venv_gpu\lib\site-packages\numpy\lib\_npyio_impl.py", line 254, in __getitem__
+    return format.read_array(bytes,
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\venv_gpu\lib\site-packages\numpy\lib\format.py", line 842, in read_array
+    array = numpy.ndarray(count, dtype=dtype)
+numpy._core._exceptions._ArrayMemoryError: Unable to allocate 155. MiB for an array with shape (162570240,) and data type uint8
+[ens] member seed=1 FAILED rc=1
+
+[ens] ---- training member seed=2 -> retina_bin_s2 ----
+[retina_bin_s2] retinamnist size=224 classes=2 device=cuda binary=True
+Traceback (most recent call last):
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\train_medmnist_v2.py", line 382, in <module>
+    main()
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\train_medmnist_v2.py", line 200, in main
+    Xtr, ytr = load_split("train"); Xva, yva = load_split("val"); Xte, yte = load_split("test")
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\train_medmnist_v2.py", line 130, in load_split
+    ds = DataClass(split=split, download=True, size=SIZE, root=DATA_ROOT)
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\venv_gpu\lib\site-packages\medmnist\dataset.py", line 76, in __init__
+    self.imgs = npz_file[f"{self.split}_images"]
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\venv_gpu\lib\site-packages\numpy\lib\_npyio_impl.py", line 254, in __getitem__
+    return format.read_array(bytes,
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\venv_gpu\lib\site-packages\numpy\lib\format.py", line 842, in read_array
+    array = numpy.ndarray(count, dtype=dtype)
+numpy._core._exceptions._ArrayMemoryError: Unable to allocate 155. MiB for an array with shape (162570240,) and data type uint8
+[ens] member seed=2 FAILED rc=1
+
+[ens] ---- training member seed=3 -> retina_bin_s3 ----
+  ep 10/40 [B(full)] loss=0.3947 val_loss=1.4440 val_acc=0.4615 val_bacc=0.6316
+[ens] member seed=0 FAILED rc=3221225477
+
+[ens] ---- training member seed=1 -> breast_s1 ----
+[retina_bin_s3] retinamnist size=224 classes=2 device=cuda binary=True
+[mem] train split -> memmap C:\Users\so\Desktop\AI-Powered Radiology Hub\api\data\medmnist\_memmap\retinamnist_train_224.npy (0.16 GB)
+[retina_bin_s3] train=1080 val=120 test=400 | test balance=[220, 180]
+[breast_s1] breastmnist size=224 classes=2 device=cuda binary=False
+[breast_s1] train=546 val=78 test=156 | test balance=[42, 114]
+fatal   : Memory allocation failure
+[ens] member seed=1 FAILED rc=3221225477
+
+[ens] ---- training member seed=2 -> breast_s2 ----
+[breast_s2] breastmnist size=224 classes=2 device=cuda binary=False
+[breast_s2] train=546 val=78 test=156 | test balance=[42, 114]
+Traceback (most recent call last):
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\train_medmnist_v2.py", line 382, in <module>
+    main()
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\train_medmnist_v2.py", line 276, in main
+    for xb, yb in tl:
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\venv_gpu\lib\site-packages\torch\utils\data\dataloader.py", line 733, in __next__
+    data = self._next_data()
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\venv_gpu\lib\site-packages\torch\utils\data\dataloader.py", line 791, in _next_data
+    data = _utils.pin_memory.pin_memory(data, self._pin_memory_device)
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\venv_gpu\lib\site-packages\torch\utils\data\_utils\pin_memory.py", line 100, in pin_memory
+    clone[i] = pin_memory(item, device)
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\venv_gpu\lib\site-packages\torch\utils\data\_utils\pin_memory.py", line 66, in pin_memory
+    return data.pin_memory(device)
+RuntimeError: CUDA error: out of memory
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
+[ens] member seed=2 FAILED rc=1
+
+[ens] ---- training member seed=3 -> breast_s3 ----
+[breast_s3] breastmnist size=224 classes=2 device=cuda binary=False
+Traceback (most recent call last):
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\venv_gpu\lib\site-packages\medmnist\dataset.py", line 106, in download
+    download_url(
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\venv_gpu\lib\site-packages\torchvision\datasets\utils.py", line 114, in download_url
+    if check_integrity(fpath, md5):
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\venv_gpu\lib\site-packages\torchvision\datasets\utils.py", line 58, in check_integrity
+    return check_md5(fpath, md5)
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\venv_gpu\lib\site-packages\torchvision\datasets\utils.py", line 50, in check_md5
+    return md5 == calculate_md5(fpath, **kwargs)
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\venv_gpu\lib\site-packages\torchvision\datasets\utils.py", line 44, in calculate_md5
+    while chunk := f.read(chunk_size):
+MemoryError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\train_medmnist_v2.py", line 382, in <module>
+    main()
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\train_medmnist_v2.py", line 200, in main
+    Xtr, ytr = load_split("train"); Xva, yva = load_split("val"); Xte, yte = load_split("test")
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\train_medmnist_v2.py", line 130, in load_split
+    ds = DataClass(split=split, download=True, size=SIZE, root=DATA_ROOT)
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\venv_gpu\lib\site-packages\medmnist\dataset.py", line 56, in __init__
+    self.download()
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\venv_gpu\lib\site-packages\medmnist\dataset.py", line 113, in download
+    raise RuntimeError(
+RuntimeError: 
+                Automatic download failed! Please download breastmnist_224.npz manually.
+                1. [Optional] Check your network connection: 
+                    Go to https://github.com/MedMNIST/MedMNIST/ and find the Zenodo repository
+                2. Download the npz file from the Zenodo repository or its Zenodo data link: 
+                    https://zenodo.org/records/10519652/files/breastmnist_224.npz?download=1
+                3. [Optional] Verify the MD5: 
+                    b56378a6eefa9fed602bb16d192d4c8b
+                4. Put the npz file under your MedMNIST root folder: 
+                    C:\Users\so\Desktop\AI-Powered Radiology Hub\api\data\medmnist
+                
+[ens] member seed=3 FAILED rc=1
+
+[ens] ---- training member seed=4 -> breast_s4 ----
+  ep  1/40 [A(head)] loss=0.7541 val_loss=0.6054 val_acc=0.6667 val_bacc=0.6835
+[breast_s4] breastmnist size=224 classes=2 device=cuda binary=False
+[breast_s4] train=546 val=78 test=156 | test balance=[42, 114]
+Traceback (most recent call last):
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\train_medmnist_v2.py", line 382, in <module>
+    main()
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\train_medmnist_v2.py", line 240, in main
+    model = build_brain_resnet(num_classes=n_cls, pretrained=True, dropout=DROPOUT).to(DEVICE)
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\venv_gpu\lib\site-packages\torch\nn\modules\module.py", line 1355, in to
+    return self._apply(convert)
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\venv_gpu\lib\site-packages\torch\nn\modules\module.py", line 915, in _apply
+    module._apply(fn)
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\venv_gpu\lib\site-packages\torch\nn\modules\module.py", line 942, in _apply
+    param_applied = fn(param)
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\venv_gpu\lib\site-packages\torch\nn\modules\module.py", line 1341, in convert
+    return t.to(
+RuntimeError: CUDA error: out of memory
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
+[ens] member seed=4 FAILED rc=1
+  ep  2/40 [A(head)] loss=0.6053 val_loss=0.6051 val_acc=0.7167 val_bacc=0.7424
+
+[ens] ---- training member seed=0 -> retina_bin_s0 ----
+[retina_bin_s0] retinamnist size=224 classes=2 device=cuda binary=True
+[mem] train split -> memmap C:\Users\so\Desktop\AI-Powered Radiology Hub\api\data\medmnist\_memmap\retinamnist_train_224.npy (0.16 GB)
+[retina_bin_s0] train=1080 val=120 test=400 | test balance=[220, 180]
+Traceback (most recent call last):
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\train_medmnist_v2.py", line 382, in <module>
+    main()
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\train_medmnist_v2.py", line 240, in main
+    model = build_brain_resnet(num_classes=n_cls, pretrained=True, dropout=DROPOUT).to(DEVICE)
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\venv_gpu\lib\site-packages\torch\nn\modules\module.py", line 1355, in to
+    return self._apply(convert)
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\venv_gpu\lib\site-packages\torch\nn\modules\module.py", line 915, in _apply
+    module._apply(fn)
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\venv_gpu\lib\site-packages\torch\nn\modules\module.py", line 942, in _apply
+    param_applied = fn(param)
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\venv_gpu\lib\site-packages\torch\nn\modules\module.py", line 1341, in convert
+    return t.to(
+RuntimeError: CUDA error: out of memory
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
+[ens] member seed=0 FAILED rc=1
+
+[ens] ---- training member seed=1 -> retina_bin_s1 ----
+  ep  3/40 [A(head)] loss=0.5945 val_loss=0.5046 val_acc=0.7833 val_bacc=0.7980
+[retina_bin_s1] retinamnist size=224 classes=2 device=cuda binary=True
+[mem] train split -> memmap C:\Users\so\Desktop\AI-Powered Radiology Hub\api\data\medmnist\_memmap\retinamnist_train_224.npy (0.16 GB)
+[retina_bin_s1] train=1080 val=120 test=400 | test balance=[220, 180]
+Traceback (most recent call last):
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\train_medmnist_v2.py", line 382, in <module>
+    main()
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\train_medmnist_v2.py", line 240, in main
+    model = build_brain_resnet(num_classes=n_cls, pretrained=True, dropout=DROPOUT).to(DEVICE)
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\venv_gpu\lib\site-packages\torch\nn\modules\module.py", line 1355, in to
+    return self._apply(convert)
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\venv_gpu\lib\site-packages\torch\nn\modules\module.py", line 915, in _apply
+    module._apply(fn)
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\venv_gpu\lib\site-packages\torch\nn\modules\module.py", line 942, in _apply
+    param_applied = fn(param)
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\venv_gpu\lib\site-packages\torch\nn\modules\module.py", line 1341, in convert
+    return t.to(
+RuntimeError: CUDA error: out of memory
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
+[ens] member seed=1 FAILED rc=1
+
+[ens] ---- training member seed=2 -> retina_bin_s2 ----
+  ep  4/40 [A(head)] loss=0.5679 val_loss=0.5377 val_acc=0.7417 val_bacc=0.7635
+[retina_bin_s2] retinamnist size=224 classes=2 device=cuda binary=True
+Traceback (most recent call last):
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\train_medmnist_v2.py", line 382, in <module>
+    main()
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\train_medmnist_v2.py", line 200, in main
+    Xtr, ytr = load_split("train"); Xva, yva = load_split("val"); Xte, yte = load_split("test")
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\train_medmnist_v2.py", line 130, in load_split
+    ds = DataClass(split=split, download=True, size=SIZE, root=DATA_ROOT)
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\venv_gpu\lib\site-packages\medmnist\dataset.py", line 76, in __init__
+    self.imgs = npz_file[f"{self.split}_images"]
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\venv_gpu\lib\site-packages\numpy\lib\_npyio_impl.py", line 254, in __getitem__
+    return format.read_array(bytes,
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\venv_gpu\lib\site-packages\numpy\lib\format.py", line 842, in read_array
+    array = numpy.ndarray(count, dtype=dtype)
+numpy._core._exceptions._ArrayMemoryError: Unable to allocate 155. MiB for an array with shape (162570240,) and data type uint8
+[ens] member seed=2 FAILED rc=1
+
+[ens] ---- training member seed=3 -> retina_bin_s3 ----
+[retina_bin_s3] retinamnist size=224 classes=2 device=cuda binary=True
+Traceback (most recent call last):
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\train_medmnist_v2.py", line 382, in <module>
+    main()
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\train_medmnist_v2.py", line 200, in main
+    Xtr, ytr = load_split("train"); Xva, yva = load_split("val"); Xte, yte = load_split("test")
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\train_medmnist_v2.py", line 130, in load_split
+    ds = DataClass(split=split, download=True, size=SIZE, root=DATA_ROOT)
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\venv_gpu\lib\site-packages\medmnist\dataset.py", line 76, in __init__
+    self.imgs = npz_file[f"{self.split}_images"]
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\venv_gpu\lib\site-packages\numpy\lib\_npyio_impl.py", line 254, in __getitem__
+    return format.read_array(bytes,
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\venv_gpu\lib\site-packages\numpy\lib\format.py", line 842, in read_array
+    array = numpy.ndarray(count, dtype=dtype)
+numpy._core._exceptions._ArrayMemoryError: Unable to allocate 155. MiB for an array with shape (162570240,) and data type uint8
+[ens] member seed=3 FAILED rc=1
+
+[ens] ---- training member seed=4 -> retina_bin_s4 ----
+[retina_bin_s4] retinamnist size=224 classes=2 device=cuda binary=True
+Traceback (most recent call last):
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\train_medmnist_v2.py", line 382, in <module>
+    main()
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\train_medmnist_v2.py", line 200, in main
+    Xtr, ytr = load_split("train"); Xva, yva = load_split("val"); Xte, yte = load_split("test")
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\train_medmnist_v2.py", line 130, in load_split
+    ds = DataClass(split=split, download=True, size=SIZE, root=DATA_ROOT)
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\venv_gpu\lib\site-packages\medmnist\dataset.py", line 76, in __init__
+    self.imgs = npz_file[f"{self.split}_images"]
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\venv_gpu\lib\site-packages\numpy\lib\_npyio_impl.py", line 254, in __getitem__
+    return format.read_array(bytes,
+  File "C:\Users\so\Desktop\AI-Powered Radiology Hub\api\venv_gpu\lib\site-packages\numpy\lib\format.py", line 842, in read_array
+    array = numpy.ndarray(count, dtype=dtype)
+numpy._core._exceptions._ArrayMemoryError: Unable to allocate 155. MiB for an array with shape (162570240,) and data type uint8
+[ens] member seed=4 FAILED rc=1
+  ep  5/40 [B(full)] loss=0.5538 val_loss=0.5083 val_acc=0.8250 val_bacc=0.8274
+  ep  6/40 [B(full)] loss=0.4326 val_loss=0.4219 val_acc=0.8250 val_bacc=0.8224
+  ep  7/40 [B(full)] loss=0.4294 val_loss=0.3966 val_acc=0.8417 val_bacc=0.8342
+  ep  8/40 [B(full)] loss=0.3648 val_loss=0.3237 val_acc=0.8667 val_bacc=0.8620
+  ep  9/40 [B(full)] loss=0.3520 val_loss=0.4987 val_acc=0.8167 val_bacc=0.8047
+  ep 10/40 [B(full)] loss=0.3439 val_loss=0.3549 val_acc=0.8167 val_bacc=0.8114
+  ep 11/40 [B(full)] loss=0.3104 val_loss=0.3378 val_acc=0.8583 val_bacc=0.8594
+  ep 12/40 [B(full)] loss=0.3239 val_loss=0.3428 val_acc=0.8500 val_bacc=0.8468
+  ep 13/40 [B(full)] loss=0.2940 val_loss=0.4348 val_acc=0.8250 val_bacc=0.8342
+  ep 14/40 [B(full)] loss=0.2943 val_loss=0.5209 val_acc=0.8250 val_bacc=0.8140
+  ep 15/40 [B(full)] loss=0.2863 val_loss=0.3814 val_acc=0.8583 val_bacc=0.8611
+  ep 16/40 [B(full)] loss=0.2678 val_loss=0.4423 val_acc=0.8417 val_bacc=0.8392
+  ep 17/40 [B(full)] loss=0.2592 val_loss=0.5450 val_acc=0.8083 val_bacc=0.7921
+  ep 18/40 [B(full)] loss=0.2590 val_loss=0.4002 val_acc=0.8417 val_bacc=0.8325
+  ep 19/40 [B(full)] loss=0.2593 val_loss=0.4002 val_acc=0.8500 val_bacc=0.8468
+  ep 20/40 [B(full)] loss=0.2253 val_loss=0.5022 val_acc=0.8250 val_bacc=0.8224
+  [early stop] patience 12
+
+[report]
+                            precision    recall  f1-score   support
+
+non-referable (grade 0-1)       0.92      0.80      0.85       220
+ referable DR (grade 2-4)       0.78      0.91      0.84       180
+
+                 accuracy                           0.85       400
+                macro avg       0.85      0.85      0.85       400
+             weighted avg       0.86      0.85      0.85       400
+
+[RESULT] retina_bin_s3 test_acc=0.8475 train_acc=0.9120 gap=+0.0645 macroF1=0.8474 auc=0.9251 tta=False
+RETINA_BIN_S3_DONE
+
+[ens] ---- training member seed=4 -> retina_bin_s4 ----
+[retina_bin_s4] retinamnist size=224 classes=2 device=cuda binary=True
+[mem] train split -> memmap C:\Users\so\Desktop\AI-Powered Radiology Hub\api\data\medmnist\_memmap\retinamnist_train_224.npy (0.16 GB)
+[retina_bin_s4] train=1080 val=120 test=400 | test balance=[220, 180]
+  ep  1/40 [A(head)] loss=0.7137 val_loss=0.5862 val_acc=0.6833 val_bacc=0.7037
+  ep  2/40 [A(head)] loss=0.5515 val_loss=0.5189 val_acc=0.7417 val_bacc=0.7567
+  ep  3/40 [A(head)] loss=0.5612 val_loss=0.5447 val_acc=0.7583 val_bacc=0.7803
+  ep  4/40 [A(head)] loss=0.5749 val_loss=0.4574 val_acc=0.8000 val_bacc=0.8081
+  ep  5/40 [B(full)] loss=0.5681 val_loss=0.4051 val_acc=0.7833 val_bacc=0.7896
+  ep  6/40 [B(full)] loss=0.4884 val_loss=0.4260 val_acc=0.8333 val_bacc=0.8215
+  ep  7/40 [B(full)] loss=0.4005 val_loss=0.2851 val_acc=0.8583 val_bacc=0.8628
+  ep  8/40 [B(full)] loss=0.3898 val_loss=0.4028 val_acc=0.7833 val_bacc=0.7879
+  ep  9/40 [B(full)] loss=0.3372 val_loss=0.3583 val_acc=0.8583 val_bacc=0.8476
+  ep 10/40 [B(full)] loss=0.3333 val_loss=0.3220 val_acc=0.8500 val_bacc=0.8502
+  ep 11/40 [B(full)] loss=0.3200 val_loss=0.3121 val_acc=0.8667 val_bacc=0.8636
+  ep 12/40 [B(full)] loss=0.3117 val_loss=0.3776 val_acc=0.8500 val_bacc=0.8535
+  ep 13/40 [B(full)] loss=0.3156 val_loss=0.4230 val_acc=0.8583 val_bacc=0.8561
+  ep 14/40 [B(full)] loss=0.3166 val_loss=0.3371 val_acc=0.8500 val_bacc=0.8468
+  ep 15/40 [B(full)] loss=0.2897 val_loss=0.3578 val_acc=0.8833 val_bacc=0.8721
+  ep 16/40 [B(full)] loss=0.2659 val_loss=0.3438 val_acc=0.8500 val_bacc=0.8468
+  ep 17/40 [B(full)] loss=0.2497 val_loss=0.3538 val_acc=0.8833 val_bacc=0.8805
+  ep 18/40 [B(full)] loss=0.2560 val_loss=0.4092 val_acc=0.8167 val_bacc=0.8030
+  ep 19/40 [B(full)] loss=0.2492 val_loss=0.4164 val_acc=0.8083 val_bacc=0.8140
+  ep 20/40 [B(full)] loss=0.2419 val_loss=0.3269 val_acc=0.8500 val_bacc=0.8519
+  ep 21/40 [B(full)] loss=0.2319 val_loss=0.3313 val_acc=0.8750 val_bacc=0.8695
+  ep 22/40 [B(full)] loss=0.2138 val_loss=0.3277 val_acc=0.8583 val_bacc=0.8594
+  ep 23/40 [B(full)] loss=0.2122 val_loss=0.3253 val_acc=0.9000 val_bacc=0.8939
+  ep 24/40 [B(full)] loss=0.2060 val_loss=0.3455 val_acc=0.8417 val_bacc=0.8409
+  ep 25/40 [B(full)] loss=0.1998 val_loss=0.2860 val_acc=0.8833 val_bacc=0.8805
+  ep 26/40 [B(full)] loss=0.1943 val_loss=0.3825 val_acc=0.8417 val_bacc=0.8392
+  ep 27/40 [B(full)] loss=0.1959 val_loss=0.3501 val_acc=0.8833 val_bacc=0.8805
+  ep 28/40 [B(full)] loss=0.1752 val_loss=0.3669 val_acc=0.8667 val_bacc=0.8653
+  ep 29/40 [B(full)] loss=0.1769 val_loss=0.3599 val_acc=0.8750 val_bacc=0.8729
+  ep 30/40 [B(full)] loss=0.1770 val_loss=0.3328 val_acc=0.8833 val_bacc=0.8805
+  ep 31/40 [B(full)] loss=0.1837 val_loss=0.3440 val_acc=0.8917 val_bacc=0.8880
+  ep 32/40 [B(full)] loss=0.1732 val_loss=0.3832 val_acc=0.8917 val_bacc=0.8864
+  ep 33/40 [B(full)] loss=0.1719 val_loss=0.3497 val_acc=0.8833 val_bacc=0.8788
+  ep 34/40 [B(full)] loss=0.1772 val_loss=0.3604 val_acc=0.8917 val_bacc=0.8864
+  ep 35/40 [B(full)] loss=0.1561 val_loss=0.3514 val_acc=0.8917 val_bacc=0.8864
+  [early stop] patience 12
+
+[report]
+                            precision    recall  f1-score   support
+
+non-referable (grade 0-1)       0.85      0.92      0.89       220
+ referable DR (grade 2-4)       0.90      0.81      0.85       180
+
+                 accuracy                           0.87       400
+                macro avg       0.87      0.86      0.87       400
+             weighted avg       0.87      0.87      0.87       400
+
+[RESULT] retina_bin_s4 test_acc=0.8700 train_acc=0.9852 gap=+0.1152 macroF1=0.8672 auc=0.9404 tta=True
+RETINA_BIN_S4_DONE
+
+[ens] 2/5 members trained — evaluating ensemble
+[ens] member 0 (retina_bin_s3.pt): solo test acc = 0.8450
+[ens] member 1 (retina_bin_s4.pt): solo test acc = 0.8700
+[ens] threshold tuned on val: 0.44 (val acc 0.8833 -> 0.8917)
+[ens] screening point: thr=0.25 -> test sens=0.9333 spec=0.7455 acc=0.8300
+
+                           precision    recall  f1-score   support
+
+non-referable (grade 0-1)       0.89      0.84      0.87       220
+ referable DR (grade 2-4)       0.82      0.88      0.85       180
+
+                 accuracy                           0.86       400
+                macro avg       0.86      0.86      0.86       400
+             weighted avg       0.86      0.86      0.86       400
+
+[RESULT] retina_bin_ens test_acc=0.8575 (argmax 0.8625) members=[0.845, 0.87] mean_member=0.8575 gain=+0.0000 thr=0.44
+RETINA_BIN_ENS_DONE
+[oct_v2] octmnist size=128 classes=4 device=cuda binary=False
+[mem] train split -> memmap C:\Users\so\Desktop\AI-Powered Radiology Hub\api\data\medmnist\_memmap\octmnist_train_128.npy (1.60 GB)
+[mem] val split -> memmap C:\Users\so\Desktop\AI-Powered Radiology Hub\api\data\medmnist\_memmap\octmnist_val_128.npy (0.18 GB)
+[oct_v2] subsampled train -> 37754
+[oct_v2] val subsampled -> 3000 (VAL_MAX, model selection only)
+[oct_v2] train=37754 val=3000 test=1000 | test balance=[250, 250, 250, 250]
+  ep  1/14 [A(head)] loss=1.2085 val_loss=0.9442 val_acc=0.6260 val_bacc=0.6260
+  ep  2/14 [A(head)] loss=1.1448 val_loss=0.9948 val_acc=0.5873 val_bacc=0.5873
+  ep  3/14 [B(full)] loss=0.5640 val_loss=0.3026 val_acc=0.8980 val_bacc=0.8980
+  ep  4/14 [B(full)] loss=0.4561 val_loss=0.2727 val_acc=0.9117 val_bacc=0.9117
+  ep  5/14 [B(full)] loss=0.4281 val_loss=0.2460 val_acc=0.9207 val_bacc=0.9207
+  ep  6/14 [B(full)] loss=0.4112 val_loss=0.2045 val_acc=0.9400 val_bacc=0.9400
+  ep  7/14 [B(full)] loss=0.3972 val_loss=0.1960 val_acc=0.9393 val_bacc=0.9393
+  ep  8/14 [B(full)] loss=0.3838 val_loss=0.2277 val_acc=0.9293 val_bacc=0.9293
+  ep  9/14 [B(full)] loss=0.3756 val_loss=0.2252 val_acc=0.9280 val_bacc=0.9280
+  ep 10/14 [B(full)] loss=0.3617 val_loss=0.1901 val_acc=0.9440 val_bacc=0.9440
+  ep 11/14 [B(full)] loss=0.3480 val_loss=0.1774 val_acc=0.9487 val_bacc=0.9487
+  ep 12/14 [B(full)] loss=0.3426 val_loss=0.1709 val_acc=0.9523 val_bacc=0.9523
+  ep 13/14 [B(full)] loss=0.3323 val_loss=0.1656 val_acc=0.9547 val_bacc=0.9547
+  ep 14/14 [B(full)] loss=0.3336 val_loss=0.1676 val_acc=0.9513 val_bacc=0.9513
+
+[report]
+                               precision    recall  f1-score   support
+
+choroidal neovascularization       0.78      0.99      0.87       250
+      diabetic macular edema       0.99      0.98      0.98       250
+                      drusen       0.99      0.73      0.84       250
+                      normal       0.98      1.00      0.99       250
+
+                    accuracy                           0.92      1000
+                   macro avg       0.94      0.92      0.92      1000
+                weighted avg       0.94      0.92      0.92      1000
+
+[RESULT] oct_v2 test_acc=0.9230 train_acc=0.9623 gap=+0.0393 macroF1=0.9219 auc=0.9928 tta=True
+OCT_V2_DONE
+=== launching oct_bin (AMP=0) 06:06:31 ===
+[oct_bin] octmnist size=128 classes=2 device=cuda binary=True
+[mem] train split -> memmap C:\Users\so\Desktop\AI-Powered Radiology Hub\api\data\medmnist\_memmap\octmnist_train_128.npy (1.60 GB)
+[mem] val split -> memmap C:\Users\so\Desktop\AI-Powered Radiology Hub\api\data\medmnist\_memmap\octmnist_val_128.npy (0.18 GB)
+[oct_bin] subsampled train -> 40000
+[oct_bin] val subsampled -> 3000 (VAL_MAX, model selection only)
+[oct_bin] train=40000 val=3000 test=1000 | test balance=[250, 750]
+  ep  1/12 [A(head)] loss=0.5340 val_loss=0.4047 val_acc=0.8153 val_bacc=0.8153
+  ep  2/12 [A(head)] loss=0.5156 val_loss=0.3891 val_acc=0.8270 val_bacc=0.8270
+  ep  3/12 [B(full)] loss=0.2355 val_loss=0.1408 val_acc=0.9503 val_bacc=0.9503
+  ep  4/12 [B(full)] loss=0.1987 val_loss=0.0837 val_acc=0.9770 val_bacc=0.9770
+  ep  5/12 [B(full)] loss=0.1894 val_loss=0.0934 val_acc=0.9740 val_bacc=0.9740
+  ep  6/12 [B(full)] loss=0.1827 val_loss=0.0887 val_acc=0.9763 val_bacc=0.9763
+  ep  7/12 [B(full)] loss=0.1784 val_loss=0.0837 val_acc=0.9793 val_bacc=0.9793
+  ep  8/12 [B(full)] loss=0.1729 val_loss=0.0863 val_acc=0.9800 val_bacc=0.9800
+  ep  9/12 [B(full)] loss=0.1694 val_loss=0.0733 val_acc=0.9833 val_bacc=0.9833
+  ep 10/12 [B(full)] loss=0.1659 val_loss=0.0841 val_acc=0.9790 val_bacc=0.9790
+  ep 11/12 [B(full)] loss=0.1620 val_loss=0.0728 val_acc=0.9833 val_bacc=0.9833
+  ep 12/12 [B(full)] loss=0.1622 val_loss=0.0741 val_acc=0.9833 val_bacc=0.9833
+
+[report]
+                           precision    recall  f1-score   support
+
+                  normal       0.97      1.00      0.98       250
+disease (CNV/DME/drusen)       1.00      0.99      0.99       750
+
+                accuracy                           0.99      1000
+               macro avg       0.98      0.99      0.99      1000
+            weighted avg       0.99      0.99      0.99      1000
+
+[RESULT] oct_bin test_acc=0.9910 train_acc=0.9835 gap=-0.0075 macroF1=0.9881 auc=0.9978 tta=True
+OCT_BIN_DONE

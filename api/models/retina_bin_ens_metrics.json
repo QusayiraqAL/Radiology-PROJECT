@@ -1,0 +1,68 @@
+{
+  "model": "retina_bin_resnet18_ensemble",
+  "dataset_key": "retina_bin_ens",
+  "medmnist": "retinamnist",
+  "binary_task": true,
+  "task": "referable diabetic retinopathy (grade >= 2)",
+  "method": "softmax average of 2 independently seeded runs of the v2 recipe, each with hflip TTA; binary decision threshold tuned on the validation split only",
+  "n_members": 2,
+  "member_seeds": [
+    0,
+    1
+  ],
+  "member_test_accuracies": [
+    0.845,
+    0.87
+  ],
+  "member_mean_test_accuracy": 0.8575,
+  "member_best_test_accuracy": 0.87,
+  "input_size": 224,
+  "classes": [
+    "non-referable (grade 0-1)",
+    "referable DR (grade 2-4)"
+  ],
+  "n_classes": 2,
+  "n_val": 120,
+  "n_test": 400,
+  "decision_threshold": 0.44,
+  "test_accuracy": 0.8575,
+  "test_accuracy_argmax": 0.8625,
+  "val_accuracy_argmax": 0.8833,
+  "val_accuracy_tuned": 0.8917,
+  "test_balanced_accuracy": 0.8593,
+  "test_macro_f1": 0.8568,
+  "test_auc": 0.9449,
+  "confusion_matrix": [
+    [
+      185,
+      35
+    ],
+    [
+      22,
+      158
+    ]
+  ],
+  "ensemble_gain_over_mean_member": 0.0,
+  "screening_operating_point": {
+    "threshold": 0.25,
+    "selected_on": "validation split, lowest threshold meeting >=0.90 sensitivity",
+    "test_sensitivity": 0.9333,
+    "test_specificity": 0.7455,
+    "test_accuracy": 0.83,
+    "test_confusion_matrix": [
+      [
+        164,
+        56
+      ],
+      [
+        12,
+        168
+      ]
+    ],
+    "note": "Screening trades specificity for sensitivity on purpose: a missed referable case is worse than a false alarm. Use this operating point for triage, the accuracy-optimal one for benchmark comparison."
+  },
+  "trained_at": "2026-09-05 05:11:11",
+  "train_seconds": 78423.0,
+  "device": "cuda",
+  "test_split": "full official MedMNIST test split (never subsampled, never tuned on)"
+}

@@ -1,0 +1,20 @@
+{
+  "derma": {
+    "v1": {
+      "measured": 0.7222,
+      "recorded": 0.7222,
+      "size": 64,
+      "n_test": 2005,
+      "auc": 0.925
+    },
+    "v2": {
+      "measured": 0.816,
+      "recorded": 0.807,
+      "size": 224,
+      "n_test": 2005,
+      "auc": 0.9615
+    },
+    "same_harness_gain": 0.0938,
+    "exact_train_test_duplicates": 0
+  }
+}

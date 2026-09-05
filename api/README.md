@@ -83,13 +83,52 @@ Fix: add **real** question-form non-medical Arabic as hard negatives — `hssein
 | `pneumonia` | Chest X-ray | Normal vs Pneumonia | **v2:** ResNet-18 @224 (ImageNet transfer, dropout+label smoothing) | **PneumoniaMNIST-224** (Kermany 2018 pediatric CXR, real full-res) | Accuracy / AUC / sensitivity / specificity + **gap** on official test split |
 | `brain` | Brain MRI | glioma / meningioma / pituitary / no-tumor | **v2:** ResNet-18 + brain-region crop (ImageNet init) | **Brain Tumor MRI Dataset** (HuggingFace, real MRI slices) | Accuracy / macro-F1 / macro-AUC + **gap**, on a **leak-free grouped** test split (see finding above) |
 | `symptoms_ar` | Clinical text (Arabic) | Arabic symptom text → specialty (20) → diagnosis | **Router** (SGD, L2 swept) + **per-category** (calibrated LinearSVC) + **input filter v2**; TF-IDF word+char | **≥200k real Arabic** (Shifaa + hajerbchn/MAQA + MKamil) | Router top-1 / top-3 + **gap**, per-category acc, filter reject-rate on **unseen question-form** negatives |
-| `breast` | Breast ultrasound | malignant vs benign | ResNet-18 (transfer) | **BreastMNIST** (real breast US) | test acc **0.808**, AUC **0.868**, + gap |
-| `derma` | Dermoscopy | 7-class skin lesion (incl. melanoma) | ResNet-18 (transfer) | **DermaMNIST** (HAM10000) | test acc **0.722**, macro-AUC **0.925**, + gap (hard imbalanced task) |
+| `breast` | Breast ultrasound | malignant vs benign | **v2:** ResNet-18 @224 (two-stage, TTA-checked) | **BreastMNIST** (real breast US) | test acc **0.878** (v1 0.808), AUC **0.924**, gap +0.083 |
+| `derma` | Dermoscopy | 7-class skin lesion (incl. melanoma) | **v2:** ResNet-18 @224 (two-stage, TTA) | **DermaMNIST** (HAM10000) | test acc **0.807** (v1 0.722), macro-AUC **0.962**, gap +0.071 |
+| `derma_bin` | Dermoscopy | **malignant/pre-malignant vs benign** (biopsy triage) | ResNet-18 @224 | **DermaMNIST** (HAM10000) | test acc **0.900**, AUC **0.948**; screening point t=0.28 catches **358/392** malignant at sens **0.913** |
 | `blood` | Blood-smear microscopy | 8-class blood cell | ResNet-18 (transfer) | **BloodMNIST** (real peripheral blood) | test acc **0.979**, macro-AUC **0.999**, gap **0.006** |
 | `organc` | Abdominal CT | 11-class organ identification | ResNet-18 (transfer) | **OrganCMNIST** (abdominal CT) | test acc **0.942**, macro-AUC **0.993** |
 | `path` | H&E histopathology | 9-class colorectal tissue | ResNet-18 (transfer) | **PathMNIST** (colorectal H&E) | test acc **0.944**, macro-AUC **0.996** |
-| `oct` | Retinal OCT | 4-class (CNV/DME/drusen/normal) | ResNet-18 (transfer) | **OCTMNIST** | test acc **0.775**, macro-AUC **0.967** |
-| `retina` | Fundus | 5-grade diabetic retinopathy | ResNet-18 (transfer) | **RetinaMNIST** | test acc **0.495** (hard task, ~benchmark), AUC 0.772 |
+| `oct` | Retinal OCT | 4-class (CNV/DME/drusen/normal) | **v2:** ResNet-18 @128 (two-stage, TTA, AMP off) | **OCTMNIST** | test acc **0.923** (v1 0.775), macro-AUC **0.993**, gap +0.039 |
+| `oct_bin` | Retinal OCT | **disease vs normal** (referral triage) | ResNet-18 @128 | **OCTMNIST** | test acc **0.992**, balanced acc **0.994**, AUC **0.998** |
+| `retina` | Fundus | 5-grade diabetic retinopathy | **v2:** ResNet-18 @224 (two-stage, TTA) | **RetinaMNIST** | test acc **0.608** (v1 0.495), AUC **0.854**; published ResNet-18 baseline ~0.52 |
+| `retina_bin` | Fundus | **referable DR (grade ≥2)** (referral triage) | ResNet-18 @224 | **RetinaMNIST** | test acc **0.883**, AUC **0.956**; screening point t=0.245 catches **163/180** at sens **0.906** |
+
+### Verification status of the 2026-09 retrain
+
+Every v1→v2 gain below was checked by re-running **both** checkpoints through **one** evaluation
+path (`verify_retrain_gains.py`). The test is simple: if the new code were measuring something
+easier, the *old* checkpoints would score higher too. They did not — every v1 reproduced its
+July number exactly, so the gains belong to the models, not to the evaluation.
+
+| model | v1 re-measured | recorded in July | v2 | same-harness gain |
+|---|---|---|---|---|
+| `oct` | 77.50% | 77.50% | **92.30%** | **+0.1480** |
+| `derma` | 72.22% | 72.22% | **81.60%** | **+0.0938** |
+| `breast` | 80.77% | 80.77% | **87.82%** | **+0.0705** |
+| `retina` | 49.50% | 49.50% | **60.75%** | **+0.1125** |
+
+**Known limitation of the leak check.** It compares **md5 of raw pixels**, so it detects only
+byte-identical duplicates. It cannot see two *different* photographs of the *same lesion or
+patient*. That distinction matters for `derma`: DermaMNIST has exactly 10,015 samples — the
+image count of HAM10000, which contains only ~7,470 unique lesions — so its split is
+image-level and lesions plausibly span train/test. `HAM10000_Colab_HighRes.ipynb` measures
+that leak directly and trains on a lesion-grouped split. Until that runs, read `derma` numbers
+as an upper bound.
+
+**One real data defect, recorded not hidden.** BreastMNIST test image #76 is byte-identical to
+a training image but carries the *opposite* label (test says benign, train says malignant). The
+model learned the training label and is scored wrong for it. Excluding it would raise accuracy
+0.8782 → 0.8839; it is **not** excluded, because removing a test item that hurts your number is
+tuning on the test set.
+
+**Screening operating points.** For the three `_bin` triage heads, accuracy is not the number to
+serve. Each metrics file carries an accuracy-optimal point *and* a high-sensitivity screening
+point, both selected on validation and measured once on test. Threshold transfer tracks
+validation size — `derma_bin` (n=1003) transfers well, `breast_v2` (n=78) does not.
+
+Full narrative — why each run happened, what changed, and every measured before/after — is in
+[`../TRAINING_LOG.md`](../TRAINING_LOG.md).
 
 ### Safety & transparency features
 - **OOD / low-confidence flag** (`assess_ood`): every image prediction carries an `ood` block

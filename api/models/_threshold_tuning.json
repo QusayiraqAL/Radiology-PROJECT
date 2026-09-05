@@ -1,0 +1,62 @@
+[
+  {
+    "key": "oct_bin",
+    "t_acc": 0.4400000000000001,
+    "t_scr": 0.9650000000000002,
+    "default": {
+      "accuracy": 0.991,
+      "positive_class_index": 1,
+      "sensitivity": 0.988,
+      "specificity": 1.0,
+      "disease_caught": "741/750",
+      "macro_f1": 0.9881,
+      "confusion_matrix_[[tn,fp],[fn,tp]]": [
+        [
+          250,
+          0
+        ],
+        [
+          9,
+          741
+        ]
+      ]
+    },
+    "accuracy": {
+      "accuracy": 0.992,
+      "positive_class_index": 1,
+      "sensitivity": 0.9893,
+      "specificity": 1.0,
+      "disease_caught": "742/750",
+      "macro_f1": 0.9894,
+      "confusion_matrix_[[tn,fp],[fn,tp]]": [
+        [
+          250,
+          0
+        ],
+        [
+          8,
+          742
+        ]
+      ]
+    },
+    "screening": {
+      "accuracy": 0.914,
+      "positive_class_index": 1,
+      "sensitivity": 0.8853,
+      "specificity": 1.0,
+      "disease_caught": "664/750",
+      "macro_f1": 0.8962,
+      "confusion_matrix_[[tn,fp],[fn,tp]]": [
+        [
+          250,
+          0
+        ],
+        [
+          86,
+          664
+        ]
+      ]
+    },
+    "auc": 0.9977813333333333
+  }
+]

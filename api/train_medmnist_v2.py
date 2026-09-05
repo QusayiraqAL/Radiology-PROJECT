@@ -112,7 +112,9 @@ def _maybe_memmap(arr, tag):
     For big arrays we therefore spill to an on-disk .npy and return the PATH, not the array.
     Pickling a path costs nothing, and each worker mmaps the same file lazily (see DS.data),
     so the OS page cache holds one shared copy instead of N private ones."""
-    if arr.nbytes < 200 * 1024 * 1024:
+    # 100 MB, not 200: this box has ~1.2 GB free while training, and derma's 224px val split
+    # alone is 151 MB. Spilling anything this size keeps headroom for the train array.
+    if arr.nbytes < 100 * 1024 * 1024:
         return arr
     os.makedirs(MM_DIR, exist_ok=True)
     path = os.path.join(MM_DIR, "%s_%s_%d.npy" % (DATASET, tag, SIZE))
@@ -156,9 +158,13 @@ class DS(Dataset):
     X is either a real uint8 array (small splits) or a path to an .npy (big splits). In the
     path case the memmap is opened lazily per process, so it is never pickled to workers.
     """
-    def __init__(self, X, y, tf):
+    def __init__(self, X, y, tf, idx=None):
         self.src, self.y, self.tf = X, y, tf
         self._mm = None
+        # `idx` selects a subset WITHOUT copying it out of the memmap. Materialising a 40k
+        # subsample of oct cost 655 MB and made this box fail to allocate 47 MB elsewhere;
+        # carrying indices instead costs 320 KB.
+        self.idx = None if idx is None else np.asarray(idx)
         self.n = len(y)
 
     @property
@@ -172,7 +178,7 @@ class DS(Dataset):
     def __len__(self): return self.n
 
     def __getitem__(self, i):
-        im = np.asarray(self.data[i])
+        im = np.asarray(self.data[i if self.idx is None else self.idx[i]])
         if im.ndim == 2:
             im = np.repeat(im[..., None], 3, axis=-1)
         return self.tf(np.ascontiguousarray(im)), int(self.y[i])
@@ -309,10 +315,18 @@ def main():
     pred      = pt.argmax(1)
     ytr_e, ptr_e = collect(trl)
     train_acc, test_acc = accuracy_score(ytr_e, ptr_e.argmax(1)), accuracy_score(yt, pred)
+    # Renormalize before the multiclass AUC: these probabilities come out of an fp16 softmax
+    # and are then averaged with their flipped copy, so rows land on 0.9995-ish. sklearn
+    # checks sum-to-1 strictly and raises "Target scores need to be probabilities", which the
+    # old bare `except` swallowed into a null AUC (that is why derma_v2 has none). Rescaling
+    # rows does not change any ranking, so it cannot change the AUC — it only satisfies the
+    # check. The exception is printed now instead of hidden.
     try:
-        auc = (roc_auc_score(yt, pt[:, 1]) if n_cls == 2
-               else roc_auc_score(yt, pt, multi_class="ovr", average="macro"))
-    except Exception:
+        pt_n = pt / np.clip(pt.sum(1, keepdims=True), 1e-12, None)
+        auc = (roc_auc_score(yt, pt_n[:, 1]) if n_cls == 2
+               else roc_auc_score(yt, pt_n, multi_class="ovr", average="macro"))
+    except Exception as e:
+        print("  [warn] AUC could not be computed: %s: %s" % (type(e).__name__, e), flush=True)
         auc = float("nan")
 
     metrics = {
