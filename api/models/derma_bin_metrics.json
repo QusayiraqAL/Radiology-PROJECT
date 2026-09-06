@@ -34,7 +34,7 @@
   "test_balanced_accuracy": 0.8605,
   "test_macro_f1": 0.8466,
   "test_auc": 0.9477,
-  "mean_confidence": NaN,
+  "mean_confidence": null,
   "tta_used": false,
   "test_accuracy_no_tta": 0.8998,
   "test_accuracy_with_tta": 0.8953,
@@ -291,5 +291,6 @@
     },
     "note": "Serve the screening point for triage and quote the accuracy point for benchmark comparison. Missing a positive is not equal to a false alarm."
   },
-  "headline_not_promoted": "The val-tuned threshold 0.660 scores 0.9062 (vs 0.8998) but catches only 285/392 of the disease against 316/392 at argmax, so the headline was left alone."
+  "headline_not_promoted": "The val-tuned threshold 0.660 scores 0.9062 (vs 0.8998) but catches only 285/392 of the disease against 316/392 at argmax, so the headline was left alone.",
+  "mean_confidence_note": "not recorded: the training run's evaluation pass ran under fp16 autocast and produced non-finite probabilities, so mean(max(p)) came out NaN. The same array is why this run also recorded a null test_auc, which was later recovered in fp32 on CPU. Left null rather than back-computed, because the value belongs to the fp16 pass that produced it and no measured replacement exists."
 }

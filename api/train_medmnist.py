@@ -153,7 +153,13 @@ def main():
         "overfitting_gap": round(float(train_acc - test_acc), 4),
         "test_macro_f1": round(float(f1_score(yt, pred, average="macro")), 4),
         "test_auc": None if np.isnan(auc) else round(float(auc), 4),
-        "mean_confidence": round(float(pt.max(1).mean()), 4),
+        # Guarded the same way test_auc above is. An fp16 eval pass can hand back
+        # non-finite probabilities, and json.dump writes a bare NaN token that json.load
+        # reads back without complaint - so the bad value survives into the API, where
+        # Starlette serializes with allow_nan=False and kills the whole /models response.
+        # derma_v2 and derma_bin both shipped one for two days before it surfaced.
+        "mean_confidence": (round(float(pt.max(1).mean()), 4)
+                            if np.isfinite(pt).all() else None),
         "confusion_matrix": confusion_matrix(yt, pred).tolist(),
         "trained_at": time.strftime("%Y-%m-%d %H:%M:%S"), "train_seconds": round(time.time()-t0, 1), "device": DEVICE,
     }

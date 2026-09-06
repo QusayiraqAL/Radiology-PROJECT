@@ -17,6 +17,7 @@ Run:  uvicorn main:app --host 127.0.0.1 --port 8000
 import io
 import os
 import json
+import math
 import time
 
 import numpy as np
@@ -44,11 +45,35 @@ app.add_middleware(CORSMiddleware, allow_origins=["*"],
 REGISTRY = {}   # id -> dict(meta, predictor)
 
 
+def _finite_only(o):
+    """Replace NaN/Infinity with None, recursively.
+
+    json.dump writes a bare `NaN` token for a non-finite float and json.load reads it back
+    without complaint, so a metrics file can carry one for months in silence. Starlette then
+    serializes every response with allow_nan=False and the whole endpoint dies with
+    "ValueError: Out of range float values are not JSON compliant: nan" - a 500 on /models
+    that names neither the file nor the field. derma_v2 and derma_bin both shipped a NaN
+    mean_confidence this way (their fp16 eval pass produced non-finite probabilities; the
+    same array is why both recorded a null test_auc, later recovered in fp32 on CPU).
+
+    Sanitising at the single point where metrics enter the process is what makes that a
+    missing value in one card instead of an outage: no training script, present or future,
+    can take the API down by writing a number sklearn or numpy handed it.
+    """
+    if isinstance(o, dict):
+        return {k: _finite_only(v) for k, v in o.items()}
+    if isinstance(o, list):
+        return [_finite_only(v) for v in o]
+    if isinstance(o, float) and not math.isfinite(o):
+        return None
+    return o
+
+
 def _load_metrics(name):
     p = os.path.join(MODEL_DIR, name)
     if os.path.exists(p):
         with open(p, encoding="utf-8") as f:
-            return json.load(f)
+            return _finite_only(json.load(f))
     return None
 
 

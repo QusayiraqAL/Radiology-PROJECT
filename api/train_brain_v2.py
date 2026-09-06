@@ -153,7 +153,13 @@ def main():
         "overfitting_gap": round(float(train_acc - test_acc), 4),
         "test_auc_macro_ovr": None if np.isnan(auc) else round(float(auc), 4),
         "test_macro_f1": round(f1_score(yt, pred, average="macro"), 4),
-        "mean_confidence": round(float(pt.max(1).mean()), 4),
+        # Guarded the same way test_auc above is. An fp16 eval pass can hand back
+        # non-finite probabilities, and json.dump writes a bare NaN token that json.load
+        # reads back without complaint - so the bad value survives into the API, where
+        # Starlette serializes with allow_nan=False and kills the whole /models response.
+        # derma_v2 and derma_bin both shipped one for two days before it surfaced.
+        "mean_confidence": (round(float(pt.max(1).mean()), 4)
+                            if np.isfinite(pt).all() else None),
         "confusion_matrix": confusion_matrix(yt, pred).tolist(),
         "n_clusters": int(cid.max() + 1),
         "trained_at": time.strftime("%Y-%m-%d %H:%M:%S"), "train_seconds": round(time.time()-t0, 1), "device": DEVICE,
@@ -163,7 +169,10 @@ def main():
                os.path.join(MODEL_DIR, "brain_tumor_mri_v2.pt"))
     json.dump(metrics, open(os.path.join(MODEL_DIR, "brain_v2_metrics.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=2)
     print("\n[classification_report]\n", classification_report(yt, pred, target_names=CLASSES))
-    print("[RESULT] v2 test_acc=%.4f train_acc=%.4f gap=%+.4f macroAUC=%s mean_conf=%.4f" % (
+    # mean_conf uses %s, not %.4f: it is None when the eval pass produced non-finite
+    # probabilities, and %.4f on None raises TypeError — after training finished, which is
+    # the worst possible moment to lose the summary line. macroAUC beside it is %s already.
+    print("[RESULT] v2 test_acc=%.4f train_acc=%.4f gap=%+.4f macroAUC=%s mean_conf=%s" % (
         metrics["test_accuracy"], metrics["train_accuracy"], metrics["overfitting_gap"],
         metrics["test_auc_macro_ovr"], metrics["mean_confidence"]))
     print("BRAIN_V2_DONE")

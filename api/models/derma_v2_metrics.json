@@ -39,7 +39,7 @@
   "test_balanced_accuracy": 0.8245,
   "test_macro_f1": 0.7175,
   "test_auc": 0.9615,
-  "mean_confidence": NaN,
+  "mean_confidence": null,
   "tta_used": true,
   "test_accuracy_no_tta": 0.8045,
   "test_accuracy_with_tta": 0.807,
@@ -290,5 +290,6 @@
   "train_seconds": 4851.6,
   "device": "cuda",
   "seed": 0,
-  "test_auc_source": "backfilled by verify_retrain_gains.py — the training run's AUC failed on the fp16 sum-to-1 check"
+  "test_auc_source": "backfilled by verify_retrain_gains.py — the training run's AUC failed on the fp16 sum-to-1 check",
+  "mean_confidence_note": "not recorded: the training run's evaluation pass ran under fp16 autocast and produced non-finite probabilities, so mean(max(p)) came out NaN. The same array is why this run also recorded a null test_auc, which was later recovered in fp32 on CPU. Left null rather than back-computed, because the value belongs to the fp16 pass that produced it and no measured replacement exists."
 }

@@ -139,7 +139,13 @@ def main():
         "accuracy_by_source": by_source,
         "classes": CLASSES, "class_names_ar": ["ورم دبقي", "ورم سحائي", "لا ورم", "ورم نخامية"],
         "n_test": int(len(cand_imgs)), "accuracy": round(acc, 4),
-        "mean_confidence": round(float(prob.max(1).mean()), 4),
+        # Guarded the same way test_auc above is. An fp16 eval pass can hand back
+        # non-finite probabilities, and json.dump writes a bare NaN token that json.load
+        # reads back without complaint - so the bad value survives into the API, where
+        # Starlette serializes with allow_nan=False and kills the whole /models response.
+        # derma_v2 and derma_bin both shipped one for two days before it surfaced.
+        "mean_confidence": (round(float(prob.max(1).mean()), 4)
+                            if np.isfinite(prob).all() else None),
     }, y_true=cand_lab, y_pred=pred, y_prob=prob, extra_arrays={"source": src_arr})
 
 
