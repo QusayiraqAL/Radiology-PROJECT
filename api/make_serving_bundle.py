@@ -2,6 +2,12 @@
 """
 Pack the exact set of files main.py needs to SERVE, and nothing else.
 
+NOT the normal way to run this project - see Serve_API_Colab.ipynb's header. Serving locally
+was measured on 2026-09-06 at under 45 s to start, 14/14 models up, and 0.13-0.76 s per real
+prediction on the same 8 GB box this was written to escape. Use start_server.bat. This
+packer earns its keep only when the API has to reach another device, or when the local box
+is busy training.
+
 Why this exists. models/ is 1.9 GB, but a serving process never touches most of it. It
 loads one checkpoint per registered model, and main.py always prefers the v2 retrain and
 only falls back to v1 when v2 is absent (main.py:442-445) - so shipping both doubles the
