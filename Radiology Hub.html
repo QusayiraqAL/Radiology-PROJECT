@@ -3421,6 +3421,15 @@
     let currentModel = 'chest';
     let modelsMeta = {};   // id -> meta (from /models)
 
+    // When the API itself served this page (main.py:490 returns it at "/"), default to the
+    // origin it came from. The hardcoded 127.0.0.1 means "the machine running the browser",
+    // which is right for a local file:// copy and wrong for every remote host — open the
+    // tunnel URL on a phone and 127.0.0.1 points the phone at itself. file:// has no origin
+    // to inherit, so that case keeps the local default untouched.
+    if (location.protocol === 'http:' || location.protocol === 'https:') {
+      apiUrlInput.value = location.origin;
+    }
+
     const apiBase = () => apiUrlInput.value.trim().replace(/\/+$/, '');
     const pct = v => (v == null ? '—' : (v * 100).toFixed(1) + '٪');
 

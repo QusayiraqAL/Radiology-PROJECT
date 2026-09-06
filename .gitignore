@@ -20,6 +20,12 @@ api/eval_external/_dl/
 *.safetensors
 *.bin
 
+# Serving bundle built by api/make_serving_bundle.py — ~1.45 GB of the weights above,
+# repacked for upload to Colab. Rebuildable in one command, and GitHub rejects any file
+# over 100 MB, so a `git add -A` that catches it fails the push rather than the add.
+radiology_serving_bundle.zip
+*_serving_bundle.zip
+
 # --- Kept on purpose ------------------------------------------------------
 # models/*_metrics.json and models/*.log ARE tracked: they are the evidence
 # behind every number in the README and in TRAINING_LOG.md.
