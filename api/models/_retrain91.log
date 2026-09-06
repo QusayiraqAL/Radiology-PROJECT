@@ -831,3 +831,63 @@ disease (CNV/DME/drusen)       1.00      0.99      0.99       750
 
 [RESULT] oct_bin test_acc=0.9910 train_acc=0.9835 gap=-0.0075 macroF1=0.9881 auc=0.9978 tta=True
 OCT_BIN_DONE
+
+[retina_ord] retinamnist size=224 device=cuda  ORDINAL (CORAL) head
+[retina_ord] train=1080 val=120 test=400 | test grades=[174, 46, 92, 68, 20]
+[retina_ord] grade counts=[486, 128, 206, 194, 66]  class weights=[0.444, 1.688, 1.049, 1.113, 3.273]
+  ep  1/30 [A(head)] loss=nan val_acc=0.4500 val_qwk=0.0000
+
+[retina_ord] retinamnist size=224 device=cuda  ORDINAL (CORAL) head
+[retina_ord] train=1080 val=120 test=400 | test grades=[174, 46, 92, 68, 20]
+[retina_ord] grade counts=[486, 128, 206, 194, 66]  class weights=[0.444, 1.688, 1.049, 1.113, 3.273]
+  ep  1/30 [A(head)] loss=0.6966 val_acc=0.3083 val_qwk=0.3456
+  ep  2/30 [A(head)] loss=0.6713 val_acc=0.4667 val_qwk=0.5504
+  ep  3/30 [A(head)] loss=0.6099 val_acc=0.4750 val_qwk=0.5644
+  ep  4/30 [A(head)] loss=0.6045 val_acc=0.4500 val_qwk=0.5485
+  ep  5/30 [B(full)] loss=0.6100 val_acc=0.4833 val_qwk=0.5519
+  ep  6/30 [B(full)] loss=0.5406 val_acc=0.4750 val_qwk=0.5481
+  ep  7/30 [B(full)] loss=0.5088 val_acc=0.4917 val_qwk=0.5786
+  ep  8/30 [B(full)] loss=0.4988 val_acc=0.4750 val_qwk=0.5737
+  ep  9/30 [B(full)] loss=0.4745 val_acc=0.4500 val_qwk=0.5894
+  ep 10/30 [B(full)] loss=0.4685 val_acc=0.4833 val_qwk=0.4942
+  ep 11/30 [B(full)] loss=0.4752 val_acc=0.4750 val_qwk=0.6451
+  ep 12/30 [B(full)] loss=0.4696 val_acc=0.4750 val_qwk=0.6382
+  ep 13/30 [B(full)] loss=0.4508 val_acc=0.4667 val_qwk=0.5741
+  ep 14/30 [B(full)] loss=0.4412 val_acc=0.4667 val_qwk=0.6006
+  ep 15/30 [B(full)] loss=0.4223 val_acc=0.5083 val_qwk=0.6662
+  ep 16/30 [B(full)] loss=0.4272 val_acc=0.4583 val_qwk=0.5865
+  ep 17/30 [B(full)] loss=0.4192 val_acc=0.4833 val_qwk=0.6091
+  ep 18/30 [B(full)] loss=0.4245 val_acc=0.4917 val_qwk=0.6422
+  ep 19/30 [B(full)] loss=0.4039 val_acc=0.4917 val_qwk=0.6212
+  ep 20/30 [B(full)] loss=0.4051 val_acc=0.4667 val_qwk=0.5835
+  ep 21/30 [B(full)] loss=0.3962 val_acc=0.4583 val_qwk=0.6286
+  ep 22/30 [B(full)] loss=0.3913 val_acc=0.5083 val_qwk=0.6241
+  ep 23/30 [B(full)] loss=0.3885 val_acc=0.4833 val_qwk=0.6401
+  ep 24/30 [B(full)] loss=0.3950 val_acc=0.5250 val_qwk=0.6524
+  ep 25/30 [B(full)] loss=0.3816 val_acc=0.4833 val_qwk=0.6355
+  ep 26/30 [B(full)] loss=0.3832 val_acc=0.5000 val_qwk=0.6298
+  ep 27/30 [B(full)] loss=0.3804 val_acc=0.4917 val_qwk=0.6440
+  ep 28/30 [B(full)] loss=0.3770 val_acc=0.4750 val_qwk=0.6452
+  ep 29/30 [B(full)] loss=0.3750 val_acc=0.4833 val_qwk=0.6494
+  ep 30/30 [B(full)] loss=0.3741 val_acc=0.4833 val_qwk=0.6311
+[retina_ord] val no-TTA=0.5250 TTA=0.4750 -> use_tta=False
+[retina_ord] learned thresholds b=[0.24799999594688416, 0.16899999976158142, -0.17000000178813934, -0.2540000081062317]  descending=True
+
+[report]
+              precision    recall  f1-score   support
+
+           0       0.64      0.93      0.76       174
+           1       0.33      0.04      0.08        46
+           2       0.44      0.17      0.25        92
+           3       0.50      0.06      0.11        68
+           4       0.16      0.80      0.27        20
+
+    accuracy                           0.50       400
+   macro avg       0.42      0.40      0.29       400
+weighted avg       0.51      0.50      0.43       400
+
+  [test] acc=0.5000  QWK=0.7066  MAE=0.760  within1=0.7725  referable sens=0.7111 (128/180)
+  [retina_v2 baseline] acc=0.6075  QWK=0.7659  MAE=0.530  within1=0.8850  referable sens=0.8222 (148/180)
+
+[RESULT] retina_ord acc=0.5000 (retina_v2 0.6075, delta -0.1075) | QWK=0.7066 (0.7659, -0.0593)
+RETINA_ORD_DONE
