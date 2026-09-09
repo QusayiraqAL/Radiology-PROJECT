@@ -1,0 +1,270 @@
+{
+  "model": "breast_k_r18f0c_resnet18_v2",
+  "arch": "resnet18",
+  "preproc": "none",
+  "kfold": 5,
+  "fold": 0,
+  "aug": "full",
+  "selected_on": "acc",
+  "loss": "ce",
+  "focal_gamma": null,
+  "dataset_key": "breast_k_r18f0c",
+  "medmnist": "breastmnist",
+  "modality": "The BreastMNIST is based on a dataset of 780 breast ultrasound images. It is categorized into 3 classes: normal, benign,",
+  "task": "2-class classification",
+  "binary_task": false,
+  "recipe_v2": [
+    "224px input (v1 used 64px)",
+    "two-stage: frozen-backbone head warmup then full fine-tune",
+    "checkpoint selected on val ACCURACY (v1 used val loss)",
+    "test-time augmentation (hflip)",
+    "AdamW + cosine LR",
+    "stronger augmentation + random erasing",
+    "dropout=0.4",
+    "label_smoothing=0.05",
+    "class weights",
+    "mixed precision",
+    "backbone=resnet18"
+  ],
+  "mixup_alpha": 0.0,
+  "cutmix_alpha": 0.0,
+  "batch_size": 32,
+  "input_size": 224,
+  "classes": [
+    "malignant",
+    "normal, benign"
+  ],
+  "n_classes": 2,
+  "n_train": 499,
+  "n_val": 125,
+  "n_test": 156,
+  "val_subsampled_for_selection": false,
+  "test_split": "full official MedMNIST test split (never subsampled)",
+  "test_accuracy": 0.891,
+  "train_accuracy": 0.9499,
+  "overfitting_gap": 0.0589,
+  "test_balanced_accuracy": 0.8653,
+  "test_macro_f1": 0.8626,
+  "test_auc": 0.9388,
+  "mean_confidence": 0.877,
+  "tta_used": true,
+  "tta_views": "flip",
+  "tta_decided_on": "val",
+  "val_accuracy_no_tta": 0.872,
+  "val_accuracy_with_tta": 0.88,
+  "test_accuracy_no_tta": 0.891,
+  "test_accuracy_with_tta": 0.891,
+  "confusion_matrix": [
+    [
+      34,
+      8
+    ],
+    [
+      9,
+      105
+    ]
+  ],
+  "epoch_history": [
+    {
+      "epoch": 1,
+      "stage": "A(head)",
+      "train_loss": 0.7428,
+      "val_loss": 0.6117,
+      "val_acc": 0.688,
+      "val_balanced_acc": 0.4965,
+      "val_selection_score": 0.688
+    },
+    {
+      "epoch": 2,
+      "stage": "A(head)",
+      "train_loss": 0.7065,
+      "val_loss": 0.6011,
+      "val_acc": 0.72,
+      "val_balanced_acc": 0.6543,
+      "val_selection_score": 0.72
+    },
+    {
+      "epoch": 3,
+      "stage": "A(head)",
+      "train_loss": 0.6773,
+      "val_loss": 0.5704,
+      "val_acc": 0.728,
+      "val_balanced_acc": 0.6986,
+      "val_selection_score": 0.728
+    },
+    {
+      "epoch": 4,
+      "stage": "B(full)",
+      "train_loss": 0.6452,
+      "val_loss": 0.3983,
+      "val_acc": 0.808,
+      "val_balanced_acc": 0.7918,
+      "val_selection_score": 0.808
+    },
+    {
+      "epoch": 5,
+      "stage": "B(full)",
+      "train_loss": 0.6003,
+      "val_loss": 0.8118,
+      "val_acc": 0.736,
+      "val_balanced_acc": 0.5,
+      "val_selection_score": 0.736
+    },
+    {
+      "epoch": 6,
+      "stage": "B(full)",
+      "train_loss": 0.471,
+      "val_loss": 1.0649,
+      "val_acc": 0.568,
+      "val_balanced_acc": 0.7065,
+      "val_selection_score": 0.568
+    },
+    {
+      "epoch": 7,
+      "stage": "B(full)",
+      "train_loss": 0.3978,
+      "val_loss": 0.2981,
+      "val_acc": 0.864,
+      "val_balanced_acc": 0.791,
+      "val_selection_score": 0.864
+    },
+    {
+      "epoch": 8,
+      "stage": "B(full)",
+      "train_loss": 0.4279,
+      "val_loss": 0.5403,
+      "val_acc": 0.808,
+      "val_balanced_acc": 0.8501,
+      "val_selection_score": 0.808
+    },
+    {
+      "epoch": 9,
+      "stage": "B(full)",
+      "train_loss": 0.3638,
+      "val_loss": 0.4479,
+      "val_acc": 0.808,
+      "val_balanced_acc": 0.8501,
+      "val_selection_score": 0.808
+    },
+    {
+      "epoch": 10,
+      "stage": "B(full)",
+      "train_loss": 0.3646,
+      "val_loss": 0.8248,
+      "val_acc": 0.672,
+      "val_balanced_acc": 0.7772,
+      "val_selection_score": 0.672
+    },
+    {
+      "epoch": 11,
+      "stage": "B(full)",
+      "train_loss": 0.354,
+      "val_loss": 1.037,
+      "val_acc": 0.632,
+      "val_balanced_acc": 0.7403,
+      "val_selection_score": 0.632
+    },
+    {
+      "epoch": 12,
+      "stage": "B(full)",
+      "train_loss": 0.3602,
+      "val_loss": 0.2918,
+      "val_acc": 0.872,
+      "val_balanced_acc": 0.8839,
+      "val_selection_score": 0.872
+    },
+    {
+      "epoch": 13,
+      "stage": "B(full)",
+      "train_loss": 0.341,
+      "val_loss": 0.4119,
+      "val_acc": 0.8,
+      "val_balanced_acc": 0.835,
+      "val_selection_score": 0.8
+    },
+    {
+      "epoch": 14,
+      "stage": "B(full)",
+      "train_loss": 0.304,
+      "val_loss": 0.4094,
+      "val_acc": 0.824,
+      "val_balanced_acc": 0.861,
+      "val_selection_score": 0.824
+    },
+    {
+      "epoch": 15,
+      "stage": "B(full)",
+      "train_loss": 0.2786,
+      "val_loss": 0.4839,
+      "val_acc": 0.8,
+      "val_balanced_acc": 0.8544,
+      "val_selection_score": 0.8
+    },
+    {
+      "epoch": 16,
+      "stage": "B(full)",
+      "train_loss": 0.2745,
+      "val_loss": 0.4161,
+      "val_acc": 0.792,
+      "val_balanced_acc": 0.849,
+      "val_selection_score": 0.792
+    },
+    {
+      "epoch": 17,
+      "stage": "B(full)",
+      "train_loss": 0.2636,
+      "val_loss": 0.3904,
+      "val_acc": 0.824,
+      "val_balanced_acc": 0.8513,
+      "val_selection_score": 0.824
+    },
+    {
+      "epoch": 18,
+      "stage": "B(full)",
+      "train_loss": 0.2944,
+      "val_loss": 0.2975,
+      "val_acc": 0.864,
+      "val_balanced_acc": 0.8785,
+      "val_selection_score": 0.864
+    },
+    {
+      "epoch": 19,
+      "stage": "B(full)",
+      "train_loss": 0.2802,
+      "val_loss": 0.2639,
+      "val_acc": 0.872,
+      "val_balanced_acc": 0.8742,
+      "val_selection_score": 0.872
+    },
+    {
+      "epoch": 20,
+      "stage": "B(full)",
+      "train_loss": 0.2332,
+      "val_loss": 0.361,
+      "val_acc": 0.84,
+      "val_balanced_acc": 0.8622,
+      "val_selection_score": 0.84
+    }
+  ],
+  "trained_at": "2026-09-09 06:04:23",
+  "train_seconds": 107.1,
+  "device": "cuda",
+  "seed": 0,
+  "selection_alternates": {
+    "acc": {
+      "val_score": 0.872,
+      "epoch": 12,
+      "checkpoint": "breast_k_r18f0c.pt"
+    },
+    "bacc": {
+      "val_score": 0.8839,
+      "epoch": 12,
+      "checkpoint": "breast_k_r18f0c_selbacc.pt"
+    },
+    "recall": {
+      "val_score": 1.0,
+      "epoch": 6,
+      "checkpoint": "breast_k_r18f0c_selrecall.pt"
+    }
+  }
+}

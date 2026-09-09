@@ -1,0 +1,217 @@
+{
+  "model": "oct_geo_efficientnet_b0_v2",
+  "arch": "efficientnet_b0",
+  "preproc": "none",
+  "kfold": null,
+  "fold": null,
+  "aug": "geometry_safe",
+  "selected_on": "acc",
+  "loss": "ce",
+  "focal_gamma": null,
+  "dataset_key": "oct_geo",
+  "medmnist": "octmnist",
+  "modality": "The OCTMNIST is based on a prior dataset of 109,309 valid optical coherence tomography (OCT) images for retinal diseases",
+  "task": "4-class classification",
+  "binary_task": false,
+  "recipe_v2": [
+    "128px input (v1 used 64px)",
+    "two-stage: frozen-backbone head warmup then full fine-tune",
+    "checkpoint selected on val ACCURACY (v1 used val loss)",
+    "TTA evaluated, did not help - not used",
+    "AdamW + cosine LR",
+    "stronger augmentation + random erasing",
+    "dropout=0.4",
+    "label_smoothing=0.05",
+    "class weights",
+    "mixed precision",
+    "backbone=efficientnet_b0"
+  ],
+  "mixup_alpha": 0.0,
+  "cutmix_alpha": 0.0,
+  "batch_size": 24,
+  "input_size": 128,
+  "classes": [
+    "choroidal neovascularization",
+    "diabetic macular edema",
+    "drusen",
+    "normal"
+  ],
+  "n_classes": 4,
+  "n_train": 37754,
+  "n_val": 3000,
+  "n_test": 1000,
+  "val_subsampled_for_selection": true,
+  "test_split": "full official MedMNIST test split (never subsampled)",
+  "test_accuracy": 0.902,
+  "train_accuracy": 0.9864,
+  "overfitting_gap": 0.0844,
+  "test_balanced_accuracy": 0.902,
+  "test_macro_f1": 0.9012,
+  "test_auc": 0.9856,
+  "mean_confidence": 0.914,
+  "tta_used": false,
+  "tta_views": "none",
+  "tta_decided_on": "val",
+  "val_accuracy_no_tta": 0.9647,
+  "val_accuracy_with_tta": 0.9633,
+  "test_accuracy_no_tta": 0.902,
+  "test_accuracy_with_tta": 0.912,
+  "confusion_matrix": [
+    [
+      248,
+      1,
+      1,
+      0
+    ],
+    [
+      10,
+      240,
+      0,
+      0
+    ],
+    [
+      70,
+      2,
+      175,
+      3
+    ],
+    [
+      3,
+      6,
+      2,
+      239
+    ]
+  ],
+  "epoch_history": [
+    {
+      "epoch": 1,
+      "stage": "A(head)",
+      "train_loss": 1.0418,
+      "val_loss": 0.7638,
+      "val_acc": 0.7117,
+      "val_balanced_acc": 0.7117,
+      "val_selection_score": 0.7117
+    },
+    {
+      "epoch": 2,
+      "stage": "A(head)",
+      "train_loss": 1.0158,
+      "val_loss": 0.772,
+      "val_acc": 0.7057,
+      "val_balanced_acc": 0.7057,
+      "val_selection_score": 0.7057
+    },
+    {
+      "epoch": 3,
+      "stage": "A(head)",
+      "train_loss": 1.0167,
+      "val_loss": 0.8055,
+      "val_acc": 0.687,
+      "val_balanced_acc": 0.687,
+      "val_selection_score": 0.687
+    },
+    {
+      "epoch": 4,
+      "stage": "B(full)",
+      "train_loss": 0.5337,
+      "val_loss": 0.2146,
+      "val_acc": 0.934,
+      "val_balanced_acc": 0.934,
+      "val_selection_score": 0.934
+    },
+    {
+      "epoch": 5,
+      "stage": "B(full)",
+      "train_loss": 0.4152,
+      "val_loss": 0.2202,
+      "val_acc": 0.9373,
+      "val_balanced_acc": 0.9373,
+      "val_selection_score": 0.9373
+    },
+    {
+      "epoch": 6,
+      "stage": "B(full)",
+      "train_loss": 0.376,
+      "val_loss": 0.2221,
+      "val_acc": 0.9267,
+      "val_balanced_acc": 0.9267,
+      "val_selection_score": 0.9267
+    },
+    {
+      "epoch": 7,
+      "stage": "B(full)",
+      "train_loss": 0.353,
+      "val_loss": 0.1666,
+      "val_acc": 0.9523,
+      "val_balanced_acc": 0.9523,
+      "val_selection_score": 0.9523
+    },
+    {
+      "epoch": 8,
+      "stage": "B(full)",
+      "train_loss": 0.3363,
+      "val_loss": 0.1662,
+      "val_acc": 0.9533,
+      "val_balanced_acc": 0.9533,
+      "val_selection_score": 0.9533
+    },
+    {
+      "epoch": 9,
+      "stage": "B(full)",
+      "train_loss": 0.319,
+      "val_loss": 0.1616,
+      "val_acc": 0.9563,
+      "val_balanced_acc": 0.9563,
+      "val_selection_score": 0.9563
+    },
+    {
+      "epoch": 10,
+      "stage": "B(full)",
+      "train_loss": 0.304,
+      "val_loss": 0.1459,
+      "val_acc": 0.959,
+      "val_balanced_acc": 0.959,
+      "val_selection_score": 0.959
+    },
+    {
+      "epoch": 11,
+      "stage": "B(full)",
+      "train_loss": 0.2928,
+      "val_loss": 0.1395,
+      "val_acc": 0.9633,
+      "val_balanced_acc": 0.9633,
+      "val_selection_score": 0.9633
+    },
+    {
+      "epoch": 12,
+      "stage": "B(full)",
+      "train_loss": 0.2812,
+      "val_loss": 0.1372,
+      "val_acc": 0.963,
+      "val_balanced_acc": 0.963,
+      "val_selection_score": 0.963
+    },
+    {
+      "epoch": 13,
+      "stage": "B(full)",
+      "train_loss": 0.2735,
+      "val_loss": 0.1314,
+      "val_acc": 0.9647,
+      "val_balanced_acc": 0.9647,
+      "val_selection_score": 0.9647
+    },
+    {
+      "epoch": 14,
+      "stage": "B(full)",
+      "train_loss": 0.2711,
+      "val_loss": 0.1291,
+      "val_acc": 0.9637,
+      "val_balanced_acc": 0.9637,
+      "val_selection_score": 0.9637
+    }
+  ],
+  "trained_at": "2026-09-08 13:07:06",
+  "train_seconds": 3019.4,
+  "device": "cuda",
+  "seed": 0
+}

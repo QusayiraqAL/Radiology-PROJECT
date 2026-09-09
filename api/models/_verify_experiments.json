@@ -1,0 +1,83 @@
+{
+  "retina_eb0": {
+    "measured": 0.67,
+    "recorded": 0.67,
+    "arch": "efficientnet_b0",
+    "tta": true,
+    "size": 224,
+    "n_test": 400,
+    "auc": 0.8539
+  },
+  "breast_eb0": {
+    "measured": 0.891,
+    "recorded": 0.891,
+    "arch": "efficientnet_b0",
+    "tta": false,
+    "size": 224,
+    "n_test": 156,
+    "auc": 0.9313
+  },
+  "retina_bin_eb0": {
+    "measured": 0.86,
+    "recorded": 0.86,
+    "arch": "efficientnet_b0",
+    "tta": false,
+    "size": 224,
+    "n_test": 400,
+    "auc": 0.9438
+  },
+  "retina_eb0cut": {
+    "measured": 0.635,
+    "recorded": 0.635,
+    "arch": "efficientnet_b0",
+    "tta": true,
+    "size": 224,
+    "n_test": 400,
+    "auc": 0.8775
+  },
+  "derma_eb0": {
+    "measured": 0.8793,
+    "recorded": 0.8793,
+    "arch": "efficientnet_b0",
+    "tta": false,
+    "size": 224,
+    "n_test": 2005,
+    "auc": 0.9621
+  },
+  "derma_bin_eb0": {
+    "measured": 0.9172,
+    "recorded": 0.9172,
+    "arch": "efficientnet_b0",
+    "tta": true,
+    "size": 224,
+    "n_test": 2005,
+    "auc": 0.9457
+  },
+  "path_eb0": {
+    "measured": 0.9545,
+    "recorded": 0.9545,
+    "arch": "efficientnet_b0",
+    "tta": true,
+    "size": 64,
+    "n_test": 7180,
+    "auc": 0.9975
+  },
+  "organc_geo64": {
+    "measured": 0.9533,
+    "recorded": 0.9533,
+    "arch": "efficientnet_b0",
+    "tta": false,
+    "size": 64,
+    "n_test": 8216,
+    "auc": 0.9949
+  },
+  "blood_eb0": {
+    "measured": 0.9883,
+    "recorded": 0.9883,
+    "arch": "efficientnet_b0",
+    "tta": false,
+    "size": 224,
+    "n_test": 3421,
+    "auc": 0.9994
+  }
+}

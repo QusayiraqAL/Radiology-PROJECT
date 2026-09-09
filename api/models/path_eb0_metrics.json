@@ -1,0 +1,326 @@
+{
+  "model": "path_eb0_efficientnet_b0_v2",
+  "arch": "efficientnet_b0",
+  "preproc": "none",
+  "kfold": null,
+  "fold": null,
+  "dataset_key": "path_eb0",
+  "medmnist": "pathmnist",
+  "modality": "The PathMNIST is based on a prior study for predicting survival from colorectal cancer histology slides, providing a dat",
+  "task": "9-class classification",
+  "binary_task": false,
+  "recipe_v2": [
+    "64px input (v1 used 64px)",
+    "two-stage: frozen-backbone head warmup then full fine-tune",
+    "checkpoint selected on val ACCURACY (v1 used val loss)",
+    "test-time augmentation (hflip)",
+    "AdamW + cosine LR",
+    "stronger augmentation + random erasing",
+    "dropout=0.4",
+    "label_smoothing=0.05",
+    "class weights",
+    "mixed precision",
+    "backbone=efficientnet_b0"
+  ],
+  "mixup_alpha": 0.0,
+  "cutmix_alpha": 0.0,
+  "batch_size": 24,
+  "input_size": 64,
+  "classes": [
+    "adipose",
+    "background",
+    "debris",
+    "lymphocytes",
+    "mucus",
+    "smooth muscle",
+    "normal colon mucosa",
+    "cancer-associated stroma",
+    "colorectal adenocarcinoma epithelium"
+  ],
+  "n_classes": 9,
+  "n_train": 19998,
+  "n_val": 10004,
+  "n_test": 7180,
+  "val_subsampled_for_selection": false,
+  "test_split": "full official MedMNIST test split (never subsampled)",
+  "test_accuracy": 0.9545,
+  "train_accuracy": 0.9873,
+  "overfitting_gap": 0.0328,
+  "test_balanced_accuracy": 0.9381,
+  "test_macro_f1": 0.9394,
+  "test_auc": 0.9975,
+  "mean_confidence": 0.903,
+  "tta_used": true,
+  "tta_decided_on": "val",
+  "val_accuracy_no_tta": 0.9803,
+  "val_accuracy_with_tta": 0.9818,
+  "test_accuracy_no_tta": 0.9535,
+  "test_accuracy_with_tta": 0.9545,
+  "confusion_matrix": [
+    [
+      1330,
+      1,
+      0,
+      0,
+      3,
+      3,
+      0,
+      0,
+      1
+    ],
+    [
+      0,
+      847,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      316,
+      0,
+      0,
+      23,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      632,
+      0,
+      0,
+      0,
+      2,
+      0
+    ],
+    [
+      41,
+      0,
+      0,
+      0,
+      985,
+      0,
+      7,
+      0,
+      2
+    ],
+    [
+      0,
+      0,
+      4,
+      0,
+      0,
+      568,
+      0,
+      19,
+      1
+    ],
+    [
+      0,
+      0,
+      1,
+      13,
+      4,
+      0,
+      697,
+      0,
+      26
+    ],
+    [
+      2,
+      0,
+      17,
+      3,
+      3,
+      87,
+      0,
+      300,
+      9
+    ],
+    [
+      0,
+      0,
+      4,
+      32,
+      0,
+      0,
+      16,
+      3,
+      1178
+    ]
+  ],
+  "epoch_history": [
+    {
+      "epoch": 1,
+      "stage": "A(head)",
+      "train_loss": 1.2387,
+      "val_loss": 0.8639,
+      "val_acc": 0.7116,
+      "val_balanced_acc": 0.7167
+    },
+    {
+      "epoch": 2,
+      "stage": "A(head)",
+      "train_loss": 1.157,
+      "val_loss": 0.8209,
+      "val_acc": 0.7227,
+      "val_balanced_acc": 0.7236
+    },
+    {
+      "epoch": 3,
+      "stage": "A(head)",
+      "train_loss": 1.1748,
+      "val_loss": 0.7832,
+      "val_acc": 0.7408,
+      "val_balanced_acc": 0.7426
+    },
+    {
+      "epoch": 4,
+      "stage": "B(full)",
+      "train_loss": 0.8678,
+      "val_loss": 0.2785,
+      "val_acc": 0.9207,
+      "val_balanced_acc": 0.9205
+    },
+    {
+      "epoch": 5,
+      "stage": "B(full)",
+      "train_loss": 0.6339,
+      "val_loss": 0.2145,
+      "val_acc": 0.9455,
+      "val_balanced_acc": 0.9452
+    },
+    {
+      "epoch": 6,
+      "stage": "B(full)",
+      "train_loss": 0.5669,
+      "val_loss": 0.2101,
+      "val_acc": 0.9494,
+      "val_balanced_acc": 0.9483
+    },
+    {
+      "epoch": 7,
+      "stage": "B(full)",
+      "train_loss": 0.5227,
+      "val_loss": 0.1801,
+      "val_acc": 0.9591,
+      "val_balanced_acc": 0.9585
+    },
+    {
+      "epoch": 8,
+      "stage": "B(full)",
+      "train_loss": 0.4911,
+      "val_loss": 0.1734,
+      "val_acc": 0.9627,
+      "val_balanced_acc": 0.9629
+    },
+    {
+      "epoch": 9,
+      "stage": "B(full)",
+      "train_loss": 0.4706,
+      "val_loss": 0.1607,
+      "val_acc": 0.9694,
+      "val_balanced_acc": 0.9694
+    },
+    {
+      "epoch": 10,
+      "stage": "B(full)",
+      "train_loss": 0.4571,
+      "val_loss": 0.1741,
+      "val_acc": 0.9632,
+      "val_balanced_acc": 0.9618
+    },
+    {
+      "epoch": 11,
+      "stage": "B(full)",
+      "train_loss": 0.4351,
+      "val_loss": 0.1416,
+      "val_acc": 0.9715,
+      "val_balanced_acc": 0.971
+    },
+    {
+      "epoch": 12,
+      "stage": "B(full)",
+      "train_loss": 0.4246,
+      "val_loss": 0.143,
+      "val_acc": 0.9748,
+      "val_balanced_acc": 0.9745
+    },
+    {
+      "epoch": 13,
+      "stage": "B(full)",
+      "train_loss": 0.4038,
+      "val_loss": 0.1384,
+      "val_acc": 0.9707,
+      "val_balanced_acc": 0.9699
+    },
+    {
+      "epoch": 14,
+      "stage": "B(full)",
+      "train_loss": 0.3961,
+      "val_loss": 0.1396,
+      "val_acc": 0.9731,
+      "val_balanced_acc": 0.9726
+    },
+    {
+      "epoch": 15,
+      "stage": "B(full)",
+      "train_loss": 0.3835,
+      "val_loss": 0.1407,
+      "val_acc": 0.9721,
+      "val_balanced_acc": 0.9718
+    },
+    {
+      "epoch": 16,
+      "stage": "B(full)",
+      "train_loss": 0.3711,
+      "val_loss": 0.1258,
+      "val_acc": 0.9778,
+      "val_balanced_acc": 0.9774
+    },
+    {
+      "epoch": 17,
+      "stage": "B(full)",
+      "train_loss": 0.3618,
+      "val_loss": 0.1201,
+      "val_acc": 0.9795,
+      "val_balanced_acc": 0.9792
+    },
+    {
+      "epoch": 18,
+      "stage": "B(full)",
+      "train_loss": 0.3562,
+      "val_loss": 0.1192,
+      "val_acc": 0.9793,
+      "val_balanced_acc": 0.9794
+    },
+    {
+      "epoch": 19,
+      "stage": "B(full)",
+      "train_loss": 0.3534,
+      "val_loss": 0.1208,
+      "val_acc": 0.9803,
+      "val_balanced_acc": 0.9805
+    },
+    {
+      "epoch": 20,
+      "stage": "B(full)",
+      "train_loss": 0.3519,
+      "val_loss": 0.1194,
+      "val_acc": 0.9804,
+      "val_balanced_acc": 0.9803
+    }
+  ],
+  "trained_at": "2026-09-08 07:20:41",
+  "train_seconds": 1768.7,
+  "device": "cuda",
+  "seed": 0
+}

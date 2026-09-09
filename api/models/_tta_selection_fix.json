@@ -1,0 +1,24 @@
+{
+  "derma_v2": {
+    "val_accuracy_no_tta": 0.8016,
+    "val_accuracy_with_tta": 0.7966,
+    "test_accuracy_no_tta": 0.8135,
+    "test_accuracy_with_tta": 0.816,
+    "tta_used_before": true,
+    "tta_used_after": false,
+    "test_accuracy_before": 0.807,
+    "test_accuracy_after": 0.8135,
+    "delta": 0.0065
+  },
+  "derma_bin": {
+    "val_accuracy_no_tta": 0.8953,
+    "val_accuracy_with_tta": 0.9013,
+    "test_accuracy_no_tta": 0.9002,
+    "test_accuracy_with_tta": 0.8968,
+    "tta_used_before": false,
+    "tta_used_after": true,
+    "test_accuracy_before": 0.8998,
+    "test_accuracy_after": 0.8968,
+    "delta": -0.003
+  }
+}

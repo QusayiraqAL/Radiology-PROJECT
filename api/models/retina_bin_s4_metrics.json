@@ -31,21 +31,21 @@
   "test_accuracy": 0.87,
   "train_accuracy": 0.9852,
   "overfitting_gap": 0.1152,
-  "test_balanced_accuracy": 0.8641,
-  "test_macro_f1": 0.8672,
-  "test_auc": 0.9404,
+  "test_balanced_accuracy": 0.8657,
+  "test_macro_f1": 0.8678,
+  "test_auc": 0.9374,
   "mean_confidence": 0.8995,
-  "tta_used": true,
+  "tta_used": false,
   "test_accuracy_no_tta": 0.87,
   "test_accuracy_with_tta": 0.87,
   "confusion_matrix": [
     [
-      203,
-      17
+      200,
+      20
     ],
     [
-      35,
-      145
+      32,
+      148
     ]
   ],
   "epoch_history": [
@@ -333,5 +333,14 @@
   "trained_at": "2026-09-05 05:10:47",
   "train_seconds": 1042.9,
   "device": "cuda",
-  "seed": 4
+  "seed": 4,
+  "tta_decided_on": "val",
+  "val_accuracy_no_tta": 0.9,
+  "val_accuracy_with_tta": 0.8917,
+  "tta_correction_2026_09_07": {
+    "was": 0.87,
+    "now": 0.87,
+    "why": "the TTA flag had been selected on the test split, which reports the max of two test numbers; it is now selected on val"
+  },
+  "test_numbers_remeasured_on": "cpu"
 }

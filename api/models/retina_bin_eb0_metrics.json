@@ -1,0 +1,169 @@
+{
+  "model": "retina_bin_eb0_efficientnet_b0_v2",
+  "arch": "efficientnet_b0",
+  "dataset_key": "retina_bin_eb0",
+  "medmnist": "retinamnist",
+  "modality": "The RetinaMNIST is based on the DeepDRiD challenge, which provides a dataset of 1,600 retina fundus images. The task is ",
+  "task": "referable diabetic retinopathy (grade >= 2)",
+  "binary_task": true,
+  "recipe_v2": [
+    "224px input (v1 used 64px)",
+    "two-stage: frozen-backbone head warmup then full fine-tune",
+    "checkpoint selected on val ACCURACY (v1 used val loss)",
+    "TTA evaluated, did not help - not used",
+    "AdamW + cosine LR",
+    "stronger augmentation + random erasing",
+    "dropout=0.4",
+    "label_smoothing=0.05",
+    "class weights",
+    "mixed precision",
+    "backbone=efficientnet_b0"
+  ],
+  "mixup_alpha": 0.0,
+  "cutmix_alpha": 0.0,
+  "batch_size": 24,
+  "input_size": 224,
+  "classes": [
+    "non-referable (grade 0-1)",
+    "referable DR (grade 2-4)"
+  ],
+  "n_classes": 2,
+  "n_train": 1080,
+  "n_val": 120,
+  "n_test": 400,
+  "val_subsampled_for_selection": false,
+  "test_split": "full official MedMNIST test split (never subsampled)",
+  "test_accuracy": 0.86,
+  "train_accuracy": 0.9194,
+  "overfitting_gap": 0.0594,
+  "test_balanced_accuracy": 0.8566,
+  "test_macro_f1": 0.858,
+  "test_auc": 0.9438,
+  "mean_confidence": 0.8689,
+  "tta_used": false,
+  "tta_decided_on": "val",
+  "val_accuracy_no_tta": 0.8833,
+  "val_accuracy_with_tta": 0.875,
+  "test_accuracy_no_tta": 0.86,
+  "test_accuracy_with_tta": 0.85,
+  "confusion_matrix": [
+    [
+      196,
+      24
+    ],
+    [
+      32,
+      148
+    ]
+  ],
+  "epoch_history": [
+    {
+      "epoch": 1,
+      "stage": "A(head)",
+      "train_loss": 0.6021,
+      "val_loss": 0.4438,
+      "val_acc": 0.8083,
+      "val_balanced_acc": 0.8056
+    },
+    {
+      "epoch": 2,
+      "stage": "A(head)",
+      "train_loss": 0.5345,
+      "val_loss": 0.428,
+      "val_acc": 0.8,
+      "val_balanced_acc": 0.8047
+    },
+    {
+      "epoch": 3,
+      "stage": "A(head)",
+      "train_loss": 0.5222,
+      "val_loss": 0.4174,
+      "val_acc": 0.8,
+      "val_balanced_acc": 0.8013
+    },
+    {
+      "epoch": 4,
+      "stage": "B(full)",
+      "train_loss": 0.4874,
+      "val_loss": 0.3977,
+      "val_acc": 0.8333,
+      "val_balanced_acc": 0.8418
+    },
+    {
+      "epoch": 5,
+      "stage": "B(full)",
+      "train_loss": 0.3997,
+      "val_loss": 0.2877,
+      "val_acc": 0.8833,
+      "val_balanced_acc": 0.8805
+    },
+    {
+      "epoch": 6,
+      "stage": "B(full)",
+      "train_loss": 0.3496,
+      "val_loss": 0.3198,
+      "val_acc": 0.8417,
+      "val_balanced_acc": 0.8392
+    },
+    {
+      "epoch": 7,
+      "stage": "B(full)",
+      "train_loss": 0.3282,
+      "val_loss": 0.2716,
+      "val_acc": 0.8833,
+      "val_balanced_acc": 0.8805
+    },
+    {
+      "epoch": 8,
+      "stage": "B(full)",
+      "train_loss": 0.3225,
+      "val_loss": 0.369,
+      "val_acc": 0.8417,
+      "val_balanced_acc": 0.8325
+    },
+    {
+      "epoch": 9,
+      "stage": "B(full)",
+      "train_loss": 0.2737,
+      "val_loss": 0.3146,
+      "val_acc": 0.875,
+      "val_balanced_acc": 0.8662
+    },
+    {
+      "epoch": 10,
+      "stage": "B(full)",
+      "train_loss": 0.2719,
+      "val_loss": 0.325,
+      "val_acc": 0.8583,
+      "val_balanced_acc": 0.851
+    },
+    {
+      "epoch": 11,
+      "stage": "B(full)",
+      "train_loss": 0.256,
+      "val_loss": 0.301,
+      "val_acc": 0.8583,
+      "val_balanced_acc": 0.8493
+    },
+    {
+      "epoch": 12,
+      "stage": "B(full)",
+      "train_loss": 0.2417,
+      "val_loss": 0.3237,
+      "val_acc": 0.8833,
+      "val_balanced_acc": 0.8788
+    },
+    {
+      "epoch": 13,
+      "stage": "B(full)",
+      "train_loss": 0.216,
+      "val_loss": 0.4342,
+      "val_acc": 0.85,
+      "val_balanced_acc": 0.8384
+    }
+  ],
+  "trained_at": "2026-09-07 23:32:09",
+  "train_seconds": 294.6,
+  "device": "cuda",
+  "seed": 0
+}

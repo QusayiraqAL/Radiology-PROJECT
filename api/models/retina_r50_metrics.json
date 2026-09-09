@@ -1,0 +1,285 @@
+{
+  "model": "retina_r50_resnet50_v2",
+  "arch": "resnet50",
+  "dataset_key": "retina_r50",
+  "medmnist": "retinamnist",
+  "modality": "The RetinaMNIST is based on the DeepDRiD challenge, which provides a dataset of 1,600 retina fundus images. The task is ",
+  "task": "5-class classification",
+  "binary_task": false,
+  "recipe_v2": [
+    "224px input (v1 used 64px)",
+    "two-stage: frozen-backbone head warmup then full fine-tune",
+    "checkpoint selected on val ACCURACY (v1 used val loss)",
+    "test-time augmentation (hflip)",
+    "AdamW + cosine LR",
+    "stronger augmentation + random erasing",
+    "dropout=0.4",
+    "label_smoothing=0.05",
+    "class weights",
+    "mixed precision",
+    "backbone=resnet50"
+  ],
+  "mixup_alpha": 0.0,
+  "cutmix_alpha": 0.0,
+  "batch_size": 24,
+  "input_size": 224,
+  "classes": [
+    "0",
+    "1",
+    "2",
+    "3",
+    "4"
+  ],
+  "n_classes": 5,
+  "n_train": 1080,
+  "n_val": 120,
+  "n_test": 400,
+  "val_subsampled_for_selection": false,
+  "test_split": "full official MedMNIST test split (never subsampled)",
+  "test_accuracy": 0.6175,
+  "train_accuracy": 0.9185,
+  "overfitting_gap": 0.286,
+  "test_balanced_accuracy": 0.5861,
+  "test_macro_f1": 0.5535,
+  "test_auc": 0.8478,
+  "mean_confidence": 0.6852,
+  "tta_used": false,
+  "test_accuracy_no_tta": 0.6175,
+  "test_accuracy_with_tta": 0.6325,
+  "confusion_matrix": [
+    [
+      126,
+      39,
+      1,
+      5,
+      3
+    ],
+    [
+      14,
+      28,
+      3,
+      0,
+      1
+    ],
+    [
+      11,
+      23,
+      32,
+      22,
+      4
+    ],
+    [
+      2,
+      2,
+      8,
+      51,
+      5
+    ],
+    [
+      0,
+      1,
+      0,
+      9,
+      10
+    ]
+  ],
+  "epoch_history": [
+    {
+      "epoch": 1,
+      "stage": "A(head)",
+      "train_loss": 1.6012,
+      "val_loss": 1.4308,
+      "val_acc": 0.5583,
+      "val_balanced_acc": 0.4214
+    },
+    {
+      "epoch": 2,
+      "stage": "A(head)",
+      "train_loss": 1.4925,
+      "val_loss": 1.4269,
+      "val_acc": 0.475,
+      "val_balanced_acc": 0.4086
+    },
+    {
+      "epoch": 3,
+      "stage": "A(head)",
+      "train_loss": 1.4442,
+      "val_loss": 1.3764,
+      "val_acc": 0.45,
+      "val_balanced_acc": 0.3879
+    },
+    {
+      "epoch": 4,
+      "stage": "B(full)",
+      "train_loss": 1.3305,
+      "val_loss": 1.1164,
+      "val_acc": 0.5917,
+      "val_balanced_acc": 0.61
+    },
+    {
+      "epoch": 5,
+      "stage": "B(full)",
+      "train_loss": 1.1269,
+      "val_loss": 1.0081,
+      "val_acc": 0.5917,
+      "val_balanced_acc": 0.5349
+    },
+    {
+      "epoch": 6,
+      "stage": "B(full)",
+      "train_loss": 1.1242,
+      "val_loss": 1.1412,
+      "val_acc": 0.575,
+      "val_balanced_acc": 0.5605
+    },
+    {
+      "epoch": 7,
+      "stage": "B(full)",
+      "train_loss": 1.0199,
+      "val_loss": 1.0482,
+      "val_acc": 0.5917,
+      "val_balanced_acc": 0.5712
+    },
+    {
+      "epoch": 8,
+      "stage": "B(full)",
+      "train_loss": 0.9757,
+      "val_loss": 1.071,
+      "val_acc": 0.5667,
+      "val_balanced_acc": 0.5842
+    },
+    {
+      "epoch": 9,
+      "stage": "B(full)",
+      "train_loss": 0.912,
+      "val_loss": 1.0357,
+      "val_acc": 0.5833,
+      "val_balanced_acc": 0.5728
+    },
+    {
+      "epoch": 10,
+      "stage": "B(full)",
+      "train_loss": 0.8351,
+      "val_loss": 1.0787,
+      "val_acc": 0.6,
+      "val_balanced_acc": 0.5649
+    },
+    {
+      "epoch": 11,
+      "stage": "B(full)",
+      "train_loss": 0.7775,
+      "val_loss": 0.9644,
+      "val_acc": 0.625,
+      "val_balanced_acc": 0.588
+    },
+    {
+      "epoch": 12,
+      "stage": "B(full)",
+      "train_loss": 0.7441,
+      "val_loss": 0.9264,
+      "val_acc": 0.6667,
+      "val_balanced_acc": 0.5751
+    },
+    {
+      "epoch": 13,
+      "stage": "B(full)",
+      "train_loss": 0.7513,
+      "val_loss": 1.1103,
+      "val_acc": 0.6667,
+      "val_balanced_acc": 0.639
+    },
+    {
+      "epoch": 14,
+      "stage": "B(full)",
+      "train_loss": 0.7002,
+      "val_loss": 1.0089,
+      "val_acc": 0.625,
+      "val_balanced_acc": 0.5724
+    },
+    {
+      "epoch": 15,
+      "stage": "B(full)",
+      "train_loss": 0.6269,
+      "val_loss": 0.9769,
+      "val_acc": 0.6833,
+      "val_balanced_acc": 0.5888
+    },
+    {
+      "epoch": 16,
+      "stage": "B(full)",
+      "train_loss": 0.6185,
+      "val_loss": 0.9546,
+      "val_acc": 0.6167,
+      "val_balanced_acc": 0.5748
+    },
+    {
+      "epoch": 17,
+      "stage": "B(full)",
+      "train_loss": 0.5677,
+      "val_loss": 0.971,
+      "val_acc": 0.675,
+      "val_balanced_acc": 0.6352
+    },
+    {
+      "epoch": 18,
+      "stage": "B(full)",
+      "train_loss": 0.5742,
+      "val_loss": 1.0279,
+      "val_acc": 0.6583,
+      "val_balanced_acc": 0.602
+    },
+    {
+      "epoch": 19,
+      "stage": "B(full)",
+      "train_loss": 0.5286,
+      "val_loss": 1.0389,
+      "val_acc": 0.6833,
+      "val_balanced_acc": 0.6296
+    },
+    {
+      "epoch": 20,
+      "stage": "B(full)",
+      "train_loss": 0.4872,
+      "val_loss": 1.0634,
+      "val_acc": 0.6417,
+      "val_balanced_acc": 0.5504
+    },
+    {
+      "epoch": 21,
+      "stage": "B(full)",
+      "train_loss": 0.4835,
+      "val_loss": 1.0567,
+      "val_acc": 0.6417,
+      "val_balanced_acc": 0.5487
+    },
+    {
+      "epoch": 22,
+      "stage": "B(full)",
+      "train_loss": 0.4774,
+      "val_loss": 0.9743,
+      "val_acc": 0.65,
+      "val_balanced_acc": 0.5234
+    },
+    {
+      "epoch": 23,
+      "stage": "B(full)",
+      "train_loss": 0.4605,
+      "val_loss": 0.9276,
+      "val_acc": 0.6833,
+      "val_balanced_acc": 0.5766
+    }
+  ],
+  "trained_at": "2026-09-07 23:02:27",
+  "train_seconds": 639.2,
+  "device": "cuda",
+  "seed": 0,
+  "tta_decided_on": "val",
+  "val_accuracy_no_tta": 0.6833,
+  "val_accuracy_with_tta": 0.675,
+  "tta_correction_2026_09_07": {
+    "was": 0.6175,
+    "now": 0.6175,
+    "why": "the TTA flag had been selected on the test split, which reports the max of two test numbers; it is now selected on val"
+  },
+  "test_numbers_remeasured_on": "cpu"
+}

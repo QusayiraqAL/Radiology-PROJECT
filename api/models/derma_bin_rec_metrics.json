@@ -1,0 +1,190 @@
+{
+  "model": "derma_bin_rec_efficientnet_b0_v2",
+  "arch": "efficientnet_b0",
+  "preproc": "none",
+  "kfold": null,
+  "fold": null,
+  "aug": "full",
+  "selected_on": "recall",
+  "loss": "ce",
+  "focal_gamma": null,
+  "dataset_key": "derma_bin_rec",
+  "medmnist": "dermamnist",
+  "modality": "The DermaMNIST is based on the HAM10000, a large collection of multi-source dermatoscopic images of common pigmented ski",
+  "task": "malignant / pre-malignant vs benign skin lesion",
+  "binary_task": true,
+  "recipe_v2": [
+    "224px input (v1 used 64px)",
+    "two-stage: frozen-backbone head warmup then full fine-tune",
+    "checkpoint selected on val ACCURACY (v1 used val loss)",
+    "test-time augmentation (hflip)",
+    "AdamW + cosine LR",
+    "stronger augmentation + random erasing",
+    "dropout=0.4",
+    "label_smoothing=0.05",
+    "class weights",
+    "mixed precision",
+    "backbone=efficientnet_b0"
+  ],
+  "mixup_alpha": 0.0,
+  "cutmix_alpha": 0.0,
+  "batch_size": 24,
+  "input_size": 224,
+  "classes": [
+    "benign (bkl/df/nv/vasc)",
+    "malignant or pre-malignant (akiec/bcc/mel)"
+  ],
+  "n_classes": 2,
+  "n_train": 7007,
+  "n_val": 1003,
+  "n_test": 2005,
+  "val_subsampled_for_selection": false,
+  "test_split": "full official MedMNIST test split (never subsampled)",
+  "test_accuracy": 0.7796,
+  "train_accuracy": 0.7939,
+  "overfitting_gap": 0.0144,
+  "test_balanced_accuracy": 0.8282,
+  "test_macro_f1": 0.7311,
+  "test_auc": 0.9176,
+  "mean_confidence": 0.7643,
+  "tta_used": true,
+  "tta_views": "flip",
+  "tta_decided_on": "val",
+  "val_accuracy_no_tta": 0.7647,
+  "val_accuracy_with_tta": 0.7707,
+  "test_accuracy_no_tta": 0.7796,
+  "test_accuracy_with_tta": 0.7796,
+  "confusion_matrix": [
+    [
+      1207,
+      406
+    ],
+    [
+      36,
+      356
+    ]
+  ],
+  "epoch_history": [
+    {
+      "epoch": 1,
+      "stage": "A(head)",
+      "train_loss": 0.5924,
+      "val_loss": 0.5317,
+      "val_acc": 0.7109,
+      "val_balanced_acc": 0.7759,
+      "val_selection_score": 0.8827
+    },
+    {
+      "epoch": 2,
+      "stage": "A(head)",
+      "train_loss": 0.5714,
+      "val_loss": 0.4737,
+      "val_acc": 0.7627,
+      "val_balanced_acc": 0.7753,
+      "val_selection_score": 0.7959
+    },
+    {
+      "epoch": 3,
+      "stage": "A(head)",
+      "train_loss": 0.5732,
+      "val_loss": 0.454,
+      "val_acc": 0.7827,
+      "val_balanced_acc": 0.8012,
+      "val_selection_score": 0.8316
+    },
+    {
+      "epoch": 4,
+      "stage": "B(full)",
+      "train_loss": 0.5498,
+      "val_loss": 0.3971,
+      "val_acc": 0.8245,
+      "val_balanced_acc": 0.8156,
+      "val_selection_score": 0.801
+    },
+    {
+      "epoch": 5,
+      "stage": "B(full)",
+      "train_loss": 0.5054,
+      "val_loss": 0.4468,
+      "val_acc": 0.7647,
+      "val_balanced_acc": 0.819,
+      "val_selection_score": 0.9082
+    },
+    {
+      "epoch": 6,
+      "stage": "B(full)",
+      "train_loss": 0.4779,
+      "val_loss": 0.3565,
+      "val_acc": 0.8485,
+      "val_balanced_acc": 0.8305,
+      "val_selection_score": 0.801
+    },
+    {
+      "epoch": 7,
+      "stage": "B(full)",
+      "train_loss": 0.453,
+      "val_loss": 0.3416,
+      "val_acc": 0.8584,
+      "val_balanced_acc": 0.8521,
+      "val_selection_score": 0.8418
+    },
+    {
+      "epoch": 8,
+      "stage": "B(full)",
+      "train_loss": 0.4427,
+      "val_loss": 0.3299,
+      "val_acc": 0.8604,
+      "val_balanced_acc": 0.8495,
+      "val_selection_score": 0.8316
+    },
+    {
+      "epoch": 9,
+      "stage": "B(full)",
+      "train_loss": 0.4204,
+      "val_loss": 0.3239,
+      "val_acc": 0.8704,
+      "val_balanced_acc": 0.8654,
+      "val_selection_score": 0.8571
+    },
+    {
+      "epoch": 10,
+      "stage": "B(full)",
+      "train_loss": 0.4098,
+      "val_loss": 0.3164,
+      "val_acc": 0.8644,
+      "val_balanced_acc": 0.8636,
+      "val_selection_score": 0.8622
+    },
+    {
+      "epoch": 11,
+      "stage": "B(full)",
+      "train_loss": 0.3876,
+      "val_loss": 0.3419,
+      "val_acc": 0.8604,
+      "val_balanced_acc": 0.8611,
+      "val_selection_score": 0.8622
+    },
+    {
+      "epoch": 12,
+      "stage": "B(full)",
+      "train_loss": 0.3701,
+      "val_loss": 0.2875,
+      "val_acc": 0.9003,
+      "val_balanced_acc": 0.8241,
+      "val_selection_score": 0.699
+    },
+    {
+      "epoch": 13,
+      "stage": "B(full)",
+      "train_loss": 0.3564,
+      "val_loss": 0.2855,
+      "val_acc": 0.8993,
+      "val_balanced_acc": 0.8466,
+      "val_selection_score": 0.7602
+    }
+  ],
+  "trained_at": "2026-09-09 05:27:18",
+  "train_seconds": 1271.5,
+  "device": "cuda",
+  "seed": 0
+}

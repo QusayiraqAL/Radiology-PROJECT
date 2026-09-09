@@ -183,5 +183,14 @@
   "trained_at": "2026-09-05 05:54:22",
   "train_seconds": 2571.8,
   "device": "cuda",
-  "seed": 0
+  "seed": 0,
+  "test_numbers_remeasured_on": "cpu",
+  "tta_decided_on": "val",
+  "val_accuracy_no_tta": 0.9675,
+  "val_accuracy_with_tta": 0.9681,
+  "tta_correction_2026_09_07": {
+    "was": 0.923,
+    "now": 0.923,
+    "why": "the TTA flag had been selected on the test split, which reports the max of two test numbers; it is now selected on val"
+  }
 }

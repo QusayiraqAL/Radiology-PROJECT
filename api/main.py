@@ -30,8 +30,10 @@ from fastapi.responses import FileResponse, JSONResponse
 from pydantic import BaseModel
 from PIL import Image
 
-from nets import SmallXRayCNN, build_brain_resnet, build_pneumonia_resnet
+from nets import (SmallXRayCNN, build_brain_resnet, build_pneumonia_resnet,
+                  build_medmnist_backbone)
 from img_utils import crop_brain_region
+import preproc
 from gradcam import gradcam_overlay   # educational "where does the model look" heatmap
 
 HERE = os.path.dirname(__file__)
@@ -114,8 +116,11 @@ _chest_tf = torchvision.transforms.Compose([
 ])
 
 
-def predict_chest(pil_gray):
-    img = np.asarray(pil_gray, dtype=np.float32)
+def predict_chest(pil_rgb):
+    # torchxrayvision's pipeline wants a 2-D single-channel array. _read_image now hands
+    # every predictor RGB (see its docstring), so the reduction happens here, where the
+    # requirement actually lives, instead of being forced on all fourteen models.
+    img = np.asarray(pil_rgb.convert("L"), dtype=np.float32)
     img = xrv.datasets.normalize(img, 255)
     img = img[None, ...]
     img = _chest_tf(img)
@@ -205,7 +210,10 @@ def predict_pneumonia(pil_gray):
             prob = torch.softmax(_pneu(x), 1)[0, 1].item()
         heatmap = gradcam_overlay(_pneu, x, 1, im)     # highlight the pneumonia evidence
     else:
-        im = pil_gray.resize((_pneu_size, _pneu_size))
+        # v1 is SmallXRayCNN(in_ch=1): it takes one channel, so reduce here rather than
+        # upstream. Chest films are greyscale anyway, so nothing is lost by this conversion -
+        # unlike the colour models, which is why the upstream one had to go.
+        im = pil_gray.convert("L").resize((_pneu_size, _pneu_size))
         x = np.asarray(im, dtype=np.float32) / 255.0
         x = (x - 0.5) / 0.5
         x = torch.from_numpy(x)[None, None, :, :].to(DEVICE)
@@ -430,36 +438,157 @@ MEDMNIST_MODELS = {
 }
 
 
-def _make_medmnist_predictor(net, classes, size, class_ar):
+def _make_medmnist_predictor(net, classes, size, class_ar, views=None, threshold=None,
+                             pre=None, views_name="none"):
+    """Serve a MedMNIST checkpoint in the SAME configuration its published number was measured in.
+
+    Two mismatches lived here until 2026-09-07 (TRAINING_LOG step 54), and both made the API
+    quieter than its own claims:
+
+      TTA. The v2 recipe evaluates hflip test-time augmentation and keeps it when it helps, so
+      `oct` publishes 0.9230 *with* TTA. This function did a single forward pass, i.e. 0.9180.
+      Every TTA-on model was being served a fraction below its advertised accuracy.
+
+      Threshold. tune_threshold.py picks a decision cut on val and writes it into the
+      checkpoint, and the guard promotes it only when it also catches MORE disease. oct_bin has
+      published 0.9920 at threshold 0.440 since session 4; argmax gives 0.9910 and catches one
+      malignant case fewer. retina_bin's re-tune is larger: 0.8875 at t=0.305 catching 160/180
+      referrals, against 0.8825 and 144/180 at argmax - sixteen referable eyes.
+
+    Both are now read from the checkpoint and applied. `threshold` is only ever passed for a
+    relabelled binary head, where positive is index 1 by construction; multi-class models and
+    breast (whose disease class is index 0, session 3 step 14) keep argmax.
+    """
+    pos_idx = 1
     def predict(pil_gray):
-        im = pil_gray.convert("RGB").resize((size, size))
+        # Fixed preprocessing first, at the ORIGINAL resolution, because ben_graham ties its
+        # blur radius to image size - running it after the resize would use a different sigma
+        # than training did.
+        im = preproc.apply_pil(pil_gray.convert("RGB"), pre).resize((size, size))
         x = torch.from_numpy(np.asarray(im, np.float32) / 255.0).permute(2, 0, 1)
         x = ((x - _IM_MEAN_T) / _IM_STD_T).unsqueeze(0).to(DEVICE)
         with torch.no_grad():
-            probs = torch.softmax(net(x), 1)[0].cpu().numpy()
+            probs = preproc.tta_average(net, x, views or ["id"])[0].cpu().numpy()
+        # The DECIDED class is not always the argmax once a tuned threshold is in play.
+        if threshold is not None and len(classes) == 2:
+            top_i = pos_idx if float(probs[pos_idx]) >= threshold else 1 - pos_idx
+        else:
+            top_i = int(np.argmax(probs))
         order = np.argsort(probs)[::-1]
         findings = [{
             "id": classes[i], "name_en": classes[i],
             "name_ar": class_ar.get(classes[i], classes[i]),
             "probability": round(float(probs[i]) * 100, 1),
-            "positive": bool(i == order[0]),
-            "verdict": "above" if i == order[0] else "low",
+            "positive": bool(i == top_i),
+            "verdict": "above" if i == top_i else "low",
         } for i in order]
-        top = classes[order[0]]
-        return {
+        top = classes[top_i]
+        out = {
             "type": "multiclass",
             "prediction_en": top, "prediction_ar": class_ar.get(top, top),
-            "confidence": round(float(probs[order[0]]) * 100, 1),
+            "confidence": round(float(probs[top_i]) * 100, 1),
             "findings": findings,
             "ood": assess_ood(probs),
-            "heatmap": gradcam_overlay(net, x, int(order[0]), im),   # teaching: where it looked
+            "heatmap": gradcam_overlay(net, x, int(top_i), im),   # teaching: where it looked
+            "tta": views_name != "none", "tta_views": views_name,
+            "preproc": pre or "none",
         }
+        if threshold is not None and len(classes) == 2:
+            out["decision_threshold_pct"] = round(threshold * 100, 1)
+        return out
+    return predict
+
+
+def _make_medmnist_ensemble_predictor(members, classes, size, class_ar, threshold=None,
+                                      pre=None):
+    """Average several checkpoints' probabilities for one task.
+
+    `members` is a list of (net, tta) - each member is run in ITS OWN configuration, because
+    the TTA flag is a per-model decision made on that model's own val split, not a property
+    of the ensemble.
+
+    Why this exists at all. Session 2 concluded ensembles do not help, from five SEEDS of one
+    resnet18 trained under GPU contention: gain over the best member was -0.0250. Session 6
+    re-ran the idea with three different ARCHITECTURES on derma_bin and measured
+    0.8968/0.9172/0.9117 members -> 0.9237 ensemble, with malignancies caught going
+    310 -> 330. Different architectures make less correlated errors than different seeds; that
+    is the whole mechanism, and it is why the earlier negative result did not generalise.
+
+    Cost is linear: three members at 224px is three forward passes (six with TTA). Measured
+    at serve time it is still well under a second on CPU for these model sizes.
+    """
+    pos_idx = 1
+    def predict(pil_gray):
+        im = preproc.apply_pil(pil_gray.convert("RGB"), pre).resize((size, size))
+        x = torch.from_numpy(np.asarray(im, np.float32) / 255.0).permute(2, 0, 1)
+        x = ((x - _IM_MEAN_T) / _IM_STD_T).unsqueeze(0).to(DEVICE)
+        acc = None
+        with torch.no_grad():
+            for net, mviews in members:
+                p = preproc.tta_average(net, x, mviews or ["id"])[0]
+                acc = p if acc is None else acc + p
+        probs = (acc / len(members)).cpu().numpy()
+        if threshold is not None and len(classes) == 2:
+            top_i = pos_idx if float(probs[pos_idx]) >= threshold else 1 - pos_idx
+        else:
+            top_i = int(np.argmax(probs))
+        order = np.argsort(probs)[::-1]
+        findings = [{
+            "id": classes[i], "name_en": classes[i],
+            "name_ar": class_ar.get(classes[i], classes[i]),
+            "probability": round(float(probs[i]) * 100, 1),
+            "positive": bool(i == top_i),
+            "verdict": "above" if i == top_i else "low",
+        } for i in order]
+        top = classes[top_i]
+        out = {
+            "type": "multiclass",
+            "prediction_en": top, "prediction_ar": class_ar.get(top, top),
+            "confidence": round(float(probs[top_i]) * 100, 1),
+            "findings": findings,
+            "ood": assess_ood(probs),
+            # Grad-CAM needs one network; the first member stands in. Saying which one it is
+            # matters - a heatmap from member 1 does not explain the averaged decision, and
+            # presenting it as if it did would be a nicer lie than no heatmap at all.
+            "heatmap": gradcam_overlay(members[0][0], x, int(top_i), im),
+            "heatmap_source": "first ensemble member only - not the averaged decision",
+            "ensemble_members": len(members),
+            "preproc": pre or "none",
+        }
+        if threshold is not None and len(classes) == 2:
+            out["decision_threshold_pct"] = round(threshold * 100, 1)
+        return out
     return predict
 
 
 # Filled in as checkpoints load below; read by _load_quiz_pool to rebuild label groupings.
 _MEDMNIST_BINARY = {}     # model_id -> original class indices counted as the positive class
 _MEDMNIST_CLASSES = {}    # model_id -> class names in the model's own output order
+
+def _load_ensemble_manifest(key):
+    """models/<key>_ensemble.json, if a measured ensemble has been promoted for this task.
+
+    A manifest is what makes an ensemble servable without editing this file per model. It is
+    written by hand only after ensemble_archs.py has measured the members AND val has agreed;
+    the format is deliberately dumb so it can be read and deleted by a human in a hurry:
+
+        {"members": ["derma_bin.pt", "derma_bin_eb0.pt", "derma_bin_r50.pt"],
+         "metrics": "derma_bin_ens_metrics.json",
+         "why": "one sentence"}
+    """
+    p = os.path.join(MODEL_DIR, f"{key}_ensemble.json")
+    if not os.path.exists(p):
+        return None
+    try:
+        with open(p, encoding="utf-8") as f:
+            man = json.load(f)
+        if not man.get("members"):
+            return None
+        return man
+    except Exception as e:
+        print(f"[!] {key}: unreadable ensemble manifest ({e}) - falling back to single model")
+        return None
+
 
 for _key, _info in MEDMNIST_MODELS.items():
     # Prefer the v2 retrain (224px, two-stage fine-tune, TTA — see TRAINING_LOG.md) and fall
@@ -469,16 +598,91 @@ for _key, _info in MEDMNIST_MODELS.items():
     _ckpt_path = _v2_path if _is_v2 else os.path.join(MODEL_DIR, f"{_key}.pt")
     _metrics = _load_metrics(f"{_key}_v2_metrics.json" if _is_v2 else f"{_key}_metrics.json")
     _predict = None
-    if os.path.exists(_ckpt_path):
-        print(f"[*] Loading {_key} model (MedMNIST ResNet-18{' v2' if _is_v2 else ''}) ...")
+    _man = _load_ensemble_manifest(_key)
+    if _man:
+        _mem, _mck = [], None
+        for _f in _man["members"]:
+            _p = os.path.join(MODEL_DIR, _f)
+            if not os.path.exists(_p):
+                print(f"[!] {_key}: ensemble member {_f} missing - falling back to single model")
+                _mem = []
+                break
+            _c = torch.load(_p, map_location=DEVICE, weights_only=False)
+            if _mck and (_c["classes"] != _mck["classes"] or _c.get("size") != _mck.get("size")):
+                print(f"[!] {_key}: member {_f} disagrees on classes or size - falling back")
+                _mem = []
+                break
+            _n, _ = build_medmnist_backbone(_c.get("arch", "resnet18"),
+                                            num_classes=len(_c["classes"]), pretrained=False,
+                                            dropout=_c.get("dropout", 0.0))
+            _n = _n.to(DEVICE).eval()
+            _n.load_state_dict(_c["state_dict"])
+            _mem.append((_n, preproc.views_for(_c)[0]))
+            _mck = _mck or _c
+        if _mem:
+            _em = _load_metrics(_man.get("metrics", f"{_key}_ens_metrics.json")) or _metrics
+            print(f"[*] Loading {_key} model (MedMNIST ENSEMBLE of {len(_mem)}: "
+                  f"{', '.join(_man['members'])}) ...")
+            _MEDMNIST_CLASSES[_key] = _mck["classes"]
+            if _mck.get("binary_positive"):
+                _MEDMNIST_BINARY[_key] = _mck["binary_positive"]
+            # Same two-condition rule as the single-model path: a threshold is served only when
+            # the metrics file says the published number came from it.
+            _ethr = None
+            if _mck.get("binary_positive") and "threshold" in str(
+                    (_em or {}).get("test_accuracy_source", "")).lower():
+                _ethr = _em.get("decision_threshold")
+            # Members must agree on preprocessing; a mixed ensemble would feed one member a
+            # distribution it never saw. Enforced above by the classes/size check plus this.
+            _pres = {torch.load(os.path.join(MODEL_DIR, f), map_location="cpu",
+                                weights_only=False).get("preproc", "none")
+                     for f in _man["members"]}
+            if len(_pres) > 1:
+                print(f"[!] {_key}: members disagree on preprocessing {_pres} - falling back")
+                _predict = None
+            else:
+                _predict = _make_medmnist_ensemble_predictor(
+                    _mem, _mck["classes"], _mck.get("size", 64), _info["class_ar"],
+                    threshold=_ethr, pre=_pres.pop())
+            _metrics = _em
+    if _predict is None and os.path.exists(_ckpt_path):
+        # Checkpoints written before session 6 carry no "arch" — every one of them is a
+        # ResNet-18, so that is the default. Reading it (rather than assuming) is what lets a
+        # resnet50/efficientnet retrain be dropped in without touching this file again.
         _ck = torch.load(_ckpt_path, map_location=DEVICE, weights_only=False)
-        _net = build_brain_resnet(num_classes=len(_ck["classes"]), pretrained=False,
-                                  dropout=_ck.get("dropout", 0.0)).to(DEVICE).eval()
+        _arch = _ck.get("arch", "resnet18")
+        print(f"[*] Loading {_key} model (MedMNIST {_arch}{' v2' if _is_v2 else ''}) ...")
+        _net, _ = build_medmnist_backbone(_arch, num_classes=len(_ck["classes"]),
+                                          pretrained=False, dropout=_ck.get("dropout", 0.0))
+        _net = _net.to(DEVICE).eval()
         _net.load_state_dict(_ck["state_dict"])
         _MEDMNIST_CLASSES[_key] = _ck["classes"]
         if _ck.get("binary_positive"):
             _MEDMNIST_BINARY[_key] = _ck["binary_positive"]
-        _predict = _make_medmnist_predictor(_net, _ck["classes"], _ck.get("size", 64), _info["class_ar"])
+        # Which threshold to serve, if any. TWO conditions, and both are load-bearing:
+        #
+        # 1. binary_positive must be set. That marks a relabelled binary head where positive
+        #    is index 1 by construction. breast_v2 is 2-class but keeps the original MedMNIST
+        #    order, where disease is index 0 - applying a "positive is index 1" threshold
+        #    there would tune the model to detect HEALTH, the polarity bug that cost four
+        #    cancers in session 3.
+        #
+        # 2. The metrics file's test_accuracy_source must say the headline came from that
+        #    threshold. tune_threshold.py writes a threshold into every checkpoint it touches,
+        #    but the step-14 guard decides separately whether it may be published - and it
+        #    REFUSES when the tuned point catches less disease. derma_bin carries
+        #    threshold=0.66 for exactly that reason: it scores 0.9062 but catches 285 of 392
+        #    malignancies against argmax's 316. Serving the checkpoint field blindly would
+        #    have shipped the operating point the guard exists to reject.
+        _thr = None
+        if _ck.get("binary_positive") and "threshold" in str(
+                (_metrics or {}).get("test_accuracy_source", "")).lower():
+            _thr = _ck.get("threshold")
+        _views, _vname = preproc.views_for(_ck)
+        _predict = _make_medmnist_predictor(_net, _ck["classes"], _ck.get("size", 64),
+                                            _info["class_ar"], views=_views,
+                                            threshold=_thr, pre=_ck.get("preproc"),
+                                            views_name=_vname)
     REGISTRY[_key] = {
         "meta": {
             "id": _key, "title_ar": _info["title_ar"], "title_en": _info["title_en"],
@@ -579,11 +783,27 @@ def predict_symptoms_ep(body: SymptomIn):
 
 
 async def _read_image(file: UploadFile):
+    """Decode an upload to **RGB**, and let each model reduce it if that is what it wants.
+
+    This used to end in `.convert("L")`, which threw colour away before any model saw the
+    image. Six of the fourteen models are trained on colour, and for several of them colour
+    IS the signal - the H&E stain in `path`, the stain in `blood`, the pigment network in
+    `derma`, haemorrhage red in `retina`. `.convert("RGB")` afterwards in the predictors only
+    replicated the single grey channel three times, so the loss was total and silent.
+
+    Measured cost of the old behaviour on the official test splits (measure_grayscale_damage.py):
+        retina      0.6700 -> 0.5975   -0.0725
+        retina_bin  0.8875 -> 0.8275   -0.0600, and 160/180 referrals caught fell to 126/180
+
+    Two predictors genuinely need one channel and now say so themselves: `predict_chest`
+    (torchxrayvision expects a 2-D array) and the v1 pneumonia SmallXRayCNN (in_ch=1). Every
+    other model already called `.convert("RGB")` and simply gets real colour now.
+    """
     raw = await file.read()
     if not raw:
         raise HTTPException(400, "الملف فارغ")
     try:
-        return Image.open(io.BytesIO(raw)).convert("L")
+        return Image.open(io.BytesIO(raw)).convert("RGB")
     except Exception:
         raise HTTPException(400, "تعذّر قراءة الصورة — ارفع ملف صورة صالح (PNG/JPG)")
 

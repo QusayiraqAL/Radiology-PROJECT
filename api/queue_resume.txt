@@ -1,0 +1,12 @@
+# Resume queue - session 7, 2026-09-09.
+# The phase6 runner died mid-run on 2026-09-08 13:16 while starting retina_clahe2 (it trained
+# to early-stop at epoch 26 and was killed during the final test pass, so no metrics file was
+# written) and left models/.runner.lock behind. These are the phase6 rows 21-27 that never
+# produced a metrics file, in their original order.
+retina_clahe2    DATASET=retinamnist ARCH=efficientnet_b0 PREPROC=clahe      SUFFIX=_clahe2
+derma_bin_bacc   DATASET=dermamnist ARCH=efficientnet_b0 BINARY=1 EPOCHS=45 SELECT_ON=bacc   SUFFIX=_bacc
+derma_bin_rec    DATASET=dermamnist ARCH=efficientnet_b0 BINARY=1 EPOCHS=45 SELECT_ON=recall SUFFIX=_rec
+breast_k_r18f0   DATASET=breastmnist ARCH=resnet18 KFOLD=5 FOLD=0 SUFFIX=_k_r18f0
+breast_k_r18f1   DATASET=breastmnist ARCH=resnet18 KFOLD=5 FOLD=1 SUFFIX=_k_r18f1
+derma_bin_focal  DATASET=dermamnist ARCH=efficientnet_b0 BINARY=1 EPOCHS=45 LOSS=focal SUFFIX=_focal
+breast_k_r18f2   DATASET=breastmnist ARCH=resnet18 KFOLD=5 FOLD=2 SUFFIX=_k_r18f2

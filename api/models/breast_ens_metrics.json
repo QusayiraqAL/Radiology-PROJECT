@@ -1,0 +1,74 @@
+{
+  "model": "breast_ens",
+  "members": [
+    "breast_v2"
+  ],
+  "all_candidates": [
+    "breast_v2",
+    "breast_eb0"
+  ],
+  "member_archs": {
+    "breast_v2": "resnet18",
+    "breast_eb0": "efficientnet_b0"
+  },
+  "medmnist": "breastmnist",
+  "classes": [
+    "malignant",
+    "normal, benign"
+  ],
+  "n_classes": 2,
+  "binary_task": false,
+  "selection": "member subset chosen on val; test scored once",
+  "val_accuracy": 0.9615,
+  "test_accuracy": 0.8782,
+  "test_balanced_accuracy": 0.849,
+  "test_macro_f1": 0.8464,
+  "confusion_matrix": [
+    [
+      33,
+      9
+    ],
+    [
+      10,
+      104
+    ]
+  ],
+  "mean_member_test_accuracy": 0.8782,
+  "best_single_member": {
+    "key": "breast_eb0",
+    "test_accuracy": 0.891
+  },
+  "ensemble_gain_over_mean_member": 0.0,
+  "ensemble_gain_over_best_member": -0.0128,
+  "n_test": 156,
+  "device": "cpu",
+  "all_member_equal_weight": {
+    "members": [
+      "breast_v2",
+      "breast_eb0"
+    ],
+    "val_accuracy": 0.9487,
+    "test_accuracy": 0.8974,
+    "test_balanced_accuracy": 0.8697,
+    "test_macro_f1": 0.8697,
+    "confusion_matrix": [
+      [
+        34,
+        8
+      ],
+      [
+        8,
+        106
+      ]
+    ],
+    "gain_over_best_member": 0.0064,
+    "note": "chooses nothing, so it cannot overfit val; reported next to the val-selected subset rather than instead of it",
+    "disease_caught": "34/42",
+    "sensitivity": 0.8095
+  },
+  "test_auc": 0.9244,
+  "positive_class_index": 0,
+  "positive_class_name": "malignant",
+  "disease_caught": "33/42",
+  "sensitivity": 0.7857
+}

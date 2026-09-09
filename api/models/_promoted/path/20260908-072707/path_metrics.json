@@ -1,0 +1,143 @@
+{
+  "model": "path_resnet18",
+  "dataset_key": "path",
+  "medmnist": "pathmnist",
+  "modality": "The PathMNIST is based on a prior study for predicting survival from colorectal cancer histology slides, providing a dat",
+  "task": "9-class classification",
+  "anti_overfitting": [
+    "transfer learning (ImageNet ResNet-18)",
+    "augmentation (crop/flip/jitter/rotate)",
+    "dropout=0.3",
+    "label_smoothing=0.05",
+    "weight_decay=1e-4",
+    "cosine LR",
+    "early stopping (patience=4) on val loss",
+    "class weights"
+  ],
+  "input_size": 64,
+  "classes": [
+    "adipose",
+    "background",
+    "debris",
+    "lymphocytes",
+    "mucus",
+    "smooth muscle",
+    "normal colon mucosa",
+    "cancer-associated stroma",
+    "colorectal adenocarcinoma epithelium"
+  ],
+  "n_classes": 9,
+  "n_train": 19998,
+  "n_val": 10004,
+  "n_test": 7180,
+  "test_accuracy": 0.944,
+  "train_accuracy": 0.9895,
+  "overfitting_gap": 0.0455,
+  "test_macro_f1": 0.9239,
+  "test_auc": 0.9957,
+  "mean_confidence": 0.9235,
+  "confusion_matrix": [
+    [
+      1329,
+      1,
+      1,
+      0,
+      1,
+      5,
+      0,
+      0,
+      1
+    ],
+    [
+      0,
+      847,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      308,
+      6,
+      1,
+      24,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      629,
+      0,
+      0,
+      5,
+      0,
+      0
+    ],
+    [
+      48,
+      1,
+      0,
+      0,
+      965,
+      0,
+      5,
+      6,
+      10
+    ],
+    [
+      0,
+      0,
+      3,
+      2,
+      0,
+      575,
+      0,
+      9,
+      3
+    ],
+    [
+      1,
+      0,
+      4,
+      9,
+      1,
+      4,
+      683,
+      0,
+      39
+    ],
+    [
+      0,
+      0,
+      38,
+      0,
+      9,
+      90,
+      1,
+      266,
+      17
+    ],
+    [
+      0,
+      0,
+      3,
+      21,
+      1,
+      2,
+      24,
+      6,
+      1176
+    ]
+  ],
+  "trained_at": "2026-07-19 16:09:11",
+  "train_seconds": 5171.2,
+  "device": "cpu"
+}

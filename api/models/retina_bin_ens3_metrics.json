@@ -1,0 +1,77 @@
+{
+  "model": "retina_bin_ens3",
+  "members": [
+    "retina_bin_r50"
+  ],
+  "all_candidates": [
+    "retina_bin",
+    "retina_bin_eb0",
+    "retina_bin_r50"
+  ],
+  "member_archs": {
+    "retina_bin": "resnet18",
+    "retina_bin_eb0": "efficientnet_b0",
+    "retina_bin_r50": "resnet50"
+  },
+  "medmnist": "retinamnist",
+  "classes": [
+    "non-referable (grade 0-1)",
+    "referable DR (grade 2-4)"
+  ],
+  "n_classes": 2,
+  "binary_task": true,
+  "selection": "member subset chosen on val; test scored once",
+  "val_accuracy": 0.9,
+  "test_accuracy": 0.88,
+  "test_balanced_accuracy": 0.8747,
+  "test_macro_f1": 0.8776,
+  "confusion_matrix": [
+    [
+      204,
+      16
+    ],
+    [
+      32,
+      148
+    ]
+  ],
+  "mean_member_test_accuracy": 0.88,
+  "best_single_member": {
+    "key": "retina_bin",
+    "test_accuracy": 0.8825
+  },
+  "ensemble_gain_over_mean_member": 0.0,
+  "ensemble_gain_over_best_member": -0.0025,
+  "n_test": 400,
+  "device": "cpu",
+  "all_member_equal_weight": {
+    "members": [
+      "retina_bin",
+      "retina_bin_eb0",
+      "retina_bin_r50"
+    ],
+    "val_accuracy": 0.8917,
+    "test_accuracy": 0.89,
+    "test_balanced_accuracy": 0.8859,
+    "test_macro_f1": 0.8881,
+    "confusion_matrix": [
+      [
+        204,
+        16
+      ],
+      [
+        28,
+        152
+      ]
+    ],
+    "gain_over_best_member": 0.0075,
+    "note": "chooses nothing, so it cannot overfit val; reported next to the val-selected subset rather than instead of it",
+    "disease_caught": "152/180",
+    "sensitivity": 0.8444
+  },
+  "test_auc": 0.9463,
+  "positive_class_index": 1,
+  "positive_class_name": "referable DR (grade 2-4)",
+  "disease_caught": "148/180",
+  "sensitivity": 0.8222
+}

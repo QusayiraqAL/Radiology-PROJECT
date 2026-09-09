@@ -1,0 +1,144 @@
+# Phase 6 - oct, after the 224 attempt died on the network.
+#
+# oct_eb0 @224 failed with `HTTP Error 504: Gateway Time-out` fetching octmnist_224.npz from
+# Zenodo. Not a code fault and not a memory fault - the remote server timed out. medmnist then
+# reported it as "Automatic download failed! Please download octmnist_224.npz manually", which
+# buries the 504 the same way it buried a MemoryError in session 2 (step 9).
+#
+# Not retrying at 224 either way: octmnist_224 is 97,477 grayscale images = 4.9 GB as an npz
+# plus a 4.9 GB memmap copy, against 16 GB free on a 93%-full drive.
+#
+# octmnist_128.npz is already cached (1.3 GB), and oct_v2 was trained at 128 - so these two
+# rows change ONLY the backbone against the served models, which is the cleaner experiment
+# anyway. Settings mirror oct_v2 and oct_bin exactly (MAX_TRAIN, VAL_MAX, EPOCHS) so the only
+# difference in the comparison is resnet18 -> efficientnet_b0.
+oct_eb0      DATASET=octmnist ARCH=efficientnet_b0 SIZE=128 MAX_TRAIN=40000 VAL_MAX=3000 EPOCHS=14 SUFFIX=_eb0
+oct_bin_eb0  DATASET=octmnist ARCH=efficientnet_b0 SIZE=128 BINARY=1 MAX_TRAIN=40000 VAL_MAX=3000 EPOCHS=12 SUFFIX=_eb0
+
+# --- Ben Graham / CLAHE preprocessing, from the Kaggle DR notebooks in code benifit/ -------
+# `retina` is the weakest model in the project (0.6700) and fundus grading is exactly what
+# these techniques were built for. ben_graham is the 2015 Kaggle DR winner's preprocessing:
+#     out = 4*img - 4*gaussian_blur(img, sigma=size/30) + 128
+# an unsharp mask that removes the slow illumination gradient (which varies by camera and
+# pupil) and amplifies microaneurysms, haemorrhages and exudates - the structures the grade
+# actually depends on. Measured on one retina image: mean 118.3 -> 129.4, std 88.3 -> 56.5,
+# i.e. it does normalise illumination as advertised. 12 ms/image.
+#
+# CLAHE is the same notebook's other lever (it uses it as a p=0.3 augmentation; here it is a
+# fixed transform so the effect can be measured rather than assumed). 171 ms/image, so it is
+# applied once per split rather than per epoch.
+#
+# efficientnet_b0 for the multi-class rows (phase 1 winner) and resnet18 for retina_bin
+# (phase 4 showed both stronger backbones LOSE there).
+retina_bg        DATASET=retinamnist ARCH=efficientnet_b0 PREPROC=ben_graham SUFFIX=_bg
+retina_clahe     DATASET=retinamnist ARCH=efficientnet_b0 PREPROC=clahe      SUFFIX=_clahe
+retina_bin_bg    DATASET=retinamnist ARCH=resnet18 BINARY=1 PREPROC=ben_graham SUFFIX=_bg
+
+# Phase 7 - settle breast with K-fold, since its 78-image val cannot.
+#
+# TRAINING_LOG step 45: on breast, val ranked breast_v2 (0.9615) > ensemble (0.9487) >
+# breast_eb0 (0.9359) - 75, 74 and 73 of 78 - while test ranked them in exactly the reverse
+# order (0.8782 < 0.8974 < 0.8910... reading the other way). One image apart each. No
+# promotion there is defensible, and promote_model.py refuses it.
+#
+# 5-fold over train+val pools 546+78 = 624 images and predicts every one of them exactly once
+# with a model that never saw it. Same seed (12345) and same folds for both configs, so the
+# only difference between the two blocks is the backbone. ~3 min a run, 30 min for all ten.
+#
+# The official test split is not touched by any of this - it ranks configurations only.
+breast_k_r18f0   DATASET=breastmnist ARCH=resnet18 KFOLD=5 FOLD=0 SUFFIX=_k_r18f0
+breast_k_r18f1   DATASET=breastmnist ARCH=resnet18 KFOLD=5 FOLD=1 SUFFIX=_k_r18f1
+breast_k_r18f2   DATASET=breastmnist ARCH=resnet18 KFOLD=5 FOLD=2 SUFFIX=_k_r18f2
+breast_k_r18f3   DATASET=breastmnist ARCH=resnet18 KFOLD=5 FOLD=3 SUFFIX=_k_r18f3
+breast_k_r18f4   DATASET=breastmnist ARCH=resnet18 KFOLD=5 FOLD=4 SUFFIX=_k_r18f4
+breast_k_eb0f0   DATASET=breastmnist ARCH=efficientnet_b0 KFOLD=5 FOLD=0 SUFFIX=_k_eb0f0
+breast_k_eb0f1   DATASET=breastmnist ARCH=efficientnet_b0 KFOLD=5 FOLD=1 SUFFIX=_k_eb0f1
+breast_k_eb0f2   DATASET=breastmnist ARCH=efficientnet_b0 KFOLD=5 FOLD=2 SUFFIX=_k_eb0f2
+breast_k_eb0f3   DATASET=breastmnist ARCH=efficientnet_b0 KFOLD=5 FOLD=3 SUFFIX=_k_eb0f3
+breast_k_eb0f4   DATASET=breastmnist ARCH=efficientnet_b0 KFOLD=5 FOLD=4 SUFFIX=_k_eb0f4
+
+# --- laterality: the augmentation policy was relabelling organc's images -------------------
+# organc_eb0 (efficientnet_b0 @224, full augmentation) scored 0.9014 against the served 64px
+# v1's 0.9419. Its confusion matrix says why: 428 of 810 errors - 52.8% of ALL of them - are
+# left/right swaps (kidney-left<->kidney-right 184+58, femur 11+136, lung 14+25). Six of the
+# eleven classes are lateral pairs, 41.6% of the test set.
+#
+# TTA is not the cause: val 0.9741 vs 0.9745 with it, test 0.9023 vs 0.9014. +/-0.001. The
+# damage happens in training, where RandomHorizontalFlip mirrors the image and keeps the
+# label - which for these classes is simply a wrong label. v2 adds vertical flip and 20 deg
+# rotation on top, and organ identity in an abdominal CT slice is largely a fact about
+# position and orientation.
+#
+# Row 1 is the control: same backbone, same resolution, geometry_safe augmentation (no flips,
+# 7 deg rotation, gentle crop; TTA forced off since it is an hflip average).
+# Row 2 asks the same of the ORIGINAL resolution, so the comparison against the served 64px
+# model changes only the recipe.
+# Row 3 retries blood, whose 224 download died on a transient DNS failure (getaddrinfo), not
+# on anything in this repo - the network answers now.
+organc_geo       DATASET=organcmnist ARCH=efficientnet_b0 SIZE=224 AUG=geometry_safe SUFFIX=_geo
+organc_geo64     DATASET=organcmnist ARCH=efficientnet_b0 SIZE=64  AUG=geometry_safe SUFFIX=_geo64
+blood_eb0        DATASET=bloodmnist  ARCH=efficientnet_b0 SIZE=224 SUFFIX=_eb0
+
+# --- the same question asked of oct -------------------------------------------------------
+# The served organc loses 139 of its 477 errors (29.1%) to left/right swaps even under the
+# milder v1 recipe - so this is not only a v2 problem, it is a problem the project already
+# had. OCT is the other dataset whose labels depend on geometry: the images are retinal
+# CROSS-SECTIONS with the layer stack running top to bottom, and CNV / DME / drusen are
+# distinguished by WHICH layer is involved. v2 applies RandomVerticalFlip(p=0.2), which
+# inverts that stack one image in five, and 20 degrees of rotation on top.
+#
+# oct_v2 is one of only two models over the 91% bar, and its recorded weakness (step 24) is
+# exactly a layer-level confusion: drusen recall 183/250, with 61 drusen called CNV. Worth one
+# control run at the served resolution before assuming that is purely clinical difficulty.
+oct_geo          DATASET=octmnist ARCH=efficientnet_b0 SIZE=128 AUG=geometry_safe MAX_TRAIN=40000 VAL_MAX=3000 EPOCHS=14 SUFFIX=_geo
+
+# --- re-run: the first PREPROC attempt was invalidated by a stale memmap ------------------
+# retina_bg scored 0.2500 against a 0.6700 baseline, with train 0.7056 - a train/test
+# DISTRIBUTION mismatch, not a bad idea. _maybe_memmap keyed its cache on
+# (dataset, split, size) with no preprocessing tag, so retina's 162 MB train split reused the
+# raw array an earlier run had spilled, while its 18 MB val and 60 MB test stayed in RAM and
+# were preprocessed normally. The model trained on raw fundus images and was scored on
+# ben_graham ones. Cache key fixed; retina_clahe was killed mid-run for the same reason.
+retina_bg2       DATASET=retinamnist ARCH=efficientnet_b0 PREPROC=ben_graham SUFFIX=_bg2
+retina_clahe2    DATASET=retinamnist ARCH=efficientnet_b0 PREPROC=clahe      SUFFIX=_clahe2
+
+# --- what "best epoch" should mean for a screening model ----------------------------------
+# From the Project-Melanin notebook in code benifit/, which selects its checkpoint on RECALL
+# rather than accuracy. The reasoning transfers exactly: derma_bin's val is 80% benign, so an
+# epoch that improves on benign outranks one that catches more malignancies. That is the trade
+# the step-14 guard refuses at the threshold - and nothing was refusing it one level up, at
+# which epoch's weights get kept.
+#
+# Both rows use the phase-4 winning backbone and epoch budget so the ONLY difference from
+# derma_bin_eb0l (0.9247, 319/392 caught) is the selection metric.
+derma_bin_bacc   DATASET=dermamnist ARCH=efficientnet_b0 BINARY=1 EPOCHS=45 SELECT_ON=bacc   SUFFIX=_bacc
+derma_bin_rec    DATASET=dermamnist ARCH=efficientnet_b0 BINARY=1 EPOCHS=45 SELECT_ON=recall SUFFIX=_rec
+
+# --- re-run folds 0 and 1: they used a swapped augmentation order --------------------------
+# The AUG refactor briefly put RandomRotation BEFORE the colour jitter, where the original v2
+# pipeline had it after. Rotation leaves black corners; jittering after it applies brightness
+# and contrast to those corners instead of leaving them at zero. Small, but a K-fold
+# comparison is only valid if every fold differs ONLY in which images are held out - and
+# folds 0 and 1 ran under the swapped order while folds 2-9 will not.
+#
+# Same SUFFIX, so these overwrite the invalid artefacts rather than adding new keys.
+breast_k_r18f0   DATASET=breastmnist ARCH=resnet18 KFOLD=5 FOLD=0 SUFFIX=_k_r18f0
+breast_k_r18f1   DATASET=breastmnist ARCH=resnet18 KFOLD=5 FOLD=1 SUFFIX=_k_r18f1
+
+# --- focal loss: a third angle on the same imbalance --------------------------------------
+# From the ISIC notebook in code benifit/. Its Dice and Tversky terms are segmentation losses
+# (they reduce over dim=(1,2,3) on masks) and do not apply here, but FocalBCELoss does: the
+# (1-p_t)^gamma factor scales an example's loss down as the model gets more confident about
+# it, moving gradient budget to what is still being got wrong.
+#
+# derma_bin is 80% benign. Three different levers now attack that: class weights (already in
+# the recipe, re-weights by CLASS), SELECT_ON (re-weights which EPOCH gets kept), and focal
+# (re-weights by DIFFICULTY). They are independent, so this row changes only the loss against
+# derma_bin_eb0l - same backbone, same 45 epochs, same acc-based selection.
+derma_bin_focal  DATASET=dermamnist ARCH=efficientnet_b0 BINARY=1 EPOCHS=45 LOSS=focal SUFFIX=_focal
+# fold 2 as well: it started at 09:17:59 and the augmentation-order fix landed within seconds
+# of that. f0 (09:14:00) and f1 (09:15:54) are certainly pre-fix, f3 (09:20:54) and f4
+# (09:24:01) certainly post-fix, and every efficientnet fold (09:26:56 onward) is post-fix.
+# f2 alone cannot be placed from the timestamps, and a comparison that rests on "probably"
+# is not a comparison. Eight minutes of GPU buys certainty for the whole table.
+breast_k_r18f2   DATASET=breastmnist ARCH=resnet18 KFOLD=5 FOLD=2 SUFFIX=_k_r18f2

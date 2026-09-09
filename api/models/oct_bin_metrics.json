@@ -31,8 +31,8 @@
   "test_accuracy": 0.992,
   "train_accuracy": 0.9835,
   "overfitting_gap": -0.0075,
-  "test_balanced_accuracy": 0.994,
-  "test_macro_f1": 0.9881,
+  "test_balanced_accuracy": 0.9947,
+  "test_macro_f1": 0.9894,
   "test_auc": 0.9978,
   "mean_confidence": 0.9621,
   "tta_used": true,
@@ -44,8 +44,8 @@
       0
     ],
     [
-      9,
-      741
+      8,
+      742
     ]
   ],
   "epoch_history": [
@@ -211,5 +211,13 @@
     "note": "Serve the screening point for triage and quote the accuracy point for benchmark comparison. Missing a positive is not equal to a false alarm."
   },
   "test_accuracy_argmax_0.5": 0.991,
-  "test_accuracy_source": "val-tuned decision threshold 0.440"
+  "test_accuracy_source": "val-tuned decision threshold 0.440",
+  "test_numbers_remeasured_on": "cpu",
+  "tta_decided_on": "val",
+  "val_accuracy_no_tta": 0.9812,
+  "val_accuracy_with_tta": 0.9825,
+  "tta_correction_2026_09_07": {
+    "headline_unchanged": 0.992,
+    "why": "val confirmed the same TTA decision (val 0.9812 plain vs 0.9825 with TTA), and this model's headline comes from the val-tuned threshold 0.440, not from argmax. An earlier pass of fix_tta_selection.py overwrote it with the argmax number (0.9910) and lost the tuning; restored. The script now refuses to touch a headline whose test_accuracy_source names a threshold."
+  }
 }

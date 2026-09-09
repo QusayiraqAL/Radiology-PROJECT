@@ -1,0 +1,60 @@
+{
+  "retina": {
+    "arch": "efficientnet_b0",
+    "n_test": 400,
+    "tta": true,
+    "threshold": null,
+    "accuracy_rgb": 0.67,
+    "accuracy_greyscale": 0.5975,
+    "cost": -0.0725
+  },
+  "retina_bin": {
+    "arch": "resnet18",
+    "n_test": 400,
+    "tta": false,
+    "threshold": 0.30500000000000005,
+    "accuracy_rgb": 0.8875,
+    "accuracy_greyscale": 0.8275,
+    "cost": -0.06,
+    "disease_caught_rgb": "160/180",
+    "disease_caught_greyscale": "126/180"
+  },
+  "derma": {
+    "arch": "efficientnet_b0",
+    "n_test": 2005,
+    "tta": false,
+    "threshold": null,
+    "accuracy_rgb": 0.8793,
+    "accuracy_greyscale": 0.7317,
+    "cost": -0.1476
+  },
+  "derma_bin": {
+    "arch": "resnet18",
+    "n_test": 2005,
+    "tta": true,
+    "threshold": null,
+    "accuracy_rgb": 0.8968,
+    "accuracy_greyscale": 0.804,
+    "cost": -0.0928,
+    "disease_caught_rgb": "310/392",
+    "disease_caught_greyscale": "10/392"
+  },
+  "blood": {
+    "arch": "resnet18",
+    "n_test": 3421,
+    "tta": false,
+    "threshold": null,
+    "accuracy_rgb": 0.9787,
+    "accuracy_greyscale": 0.2441,
+    "cost": -0.7346
+  },
+  "path": {
+    "arch": "resnet18",
+    "n_test": 7180,
+    "tta": false,
+    "threshold": null,
+    "accuracy_rgb": 0.944,
+    "accuracy_greyscale": 0.5609,
+    "cost": -0.3831
+  }
+}

@@ -1,0 +1,182 @@
+{
+  "model": "retina_bin_bg_resnet18_v2",
+  "arch": "resnet18",
+  "preproc": "ben_graham",
+  "kfold": null,
+  "fold": null,
+  "aug": "full",
+  "dataset_key": "retina_bin_bg",
+  "medmnist": "retinamnist",
+  "modality": "The RetinaMNIST is based on the DeepDRiD challenge, which provides a dataset of 1,600 retina fundus images. The task is ",
+  "task": "referable diabetic retinopathy (grade >= 2)",
+  "binary_task": true,
+  "recipe_v2": [
+    "224px input (v1 used 64px)",
+    "two-stage: frozen-backbone head warmup then full fine-tune",
+    "checkpoint selected on val ACCURACY (v1 used val loss)",
+    "TTA evaluated, did not help - not used",
+    "AdamW + cosine LR",
+    "stronger augmentation + random erasing",
+    "dropout=0.4",
+    "label_smoothing=0.05",
+    "class weights",
+    "mixed precision",
+    "backbone=resnet18"
+  ],
+  "mixup_alpha": 0.0,
+  "cutmix_alpha": 0.0,
+  "batch_size": 32,
+  "input_size": 224,
+  "classes": [
+    "non-referable (grade 0-1)",
+    "referable DR (grade 2-4)"
+  ],
+  "n_classes": 2,
+  "n_train": 1080,
+  "n_val": 120,
+  "n_test": 400,
+  "val_subsampled_for_selection": false,
+  "test_split": "full official MedMNIST test split (never subsampled)",
+  "test_accuracy": 0.8625,
+  "train_accuracy": 0.9148,
+  "overfitting_gap": 0.0523,
+  "test_balanced_accuracy": 0.8634,
+  "test_macro_f1": 0.8617,
+  "test_auc": 0.9409,
+  "mean_confidence": 0.8556,
+  "tta_used": false,
+  "tta_views": "none",
+  "tta_decided_on": "val",
+  "val_accuracy_no_tta": 0.8667,
+  "val_accuracy_with_tta": 0.8667,
+  "test_accuracy_no_tta": 0.8625,
+  "test_accuracy_with_tta": 0.87,
+  "confusion_matrix": [
+    [
+      188,
+      32
+    ],
+    [
+      23,
+      157
+    ]
+  ],
+  "epoch_history": [
+    {
+      "epoch": 1,
+      "stage": "A(head)",
+      "train_loss": 0.7281,
+      "val_loss": 0.795,
+      "val_acc": 0.4667,
+      "val_balanced_acc": 0.5152
+    },
+    {
+      "epoch": 2,
+      "stage": "A(head)",
+      "train_loss": 0.6302,
+      "val_loss": 0.6315,
+      "val_acc": 0.6417,
+      "val_balanced_acc": 0.6675
+    },
+    {
+      "epoch": 3,
+      "stage": "A(head)",
+      "train_loss": 0.5964,
+      "val_loss": 0.5514,
+      "val_acc": 0.7083,
+      "val_balanced_acc": 0.7146
+    },
+    {
+      "epoch": 4,
+      "stage": "B(full)",
+      "train_loss": 0.5302,
+      "val_loss": 0.511,
+      "val_acc": 0.775,
+      "val_balanced_acc": 0.7803
+    },
+    {
+      "epoch": 5,
+      "stage": "B(full)",
+      "train_loss": 0.3878,
+      "val_loss": 0.6759,
+      "val_acc": 0.7667,
+      "val_balanced_acc": 0.7795
+    },
+    {
+      "epoch": 6,
+      "stage": "B(full)",
+      "train_loss": 0.3873,
+      "val_loss": 0.3519,
+      "val_acc": 0.8667,
+      "val_balanced_acc": 0.8603
+    },
+    {
+      "epoch": 7,
+      "stage": "B(full)",
+      "train_loss": 0.3641,
+      "val_loss": 0.51,
+      "val_acc": 0.8,
+      "val_balanced_acc": 0.7879
+    },
+    {
+      "epoch": 8,
+      "stage": "B(full)",
+      "train_loss": 0.3079,
+      "val_loss": 0.3692,
+      "val_acc": 0.85,
+      "val_balanced_acc": 0.8519
+    },
+    {
+      "epoch": 9,
+      "stage": "B(full)",
+      "train_loss": 0.2994,
+      "val_loss": 0.5063,
+      "val_acc": 0.8417,
+      "val_balanced_acc": 0.8274
+    },
+    {
+      "epoch": 10,
+      "stage": "B(full)",
+      "train_loss": 0.2979,
+      "val_loss": 0.5122,
+      "val_acc": 0.8167,
+      "val_balanced_acc": 0.803
+    },
+    {
+      "epoch": 11,
+      "stage": "B(full)",
+      "train_loss": 0.2787,
+      "val_loss": 0.4927,
+      "val_acc": 0.8083,
+      "val_balanced_acc": 0.7938
+    },
+    {
+      "epoch": 12,
+      "stage": "B(full)",
+      "train_loss": 0.2602,
+      "val_loss": 0.333,
+      "val_acc": 0.8583,
+      "val_balanced_acc": 0.8561
+    },
+    {
+      "epoch": 13,
+      "stage": "B(full)",
+      "train_loss": 0.2471,
+      "val_loss": 0.5365,
+      "val_acc": 0.8083,
+      "val_balanced_acc": 0.7921
+    },
+    {
+      "epoch": 14,
+      "stage": "B(full)",
+      "train_loss": 0.2411,
+      "val_loss": 0.3779,
+      "val_acc": 0.85,
+      "val_balanced_acc": 0.8401
+    }
+  ],
+  "trained_at": "2026-09-08 09:13:53",
+  "train_seconds": 181.6,
+  "device": "cuda",
+  "seed": 0
+}

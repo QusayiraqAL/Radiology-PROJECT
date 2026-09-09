@@ -1,0 +1,67 @@
+[
+  {
+    "at": "2026-09-08 00:51:35",
+    "from": "retina_eb0",
+    "to": "retina",
+    "from_test_accuracy": 0.67,
+    "replaced_test_accuracy": 0.575,
+    "from_best_val": 0.6917,
+    "replaced_best_val": 0.65,
+    "arch": "efficientnet_b0",
+    "why": "efficientnet_b0 beats the served resnet18 on val (0.6917 vs 0.6500) AND on test (0.6700 vs 0.5750, both re-measured CPU fp32 by verify_retrain_gains.py --ckpt); TTA flag decided on val; converged in 19 epochs against the incumbent's 30, so the gain is not a training-budget artefact",
+    "val_disagreed": false,
+    "backup": "C:\\Users\\so\\Desktop\\AI-Powered Radiology Hub\\api\\models\\_promoted\\retina\\20260908-005135"
+  },
+  {
+    "at": "2026-09-08 01:37:18",
+    "from": "derma_eb0",
+    "to": "derma",
+    "from_test_accuracy": 0.8793,
+    "replaced_test_accuracy": 0.8135,
+    "from_best_val": 0.8714,
+    "replaced_best_val": 0.8006,
+    "arch": "efficientnet_b0",
+    "why": "efficientnet_b0 beats the served resnet18 on val by +0.0708 (0.8714 vs 0.8006 on a 1003-image val, i.e. 71 images - well outside the noise that makes breast undecidable) and on test by +0.0658 (0.8793 vs 0.8135), with macro-F1 up +0.0833; both re-measured CPU fp32 and reproducing exactly; TTA decided on val; both runs converged before their epoch caps so the gain is not a training-budget artefact",
+    "val_disagreed": false,
+    "backup": "C:\\Users\\so\\Desktop\\AI-Powered Radiology Hub\\api\\models\\_promoted\\derma\\20260908-013718"
+  },
+  {
+    "at": "2026-09-08 07:27:07",
+    "from": "path_eb0",
+    "to": "path",
+    "from_test_accuracy": 0.9545,
+    "replaced_test_accuracy": 0.944,
+    "from_best_val": 0.9804,
+    "replaced_best_val": null,
+    "arch": "efficientnet_b0",
+    "why": "efficientnet_b0 with the v2 recipe beats the served v1 resnet18 at the SAME 64px resolution and the same 20k training subsample: val 0.9818 vs 0.9718 measured in one harness on 10,004 val images (a 100-image margin, not the 2-image ambiguity that makes breast undecidable), test 0.9545 vs 0.9440, macro-F1 0.9394 vs 0.9239, AUC 0.9975 vs 0.9957, and a smaller overfitting gap (+0.0328 vs +0.0455); re-measured CPU fp32 and reproduces exactly",
+    "val_disagreed": false,
+    "backup": "C:\\Users\\so\\Desktop\\AI-Powered Radiology Hub\\api\\models\\_promoted\\path\\20260908-072707"
+  },
+  {
+    "at": "2026-09-08 11:10:14",
+    "from": "organc_geo64",
+    "to": "organc",
+    "from_test_accuracy": 0.9533,
+    "replaced_test_accuracy": 0.9419,
+    "from_best_val": 0.9941,
+    "replaced_best_val": null,
+    "arch": "efficientnet_b0",
+    "why": "efficientnet_b0 with geometry_safe augmentation at the SAME 64px resolution as the served v1: val 0.9941 vs 0.9883 measured in one harness on 2392 val images, test 0.9533 vs 0.9419, macro-F1 0.9477 vs 0.9353, smaller overfitting gap (+0.0460 vs +0.0571); re-measured CPU fp32 and reproduces exactly. The augmentation policy is the point - organc has kidney-left/right, lung-left/right and femur-left/right, and RandomHorizontalFlip relabels those images, which cost the served model 139 of its 477 errors",
+    "val_disagreed": false,
+    "backup": "C:\\Users\\so\\Desktop\\AI-Powered Radiology Hub\\api\\models\\_promoted\\organc\\20260908-111014"
+  },
+  {
+    "at": "2026-09-08 13:24:32",
+    "from": "blood_eb0",
+    "to": "blood",
+    "from_test_accuracy": 0.9883,
+    "replaced_test_accuracy": 0.9787,
+    "from_best_val": 0.9924,
+    "replaced_best_val": null,
+    "arch": "efficientnet_b0",
+    "why": "efficientnet_b0 @224 with the v2 recipe against the served v1 resnet18 @64: val 0.9924 vs 0.9796 measured in one harness on 1712 val images (~22 images), test 0.9883 vs 0.9787, macro-F1 0.9889, AUC 0.9994; re-measured CPU fp32 and reproduces exactly. Caveat recorded in TRAINING_LOG step 83: this run changed resolution, backbone and recipe together, so the gain is real and measured but not attributed to a single lever - blood smears are stained colour images, so 64 to 224 is likely the largest part of it",
+    "val_disagreed": false,
+    "backup": "C:\\Users\\so\\Desktop\\AI-Powered Radiology Hub\\api\\models\\_promoted\\blood\\20260908-132432"
+  }
+]

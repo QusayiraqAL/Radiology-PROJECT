@@ -1,0 +1,20 @@
+{
+  "blood": {
+    "n": 3,
+    "class_matches": 3,
+    "prob_matches": 3,
+    "worst_prob_delta": 0.00047,
+    "ensemble": false,
+    "tta": false,
+    "threshold": null
+  },
+  "organc": {
+    "n": 3,
+    "class_matches": 3,
+    "prob_matches": 3,
+    "worst_prob_delta": 0.0005,
+    "ensemble": false,
+    "tta": false,
+    "threshold": null
+  }
+}

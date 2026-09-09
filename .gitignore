@@ -11,26 +11,37 @@ api/data/
 api/eval_external/_dl/
 
 # --- Trained weights ------------------------------------------------------
-# 44 MB each; ~12 of them. Not in git — every one is reproducible from the
-# training script + seed recorded in its *_metrics.json. Ship them as a
-# GitHub Release asset if they need to travel.
+# 44 MB each; ~12 of them. Not in git. Ship them as a GitHub Release asset if
+# they need to travel.
+#
+# This used to say "every one is reproducible from the training script + seed
+# recorded in its *_metrics.json". That is FALSE and was measured false in
+# session 7 (TRAINING_LOG step 91): the same seed reproduces a run only while
+# the backbone is frozen. Once it unfreezes, two runs of identical code on
+# identical data diverge by up to 0.0220 val accuracy, and dropout makes even
+# the frozen phase non-reproducible. A deleted checkpoint cannot be recreated -
+# only a different checkpoint of similar quality can. The *_metrics.json is the
+# record of what the file scored, not a recipe for rebuilding that exact file.
 *.pt
 *.pth
 *.joblib
 *.safetensors
 *.bin
 
-# Serving bundle built by api/make_serving_bundle.py — ~1.45 GB of the weights above,
-# repacked for upload to Colab. Rebuildable in one command, and GitHub rejects any file
-# over 100 MB, so a `git add -A` that catches it fails the push rather than the add.
-radiology_serving_bundle.zip
-*_serving_bundle.zip
-
 # --- Kept on purpose ------------------------------------------------------
 # models/*_metrics.json and models/*.log ARE tracked: they are the evidence
 # behind every number in the README and in TRAINING_LOG.md.
 !api/models/*_metrics.json
 !api/models/*.log
+
+# --- Third-party reference notebooks --------------------------------------
+# `code benifit/` is ~38 MB of downloaded Kaggle notebooks kept locally while
+# session 6 mined them for ideas. Same policy as datasets and weights: they are
+# somebody else's work, re-downloadable, and carry their embedded outputs.
+# TRAINING_LOG steps 64-65, 74-75 and 80 record which ones were triaged, what
+# was taken from each, and what was rejected - that record is the part worth
+# keeping in git, and it is already here.
+code benifit/
 
 # --- OS / editor ----------------------------------------------------------
 Thumbs.db

@@ -1,0 +1,18 @@
+{
+  "members": ["derma_bin.pt", "derma_bin_r50.pt", "derma_bin_eb0l.pt"],
+  "metrics": "derma_bin_ens4_metrics.json",
+  "why": "Three architectures averaged with equal weight: resnet18 (22 epochs), resnet50 (30), efficientnet_b0 (45). Chosen by val out of four candidates - it beat both the four-member average (val 0.9362 vs 0.9342) and every single member, and it also catches the most disease (340/392 against 335 for all-four and 319 for the best single model). Supersedes the 2026-09-08 three-member manifest, which used the 30-epoch efficientnet and scored 0.9237 with 330/392. TRAINING_LOG steps 55-56, 62-63.",
+  "measured": {
+    "val_accuracy": 0.9362,
+    "test_accuracy": 0.9342,
+    "test_balanced_accuracy": 0.9089,
+    "test_macro_f1": 0.8981,
+    "test_auc": 0.9672,
+    "disease_caught": "340/392",
+    "confusion_matrix": [[1533, 80], [52, 340]],
+    "best_single_member": {"key": "derma_bin_eb0l", "test_accuracy": 0.9247, "disease_caught": "319/392"},
+    "previous_manifest": {"members": ["derma_bin", "derma_bin_eb0", "derma_bin_r50"], "test_accuracy": 0.9237, "disease_caught": "330/392"},
+    "served_originally": {"key": "derma_bin", "test_accuracy": 0.8968, "disease_caught": "310/392"}
+  },
+  "note": "Delete this file to fall straight back to the single derma_bin checkpoint; main.py also falls back on its own if a member file goes missing, or if members disagree on classes, input size, or preprocessing."
+}

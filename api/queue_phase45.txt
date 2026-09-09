@@ -1,0 +1,41 @@
+# Phases 4+5.
+#
+# --- phase 4: close the two confounds the epoch audit exposed ------------------------------
+# The epoch audit (step 44) found derma_bin was the ONE model that stopped at its cap while
+# still improving: retrain_below91.py gave derma/derma_bin EPOCHS=22 and everything else 40.
+# So derma_bin_eb0's +0.0174 cannot be attributed to the backbone until a resnet18 gets the
+# same 30 epochs. This row is that control - and it may simply win on its own, since
+# derma_bin needs +0.0102 and was cut off on the way up.
+derma_bin_r18e30   DATASET=dermamnist ARCH=resnet18 BINARY=1 EPOCHS=30 SUFFIX=_r18e30
+#
+# efficientnet LOST on retina_bin (0.8600 vs 0.8825) after converging in 13 epochs, so that
+# loss is real, not a budget artefact. resnet50 was never tried there and landed between the
+# two backbones on multi-class retina. 11 minutes to find out.
+retina_bin_r50     DATASET=retinamnist ARCH=resnet50 BINARY=1 SUFFIX=_r50
+#
+# derma_bin_eb0's best val landed at epoch 29 of 30 - it is near its own cap too. If the
+# control above confirms the backbone, this is the run that banks the rest of it.
+derma_bin_eb0l     DATASET=dermamnist ARCH=efficientnet_b0 BINARY=1 EPOCHS=45 SUFFIX=_eb0l
+#
+# --- phase 5: the three models session 1 never touched --------------------------------------
+# Session 1 only retrained what was under 91%, so blood, organc and path are still v1: 64px,
+# single-stage, no TTA check, selected on val LOSS rather than val accuracy. That is exactly
+# the recipe that took oct from 0.7750 @64px to 0.9230 @128px (+0.1480). Their overfitting
+# gaps say there is room: organc trains to 0.9990 and tests at 0.9419.
+#
+# Ordered by headroom (gap), largest first:
+#     organc  0.9419  gap +0.0571  12,975 train  ~56 min @224
+#     path    0.9440  gap +0.0455  89,996 train           @64  - see the disk note below
+#     blood   0.9787  gap +0.0057  11,959 train  ~51 min @224  (least headroom - runs last)
+#
+# DISK. This box has 16 GB free on a 93%-full drive. Train-array sizes at 224px:
+#     organc 0.65 GB   blood 1.80 GB   path 13.55 GB
+# path is not a 224 candidate here - its npz download plus the trainer's memmap copy would be
+# roughly 27 GB. It also has 89,996 training images, not the 19,998 its metrics file reports;
+# v1 subsampled it. So path stays at 64px, where its npz is already cached, and the run tests
+# the RECIPE and BACKBONE alone (two-stage, val-accuracy selection, val-decided TTA,
+# efficientnet_b0) with resolution held fixed. That is a narrower experiment than the other
+# two, and the log has to say so rather than let the row look equivalent.
+organc_eb0         DATASET=organcmnist ARCH=efficientnet_b0 SIZE=224 SUFFIX=_eb0
+blood_eb0          DATASET=bloodmnist  ARCH=efficientnet_b0 SIZE=224 SUFFIX=_eb0
+path_eb0           DATASET=pathmnist   ARCH=efficientnet_b0 SIZE=64 MAX_TRAIN=20000 EPOCHS=20 SUFFIX=_eb0

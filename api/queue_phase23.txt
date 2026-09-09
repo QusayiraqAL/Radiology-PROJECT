@@ -1,0 +1,37 @@
+# Phases 2+3, one queue, strictly sequential.
+#
+# Phase 1 verdict (retina, 224px, seed 0, everything else identical):
+#     resnet18   test 0.5800 no-TTA   gap +0.2175   979 s
+#     resnet50   test 0.6175 no-TTA   gap +0.2860   639 s
+#     effnet_b0  test 0.6425 no-TTA   gap +0.2096   307 s   <- wins on accuracy, gap AND time
+#
+# The smallest backbone (4.0M params) beat the largest (23.5M) on a 1080-image training set
+# and overfits least. That is the expected direction for this much data, and it is now
+# measured rather than assumed. effnet_b0 is the backbone for everything below.
+#
+# --- phase 2: does mixing add anything ON TOP of the new backbone? --------------------------
+# effnet_b0 still memorises 88.0% of train against 64.3% test (+0.2096). These two rows change
+# ONLY the regulariser against retina_eb0, so any delta is attributable to it alone.
+retina_eb0mix     DATASET=retinamnist ARCH=efficientnet_b0 MIXUP=0.2  SUFFIX=_eb0mix
+retina_eb0cut     DATASET=retinamnist ARCH=efficientnet_b0 CUTMIX=1.0 SUFFIX=_eb0cut
+#
+# --- phase 3: the new backbone on every model still under the 91% bar ----------------------
+# Ordered by cost, cheapest first, so a stall costs the least evidence:
+#     retina_bin  0.8825  needs +0.0275   ~3 min
+#     breast      0.8782  needs +0.0318   ~3 min
+#     derma_bin   0.8998  needs +0.0102   ~25 min  <- closest to the bar in the whole project
+#     derma       0.8070  needs +0.1030   ~25 min  (published ceiling ~0.77; run for the gain)
+retina_bin_eb0    DATASET=retinamnist ARCH=efficientnet_b0 BINARY=1 SUFFIX=_eb0
+breast_eb0        DATASET=breastmnist ARCH=efficientnet_b0 SUFFIX=_eb0
+derma_bin_eb0     DATASET=dermamnist  ARCH=efficientnet_b0 BINARY=1 SUFFIX=_eb0
+derma_eb0         DATASET=dermamnist  ARCH=efficientnet_b0 SUFFIX=_eb0
+#
+# derma_bin is the one row worth spending a second backbone on: it needs +0.0102 to cross 91%,
+# less than any other model in the project.
+derma_bin_r50     DATASET=dermamnist  ARCH=resnet50 BINARY=1 SUFFIX=_r50
+#
+# --- oct at 224 ----------------------------------------------------------------------------
+# oct_v2 is already over the bar (0.9230) but was trained at 128px because 224 did not fit the
+# old memory budget. It fits now. VAL_MAX mirrors oct_v2's own setting so selection is
+# comparable; EPOCHS is lower because oct has 37,754 training images, not 1,080.
+oct_eb0           DATASET=octmnist ARCH=efficientnet_b0 SIZE=224 MAX_TRAIN=40000 VAL_MAX=3000 EPOCHS=14 SUFFIX=_eb0

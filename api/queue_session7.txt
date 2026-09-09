@@ -1,0 +1,17 @@
+# Session 7 queue, 2026-09-09.
+#
+# The cheap rows run first: three more copies of ONE breast fold, config-identical to the
+# breast_k_r18f0 that already exists. Nothing differs between them - not the split, not the
+# seed - so their spread IS the run-to-run term, and it splits step 79's 0.0226 "fold-to-fold"
+# noise floor into "different held-out images" and "the same run twice". 2 minutes each.
+breast_k_r18f0b  DATASET=breastmnist ARCH=resnet18 KFOLD=5 FOLD=0 SUFFIX=_k_r18f0b
+breast_k_r18f0c  DATASET=breastmnist ARCH=resnet18 KFOLD=5 FOLD=0 SUFFIX=_k_r18f0c
+breast_k_r18f0d  DATASET=breastmnist ARCH=resnet18 KFOLD=5 FOLD=0 SUFFIX=_k_r18f0d
+#
+# Then the selection-metric question, done properly. One run per LOSS, each keeping a
+# checkpoint for acc, bacc and recall off the SAME trajectory - so comparing the three is free
+# of the run-to-run term that made derma_bin_bacc vs derma_bin_eb0l unreadable. PATIENCE=45
+# with EPOCHS=45 disables early stop, so every metric gets the whole trajectory to choose from
+# instead of the run length itself becoming a random variable (step 90).
+derma_bin_all3   DATASET=dermamnist ARCH=efficientnet_b0 BINARY=1 EPOCHS=45 PATIENCE=45 SUFFIX=_all3
+derma_bin_focal3 DATASET=dermamnist ARCH=efficientnet_b0 BINARY=1 EPOCHS=45 PATIENCE=45 LOSS=focal SUFFIX=_focal3

@@ -28,24 +28,24 @@
   "n_test": 400,
   "val_subsampled_for_selection": false,
   "test_split": "full official MedMNIST test split (never subsampled)",
-  "test_accuracy": 0.8825,
+  "test_accuracy": 0.8875,
   "train_accuracy": 0.9722,
   "overfitting_gap": 0.0897,
-  "test_balanced_accuracy": 0.8765,
-  "test_macro_f1": 0.8799,
-  "test_auc": 0.9556,
+  "test_balanced_accuracy": 0.875,
+  "test_macro_f1": 0.8793,
+  "test_auc": 0.9504,
   "mean_confidence": 0.8779,
-  "tta_used": true,
+  "tta_used": false,
   "test_accuracy_no_tta": 0.8825,
   "test_accuracy_with_tta": 0.8825,
   "confusion_matrix": [
     [
-      206,
-      14
+      209,
+      11
     ],
     [
-      33,
-      147
+      36,
+      144
     ]
   ],
   "epoch_history": [
@@ -283,33 +283,33 @@
     "default_0.5": {
       "accuracy": 0.8825,
       "positive_class_index": 1,
-      "sensitivity": 0.8167,
-      "specificity": 0.9364,
-      "disease_caught": "147/180",
-      "macro_f1": 0.8799,
+      "sensitivity": 0.8,
+      "specificity": 0.95,
+      "disease_caught": "144/180",
+      "macro_f1": 0.8793,
       "confusion_matrix_[[tn,fp],[fn,tp]]": [
         [
-          206,
-          14
+          209,
+          11
         ],
         [
-          33,
-          147
+          36,
+          144
         ]
       ]
     },
     "accuracy_optimal": {
-      "threshold": 0.335,
-      "accuracy": 0.875,
+      "threshold": 0.305,
+      "accuracy": 0.8875,
       "positive_class_index": 1,
       "sensitivity": 0.8889,
-      "specificity": 0.8636,
+      "specificity": 0.8864,
       "disease_caught": "160/180",
-      "macro_f1": 0.8743,
+      "macro_f1": 0.8866,
       "confusion_matrix_[[tn,fp],[fn,tp]]": [
         [
-          190,
-          30
+          195,
+          25
         ],
         [
           20,
@@ -318,24 +318,35 @@
       ]
     },
     "screening_min_sensitivity_0.90": {
-      "threshold": 0.245,
-      "accuracy": 0.8575,
+      "threshold": 0.18,
+      "accuracy": 0.85,
       "positive_class_index": 1,
-      "sensitivity": 0.9056,
-      "specificity": 0.8182,
-      "disease_caught": "163/180",
-      "macro_f1": 0.8572,
+      "sensitivity": 0.9111,
+      "specificity": 0.8,
+      "disease_caught": "164/180",
+      "macro_f1": 0.8499,
       "confusion_matrix_[[tn,fp],[fn,tp]]": [
         [
-          180,
-          40
+          176,
+          44
         ],
         [
-          17,
-          163
+          16,
+          164
         ]
       ]
     },
     "note": "Serve the screening point for triage and quote the accuracy point for benchmark comparison. Missing a positive is not equal to a false alarm."
-  }
+  },
+  "tta_decided_on": "val",
+  "val_accuracy_no_tta": 0.8917,
+  "val_accuracy_with_tta": 0.8917,
+  "tta_correction_2026_09_07": {
+    "was": 0.8825,
+    "now": 0.8825,
+    "why": "the TTA flag had been selected on the test split, which reports the max of two test numbers; it is now selected on val"
+  },
+  "test_numbers_remeasured_on": "cpu",
+  "test_accuracy_argmax_0.5": 0.8825,
+  "test_accuracy_source": "val-tuned decision threshold 0.305"
 }

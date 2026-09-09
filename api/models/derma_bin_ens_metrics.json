@@ -1,0 +1,79 @@
+{
+  "model": "derma_bin_ens",
+  "members": [
+    "derma_bin",
+    "derma_bin_eb0",
+    "derma_bin_r50"
+  ],
+  "all_candidates": [
+    "derma_bin",
+    "derma_bin_eb0",
+    "derma_bin_r50"
+  ],
+  "member_archs": {
+    "derma_bin": "resnet18",
+    "derma_bin_eb0": "efficientnet_b0",
+    "derma_bin_r50": "resnet50"
+  },
+  "medmnist": "dermamnist",
+  "classes": [
+    "benign (bkl/df/nv/vasc)",
+    "malignant or pre-malignant (akiec/bcc/mel)"
+  ],
+  "n_classes": 2,
+  "binary_task": true,
+  "selection": "member subset chosen on val; test scored once",
+  "val_accuracy": 0.9322,
+  "test_accuracy": 0.9237,
+  "test_balanced_accuracy": 0.8927,
+  "test_macro_f1": 0.882,
+  "confusion_matrix": [
+    [
+      1522,
+      91
+    ],
+    [
+      62,
+      330
+    ]
+  ],
+  "mean_member_test_accuracy": 0.9086,
+  "best_single_member": {
+    "key": "derma_bin_eb0",
+    "test_accuracy": 0.9172
+  },
+  "ensemble_gain_over_mean_member": 0.0151,
+  "ensemble_gain_over_best_member": 0.0065,
+  "n_test": 2005,
+  "device": "cpu",
+  "all_member_equal_weight": {
+    "members": [
+      "derma_bin",
+      "derma_bin_eb0",
+      "derma_bin_r50"
+    ],
+    "val_accuracy": 0.9322,
+    "test_accuracy": 0.9237,
+    "test_balanced_accuracy": 0.8927,
+    "test_macro_f1": 0.882,
+    "confusion_matrix": [
+      [
+        1522,
+        91
+      ],
+      [
+        62,
+        330
+      ]
+    ],
+    "gain_over_best_member": 0.0065,
+    "note": "chooses nothing, so it cannot overfit val; reported next to the val-selected subset rather than instead of it",
+    "disease_caught": "330/392",
+    "sensitivity": 0.8418
+  },
+  "test_auc": 0.9688,
+  "positive_class_index": 1,
+  "positive_class_name": "malignant or pre-malignant (akiec/bcc/mel)",
+  "disease_caught": "330/392",
+  "sensitivity": 0.8418
+}

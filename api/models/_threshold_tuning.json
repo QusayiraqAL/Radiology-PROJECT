@@ -1,62 +1,122 @@
 [
   {
-    "key": "oct_bin",
-    "t_acc": 0.4400000000000001,
-    "t_scr": 0.9650000000000002,
+    "key": "derma_bin_focal3",
+    "t_acc": 0.5150000000000001,
+    "t_scr": 0.26000000000000006,
     "default": {
-      "accuracy": 0.991,
+      "accuracy": 0.9272,
       "positive_class_index": 1,
-      "sensitivity": 0.988,
-      "specificity": 1.0,
-      "disease_caught": "741/750",
-      "macro_f1": 0.9881,
+      "sensitivity": 0.8291,
+      "specificity": 0.951,
+      "disease_caught": "325/392",
+      "macro_f1": 0.8856,
       "confusion_matrix_[[tn,fp],[fn,tp]]": [
         [
-          250,
-          0
+          1534,
+          79
         ],
         [
-          9,
-          741
+          67,
+          325
         ]
       ]
     },
     "accuracy": {
-      "accuracy": 0.992,
+      "accuracy": 0.9282,
       "positive_class_index": 1,
-      "sensitivity": 0.9893,
-      "specificity": 1.0,
-      "disease_caught": "742/750",
-      "macro_f1": 0.9894,
+      "sensitivity": 0.8189,
+      "specificity": 0.9547,
+      "disease_caught": "321/392",
+      "macro_f1": 0.8861,
       "confusion_matrix_[[tn,fp],[fn,tp]]": [
         [
-          250,
-          0
+          1540,
+          73
         ],
         [
-          8,
-          742
+          71,
+          321
         ]
       ]
     },
     "screening": {
-      "accuracy": 0.914,
+      "accuracy": 0.8853,
       "positive_class_index": 1,
-      "sensitivity": 0.8853,
+      "sensitivity": 0.9082,
+      "specificity": 0.8797,
+      "disease_caught": "356/392",
+      "macro_f1": 0.8404,
+      "confusion_matrix_[[tn,fp],[fn,tp]]": [
+        [
+          1419,
+          194
+        ],
+        [
+          36,
+          356
+        ]
+      ]
+    },
+    "auc": 0.9635629515290307
+  },
+  {
+    "key": "oct_bin_eb0",
+    "t_acc": 0.21500000000000002,
+    "t_scr": 0.9500000000000002,
+    "default": {
+      "accuracy": 0.99,
+      "positive_class_index": 1,
+      "sensitivity": 0.9867,
       "specificity": 1.0,
-      "disease_caught": "664/750",
-      "macro_f1": 0.8962,
+      "disease_caught": "740/750",
+      "macro_f1": 0.9868,
       "confusion_matrix_[[tn,fp],[fn,tp]]": [
         [
           250,
           0
         ],
         [
-          86,
-          664
+          10,
+          740
         ]
       ]
     },
-    "auc": 0.9977813333333333
+    "accuracy": {
+      "accuracy": 0.99,
+      "positive_class_index": 1,
+      "sensitivity": 0.992,
+      "specificity": 0.984,
+      "disease_caught": "744/750",
+      "macro_f1": 0.9867,
+      "confusion_matrix_[[tn,fp],[fn,tp]]": [
+        [
+          246,
+          4
+        ],
+        [
+          6,
+          744
+        ]
+      ]
+    },
+    "screening": {
+      "accuracy": 0.935,
+      "positive_class_index": 1,
+      "sensitivity": 0.9133,
+      "specificity": 1.0,
+      "disease_caught": "685/750",
+      "macro_f1": 0.9198,
+      "confusion_matrix_[[tn,fp],[fn,tp]]": [
+        [
+          250,
+          0
+        ],
+        [
+          65,
+          685
+        ]
+      ]
+    },
+    "auc": 0.9994560000000001
   }
 ]

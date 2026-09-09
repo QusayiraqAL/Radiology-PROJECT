@@ -31,7 +31,8 @@ import medmnist
 from medmnist import INFO
 from sklearn.metrics import accuracy_score, roc_auc_score, confusion_matrix, f1_score
 
-from nets import build_brain_resnet
+from nets import build_medmnist_backbone
+import preproc
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 MODEL_DIR = os.path.join(HERE, "models")
@@ -78,14 +79,19 @@ def probs(net, X, y, size, tta):
     return np.concatenate(out)
 
 
-def split_of(dataset, split, size, binary_positive):
+def split_of(dataset, split, size, binary_positive, pre=None):
     DataClass = getattr(medmnist, INFO[dataset]["python_class"])
     ds = DataClass(split=split, download=True, size=size, root=DATA_ROOT)
     y = ds.labels.astype(np.int64).reshape(-1)
     if binary_positive:
         pos = set(binary_positive)
         y = np.array([1 if int(v) in pos else 0 for v in y], dtype=np.int64)
-    return ds.imgs, y
+    X = ds.imgs
+    # The checkpoint's own fixed preprocessing. A threshold tuned on a different input
+    # distribution than the one served is not a threshold for this model.
+    if pre and pre != "none":
+        X = np.stack([preproc.apply(X[i], pre) for i in range(len(X))])
+    return X, y
 
 
 def rates(y, pred, pos):
@@ -116,10 +122,12 @@ def tune(key):
     size, tta = ck.get("size", 224), bool(ck.get("tta", False))
     bp = ck.get("binary_positive")
 
-    Xva, yva = split_of(dataset, "val", size, bp)
-    Xte, yte = split_of(dataset, "test", size, bp)
-    net = build_brain_resnet(num_classes=2, pretrained=False,
-                             dropout=ck.get("dropout", 0.0)).to(DEVICE).eval()
+    pre = ck.get("preproc", "none")
+    Xva, yva = split_of(dataset, "val", size, bp, pre)
+    Xte, yte = split_of(dataset, "test", size, bp, pre)
+    net, _ = build_medmnist_backbone(ck.get("arch", "resnet18"), num_classes=2,
+                                     pretrained=False, dropout=ck.get("dropout", 0.0))
+    net = net.to(DEVICE).eval()
     net.load_state_dict(ck["state_dict"])
     pv, pt = probs(net, Xva, yva, size, tta), probs(net, Xte, yte, size, tta)
     del net

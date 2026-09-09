@@ -75,6 +75,53 @@ Fix: add **real** question-form non-medical Arabic as hard negatives — `hssein
 > Both findings share one lesson: **a high score against an easy or contaminated
 > evaluation set is not a high score.** Check what the test set actually contains.
 
+## ⚠️ Third finding: the API was deleting colour before every prediction (fixed 2026-09-08)
+
+`_read_image` decoded every upload with `.convert("L")`, so all fourteen models were served a
+greyscale image. The MedMNIST predictors then called `.convert("RGB")`, which only replicates
+that one grey channel three times — colour never reached a network. Six models are trained on
+colour, and for several of them colour **is** the signal: the haematoxylin-blue / eosin-pink
+split in `path`, the stain in `blood`, the dermoscopic pigment network in `derma`, haemorrhage
+red in `retina`.
+
+Measured on the official test splits with `api/measure_grayscale_damage.py`, through the same
+serving configuration (TTA flag and promoted threshold included):
+
+| model | n_test | RGB (as published) | greyscale (as served) | cost | disease caught |
+|---|---|---|---|---|---|
+| `retina` | 400 | 0.6700 | 0.5975 | −0.0725 | — |
+| `retina_bin` | 400 | 0.8875 | 0.8275 | −0.0600 | **160/180 → 126/180** |
+| `derma` | 2005 | 0.8793 | 0.7317 | **−0.1476** | — |
+| `derma_bin` | 2005 | 0.8968 | 0.8040 | −0.0928 | **310/392 → 10/392** |
+| `path` | 7180 | 0.9440 | **0.5609** | **−0.3831** | — |
+| `blood` | 3421 | 0.9787 | **0.2441** | **−0.7346** | — |
+
+`blood` fell 73 points. With eight classes, random guessing is 12.5%; the served model was at
+24.4%. `path` lost 38 — H&E is two stains, haematoxylin **blue** and eosin **pink**, and
+greyscale merges nucleus with cytoplasm.
+
+**`derma_bin` is the worst entry and not because of its accuracy.** It went from catching
+310 of 392 malignancies to catching **10** — it degenerated into an "everything is benign"
+classifier, and still reported **80% accuracy**, because 1613 of the 2005 test lesions really
+are benign. A biopsy-triage tool was catching 2.6% of the malignancies it exists to find while
+its accuracy number looked healthy.
+
+**None of the repo's existing tools could have caught this.** `verify_retrain_gains.py`,
+`fix_tta_selection.py` and `tune_threshold.py` all read arrays straight from `medmnist` in RGB.
+Not one of them goes through `_read_image`. What found it was uploading a real file to the real
+endpoint and comparing the answer against an offline measurement of the same image.
+
+`_read_image` now returns RGB. The two predictors that genuinely need one channel —
+`predict_chest` (torchxrayvision wants a 2-D array) and the v1 pneumonia `SmallXRayCNN(in_ch=1)`
+— convert for themselves. Chest films are greyscale anyway, so nothing is lost there.
+
+**The general lesson, which is bigger than the bug.** Every number in this repo was measured on
+the *evaluation* path. Nothing had ever checked that the *serving* path matched it. It did not,
+in three separate ways found the same day: TTA was never applied at serve time, promoted
+decision thresholds were never applied, and colour was discarded. The numbers were honest; what
+the user received was not the thing they described. **Measuring the path the user's request
+actually travels is a separate test, and it has to be run.**
+
 ## Models
 
 | id | Modality | Task | Backbone | Data | Validation |
@@ -84,15 +131,15 @@ Fix: add **real** question-form non-medical Arabic as hard negatives — `hssein
 | `brain` | Brain MRI | glioma / meningioma / pituitary / no-tumor | **v2:** ResNet-18 + brain-region crop (ImageNet init) | **Brain Tumor MRI Dataset** (HuggingFace, real MRI slices) | Accuracy / macro-F1 / macro-AUC + **gap**, on a **leak-free grouped** test split (see finding above) |
 | `symptoms_ar` | Clinical text (Arabic) | Arabic symptom text → specialty (20) → diagnosis | **Router** (SGD, L2 swept) + **per-category** (calibrated LinearSVC) + **input filter v2**; TF-IDF word+char | **≥200k real Arabic** (Shifaa + hajerbchn/MAQA + MKamil) | Router top-1 / top-3 + **gap**, per-category acc, filter reject-rate on **unseen question-form** negatives |
 | `breast` | Breast ultrasound | malignant vs benign | **v2:** ResNet-18 @224 (two-stage, TTA-checked) | **BreastMNIST** (real breast US) | test acc **0.878** (v1 0.808), AUC **0.924**, gap +0.083 |
-| `derma` | Dermoscopy | 7-class skin lesion (incl. melanoma) | **v2:** ResNet-18 @224 (two-stage, TTA) | **DermaMNIST** (HAM10000) | test acc **0.807** (v1 0.722), macro-AUC **0.962**, gap +0.071 |
-| `derma_bin` | Dermoscopy | **malignant/pre-malignant vs benign** (biopsy triage) | ResNet-18 @224 | **DermaMNIST** (HAM10000) | test acc **0.900**, AUC **0.948**; screening point t=0.28 catches **358/392** malignant at sens **0.913** |
-| `blood` | Blood-smear microscopy | 8-class blood cell | ResNet-18 (transfer) | **BloodMNIST** (real peripheral blood) | test acc **0.979**, macro-AUC **0.999**, gap **0.006** |
-| `organc` | Abdominal CT | 11-class organ identification | ResNet-18 (transfer) | **OrganCMNIST** (abdominal CT) | test acc **0.942**, macro-AUC **0.993** |
-| `path` | H&E histopathology | 9-class colorectal tissue | ResNet-18 (transfer) | **PathMNIST** (colorectal H&E) | test acc **0.944**, macro-AUC **0.996** |
+| `derma` | Dermoscopy | 7-class skin lesion (incl. melanoma) | **v3:** EfficientNet-B0 @224 (two-stage, val-decided TTA) | **DermaMNIST** (HAM10000) | test acc **0.879** (resnet18 v2 0.814, v1 0.722), **macro-F1 0.804** (was 0.721), macro-AUC **0.962**, gap +0.086; published ceiling ~0.75-0.77 |
+| `derma_bin` | Dermoscopy | **malignant/pre-malignant vs benign** (biopsy triage) | ResNet-18 @224 | **DermaMNIST** (HAM10000) | test acc **0.897**, AUC **0.948**, catches **310/392** malignant. The published screening point (t=0.28, 358/392) was tuned on this model's no-TTA probabilities and is **stale** since the 2026-09-07 TTA correction - re-run `tune_threshold.py` before quoting it |
+| `blood` | Blood-smear microscopy | 8-class blood cell | ResNet-18 @64 (**v1 recipe - never retrained**) | **BloodMNIST** (real peripheral blood) | test acc **0.979**, macro-AUC **0.999**, gap **0.006** |
+| `organc` | Abdominal CT | 11-class organ identification | ResNet-18 @64 (**v1 recipe - never retrained**) | **OrganCMNIST** (abdominal CT) | test acc **0.942**, macro-AUC **0.993**, gap **+0.057** (trains to 0.999) |
+| `path` | H&E histopathology | 9-class colorectal tissue | ResNet-18 @64 (**v1 recipe - never retrained**) | **PathMNIST** (colorectal H&E) | test acc **0.944**, macro-AUC **0.996**, gap **+0.046**; trained on a 20k subsample of the 90k train split |
 | `oct` | Retinal OCT | 4-class (CNV/DME/drusen/normal) | **v2:** ResNet-18 @128 (two-stage, TTA, AMP off) | **OCTMNIST** | test acc **0.923** (v1 0.775), macro-AUC **0.993**, gap +0.039 |
-| `oct_bin` | Retinal OCT | **disease vs normal** (referral triage) | ResNet-18 @128 | **OCTMNIST** | test acc **0.992**, balanced acc **0.994**, AUC **0.998** |
-| `retina` | Fundus | 5-grade diabetic retinopathy | **v2:** ResNet-18 @224 (two-stage, TTA) | **RetinaMNIST** | test acc **0.608** (v1 0.495), AUC **0.854**; published ResNet-18 baseline ~0.52 |
-| `retina_bin` | Fundus | **referable DR (grade ≥2)** (referral triage) | ResNet-18 @224 | **RetinaMNIST** | test acc **0.883**, AUC **0.956**; screening point t=0.245 catches **163/180** at sens **0.906** |
+| `oct_bin` | Retinal OCT | **disease vs normal** (referral triage) | ResNet-18 @128 | **OCTMNIST** | test acc **0.992** at the val-tuned cut t=0.440, catching **742/750** (argmax: 0.991, 741/750). Balanced acc **0.994**, AUC **0.998** |
+| `retina` | Fundus | 5-grade diabetic retinopathy | **v3:** EfficientNet-B0 @224 (two-stage, val-decided TTA) | **RetinaMNIST** | test acc **0.670** (resnet18 v2 0.575, v1 0.495), macro-F1 **0.597**, AUC **0.854**; published ResNet-18 baseline ~0.52 |
+| `retina_bin` | Fundus | **referable DR (grade ≥2)** (referral triage) | ResNet-18 @224 | **RetinaMNIST** | test acc **0.888** at the val-tuned cut t=0.305, catching **160/180** referrals (argmax: 0.883, 144/180). AUC **0.950**. Screening point t=0.180 catches **164/180** at sens **0.911** |
 
 ### Verification status of the 2026-09 retrain
 
@@ -101,20 +148,37 @@ path (`verify_retrain_gains.py`). The test is simple: if the new code were measu
 easier, the *old* checkpoints would score higher too. They did not — every v1 reproduced its
 July number exactly, so the gains belong to the models, not to the evaluation.
 
-| model | v1 re-measured | recorded in July | v2 | same-harness gain |
-|---|---|---|---|---|
-| `oct` | 77.50% | 77.50% | **92.30%** | **+0.1480** |
-| `derma` | 72.22% | 72.22% | **81.60%** | **+0.0938** |
-| `breast` | 80.77% | 80.77% | **87.82%** | **+0.0705** |
-| `retina` | 49.50% | 49.50% | **60.75%** | **+0.1125** |
+| model | v1 re-measured | recorded in July | v2 (ResNet-18) | same-harness gain | **v3 (EfficientNet-B0)** |
+|---|---|---|---|---|---|
+| `oct` | 77.50% | 77.50% | **92.30%** | **+0.1480** | not yet run |
+| `derma` | 72.22% | 72.22% | 81.35% | **+0.0913** | **87.93%** ← served |
+| `breast` | 80.77% | 80.77% | **87.82%** | **+0.0705** | 89.10%, **not promoted** (see below) |
+| `retina` | 49.50% | 49.50% | 57.50% | **+0.0800** | **67.00%** ← served |
+
+The v3 column is the 2026-09-07 backbone sweep (TRAINING_LOG session 6). Every v3 number in it
+was re-measured on CPU fp32 by `verify_retrain_gains.py --ckpt` and reproduced exactly.
+`retina` and `derma` were promoted because **val agreed** with the promotion by 2 and 71 images
+respectively. `breast` was **refused by `promote_model.py`**: on its 78-image val the three
+candidates rank in exactly the reverse of their test order, one image apart each, so promoting
+on the test comparison would be test-set selection. It stays on ResNet-18 at 0.8782.
+
+**Correction, 2026-09-07 (TRAINING_LOG steps 38-40).** `retina` v2 is listed above at 57.50%,
+not the 60.75% published between September 4 and 7. The trainer had been choosing the
+test-time-augmentation flag by scoring the TEST split both ways and keeping the winner, which
+reports max(a, b) of two test numbers and can only move a headline up. The flag is now chosen
+on val, and on val `retina_v2` says "no TTA". Re-measured under that decision the model scores
+0.5750. Same audit on the other models: `oct` −0.0050, `oct_bin` −0.0040, `derma` −0.0025,
+`breast`/`derma_bin`/`retina_bin` unchanged. The gain over v1 is still real and still
+same-harness — it is 8.0 points, not 11.3.
 
 **Known limitation of the leak check.** It compares **md5 of raw pixels**, so it detects only
 byte-identical duplicates. It cannot see two *different* photographs of the *same lesion or
 patient*. That distinction matters for `derma`: DermaMNIST has exactly 10,015 samples — the
 image count of HAM10000, which contains only ~7,470 unique lesions — so its split is
-image-level and lesions plausibly span train/test. `HAM10000_Colab_HighRes.ipynb` measures
-that leak directly and trains on a lesion-grouped split. Until that runs, read `derma` numbers
-as an upper bound.
+image-level and lesions plausibly span train/test. Measuring that leak needs the original
+HAM10000 (with its `lesion_id` column) and a lesion-grouped split; the Colab notebook that was
+going to do it was dropped with the rest of the Colab path on 2026-09-07 (TRAINING_LOG step 33)
+and has no local replacement yet. Until one exists, read `derma` numbers as an upper bound.
 
 **One real data defect, recorded not hidden.** BreastMNIST test image #76 is byte-identical to
 a training image but carries the *opposite* label (test says benign, train says malignant). The

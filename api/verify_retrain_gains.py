@@ -30,12 +30,16 @@ import medmnist
 from medmnist import INFO
 from sklearn.metrics import accuracy_score, roc_auc_score
 
-from nets import build_brain_resnet
+from nets import build_medmnist_backbone
+import preproc
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 MODEL_DIR = os.path.join(HERE, "models")
 DATA_ROOT = os.path.join(HERE, "data", "medmnist")
 DEVICE = os.environ.get("VERIFY_DEVICE", "cpu")   # cpu by default: the GPU may be training
+# Activation memory scales with the batch. This box has been measured at 0.38 GB free
+# while a training job holds the GPU, so the batch has to be settable from outside.
+BATCH = int(os.environ.get("VERIFY_BATCH", "64"))
 IM_MEAN, IM_STD = [0.485, 0.456, 0.406], [0.229, 0.224, 0.225]
 
 # (key, old checkpoint, new checkpoint, medmnist dataset, recorded old acc, recorded new acc)
@@ -90,20 +94,24 @@ def evaluate(ckpt_path, dataset, tta):
     src = min([s for s in (64, 128, 224) if s >= size] or [224])
     ds = DataClass(split="test", download=True, size=src, root=DATA_ROOT)
     X, y = ds.imgs, ds.labels.astype(np.int64).reshape(-1)
+    # Same fixed preprocessing the checkpoint was trained with, read from the checkpoint.
+    if ck.get("preproc", "none") != "none":
+        X = np.stack([preproc.apply(X[i], ck["preproc"]) for i in range(len(X))])
     if len(classes) == 2 and ck.get("binary_positive"):
         pos = set(ck["binary_positive"])
         y = np.array([1 if int(v) in pos else 0 for v in y], dtype=np.int64)
 
-    net = build_brain_resnet(num_classes=len(classes), pretrained=False,
-                             dropout=ck.get("dropout", 0.0)).to(DEVICE).eval()
+    # Rebuild whatever architecture the checkpoint was actually saved as. Assuming
+    # resnet18 here would make every stronger-backbone retrain fail to load, and a
+    # verifier that cannot load the model it is verifying is worse than none.
+    net, _ = build_medmnist_backbone(ck.get("arch", "resnet18"), num_classes=len(classes),
+                                     pretrained=False, dropout=ck.get("dropout", 0.0))
+    net = net.to(DEVICE).eval()
     net.load_state_dict(ck["state_dict"])
+    views, _ = preproc.views_for(ck)
     ps = []
-    for xb, _ in DataLoader(DS(X, y, size), batch_size=64):
-        xb = xb.to(DEVICE)
-        p = torch.softmax(net(xb), 1)
-        if tta:
-            p = (p + torch.softmax(net(torch.flip(xb, dims=[3])), 1)) / 2
-        ps.append(p.cpu().numpy())
+    for xb, _ in DataLoader(DS(X, y, size), batch_size=BATCH, num_workers=0):
+        ps.append(preproc.tta_average(net, xb.to(DEVICE), views).cpu().numpy())
     del net
     p = np.concatenate(ps)
     # Renormalize rows before AUC: fp16 softmax + flip-averaging leaves them at ~0.9995 and
@@ -115,7 +123,11 @@ def evaluate(ckpt_path, dataset, tta):
     except Exception as e:
         print("    [warn] AUC failed: %s: %s" % (type(e).__name__, e))
         auc = None
-    return float(accuracy_score(y, p.argmax(1))), size, len(y), src, auc
+    # y and the probability matrix come back too, so a caller that needs more than accuracy
+    # (a confusion matrix, a per-class recall) does not have to re-implement the loading and
+    # preprocessing above. Duplicating that is how the greyscale bug survived (step 57): four
+    # tools each with their own copy of "what the model expects".
+    return float(accuracy_score(y, p.argmax(1))), size, len(y), src, auc, y, p
 
 
 def leak_check(dataset, size):
@@ -128,8 +140,64 @@ def leak_check(dataset, size):
     return dup, len(te)
 
 
+def verify_one(key):
+    """Re-measure a single experiment checkpoint against its own metrics file.
+
+    PAIRS only covers the four v1/v2 retrains. Session 6 produces experiment keys
+    (retina_r50, retina_mix, ...) that have no v1 twin, but still need the same question
+    asked of them before anything is promoted: does the number in the metrics file come back
+    when the checkpoint is re-run through this harness, on this machine, in the configuration
+    it is actually saved with?
+    """
+    cp = os.path.join(MODEL_DIR, key + ".pt")
+    mp = os.path.join(MODEL_DIR, key + "_metrics.json")
+    if not os.path.exists(cp):
+        print("%-14s checkpoint not present" % key)
+        return None
+    ck = torch.load(cp, map_location="cpu", weights_only=False)
+    dataset = ck.get("medmnist")
+    if not dataset:
+        print("%-14s checkpoint has no 'medmnist' field - cannot pick a dataset" % key)
+        return None
+    acc, size, n, src, auc, _y, _p = evaluate(cp, dataset, ck.get("tta", False))
+    rec = recorded(os.path.basename(mp))
+    if rec is None:
+        verdict = "no recorded value to compare"
+    elif abs(acc - rec) <= 0.02:
+        verdict = "REPRODUCES (delta %+.4f)" % (acc - rec)
+    else:
+        verdict = "MISMATCH (delta %+.4f) <-- investigate" % (acc - rec)
+    print("%-14s %-14s %7.2f%% %8s   %s  [%dpx, n=%d, arch=%s, tta=%s]"
+          % (key, dataset, acc * 100, ("%.2f%%" % (rec * 100)) if rec else "-", verdict,
+             size, n, ck.get("arch", "resnet18"), ck.get("tta", False)))
+    return {"measured": round(acc, 4), "recorded": rec, "arch": ck.get("arch", "resnet18"),
+            "tta": bool(ck.get("tta", False)), "size": size, "n_test": n,
+            "auc": None if auc is None else round(float(auc), 4)}
+
+
 def main():
-    only = sys.argv[1:]
+    argv = sys.argv[1:]
+    if argv and argv[0] == "--ckpt":
+        print("device=%s\n" % DEVICE)
+        print("%-14s %-14s %8s %8s   %s" % ("key", "dataset", "measured", "recorded", "verdict"))
+        print("-" * 100)
+        res = {}
+        for k in argv[1:]:
+            r = verify_one(k)
+            if r:
+                res[k] = r
+        out_p = os.path.join(MODEL_DIR, "_verify_experiments.json")
+        prev = {}
+        if os.path.exists(out_p):
+            with open(out_p, encoding="utf-8") as f:
+                prev = json.load(f)
+        prev.update(res)
+        with open(out_p, "w", encoding="utf-8") as f:
+            json.dump(prev, f, ensure_ascii=False, indent=2)
+        print("\nwrote models/_verify_experiments.json")
+        return
+
+    only = argv
     print("device=%s\n" % DEVICE)
     print("%-8s %-22s %8s %8s   %s" % ("model", "checkpoint", "measured", "recorded", "verdict"))
     print("-" * 92)
@@ -145,7 +213,7 @@ def main():
             if not os.path.exists(path):
                 print("%-8s %-22s %8s %8s   checkpoint not present" % (key, ck_name, "-", "-"))
                 continue
-            acc, size, n, src, auc = evaluate(path, dataset, tta)
+            acc, size, n, src, auc, _y, _p = evaluate(path, dataset, tta)
             rec = recorded(metrics_name)
             if rec is None:
                 verdict = "no recorded value to compare"

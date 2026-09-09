@@ -1,0 +1,92 @@
+{
+  "model": "retina_ens",
+  "members": [
+    "retina_eb0cut"
+  ],
+  "all_candidates": [
+    "retina_v2",
+    "retina_r50",
+    "retina_eb0",
+    "retina_eb0cut"
+  ],
+  "member_archs": {
+    "retina_v2": "resnet18",
+    "retina_r50": "resnet50",
+    "retina_eb0": "efficientnet_b0",
+    "retina_eb0cut": "efficientnet_b0"
+  },
+  "medmnist": "retinamnist",
+  "classes": [
+    "0",
+    "1",
+    "2",
+    "3",
+    "4"
+  ],
+  "n_classes": 5,
+  "binary_task": false,
+  "selection": "member subset chosen on val; test scored once",
+  "val_accuracy": 0.7167,
+  "test_accuracy": 0.635,
+  "test_balanced_accuracy": 0.6029,
+  "test_macro_f1": 0.5739,
+  "confusion_matrix": [
+    [
+      124,
+      37,
+      9,
+      2,
+      2
+    ],
+    [
+      13,
+      26,
+      7,
+      0,
+      0
+    ],
+    [
+      8,
+      20,
+      38,
+      22,
+      4
+    ],
+    [
+      1,
+      1,
+      4,
+      56,
+      6
+    ],
+    [
+      0,
+      1,
+      1,
+      8,
+      10
+    ]
+  ],
+  "mean_member_test_accuracy": 0.635,
+  "best_single_member": {
+    "key": "retina_eb0",
+    "test_accuracy": 0.67
+  },
+  "ensemble_gain_over_mean_member": 0.0,
+  "ensemble_gain_over_best_member": -0.035,
+  "n_test": 400,
+  "device": "cpu",
+  "all_member_equal_weight": {
+    "members": [
+      "retina_v2",
+      "retina_r50",
+      "retina_eb0",
+      "retina_eb0cut"
+    ],
+    "val_accuracy": 0.6917,
+    "test_accuracy": 0.6625,
+    "gain_over_best_member": -0.0075,
+    "note": "chooses nothing, so it cannot overfit val; reported next to the val-selected subset rather than instead of it"
+  },
+  "test_auc": 0.8775
+}

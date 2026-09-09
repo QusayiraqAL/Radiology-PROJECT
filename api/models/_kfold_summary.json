@@ -1,0 +1,48 @@
+{
+  "breast_k_r18": {
+    "arch": "resnet18",
+    "preproc": "none",
+    "folds_done": 5,
+    "k": 5,
+    "mean_val": 0.9231,
+    "std_val": 0.031,
+    "per_fold_val": [
+      0.88,
+      0.896,
+      0.952,
+      0.96,
+      0.9274
+    ],
+    "pooled_val_images": 624,
+    "per_fold_test": [
+      0.8782,
+      0.8782,
+      0.8974,
+      0.8782,
+      0.8846
+    ]
+  },
+  "breast_k_eb0": {
+    "arch": "efficientnet_b0",
+    "preproc": "none",
+    "folds_done": 5,
+    "k": 5,
+    "mean_val": 0.9086,
+    "std_val": 0.0213,
+    "per_fold_val": [
+      0.872,
+      0.92,
+      0.936,
+      0.912,
+      0.9032
+    ],
+    "pooled_val_images": 624,
+    "per_fold_test": [
+      0.891,
+      0.8782,
+      0.891,
+      0.9103,
+      0.8782
+    ]
+  }
+}

@@ -28,24 +28,24 @@
   "n_test": 2005,
   "val_subsampled_for_selection": false,
   "test_split": "full official MedMNIST test split (never subsampled)",
-  "test_accuracy": 0.8998,
+  "test_accuracy": 0.8968,
   "train_accuracy": 0.968,
   "overfitting_gap": 0.0683,
-  "test_balanced_accuracy": 0.8605,
-  "test_macro_f1": 0.8466,
-  "test_auc": 0.9477,
+  "test_balanced_accuracy": 0.8567,
+  "test_macro_f1": 0.8423,
+  "test_auc": 0.9504,
   "mean_confidence": null,
-  "tta_used": false,
-  "test_accuracy_no_tta": 0.8998,
-  "test_accuracy_with_tta": 0.8953,
+  "tta_used": true,
+  "test_accuracy_no_tta": 0.9002,
+  "test_accuracy_with_tta": 0.8968,
   "confusion_matrix": [
     [
-      1492,
-      121
+      1488,
+      125
     ],
     [
-      80,
-      312
+      82,
+      310
     ]
   ],
   "epoch_history": [
@@ -292,5 +292,22 @@
     "note": "Serve the screening point for triage and quote the accuracy point for benchmark comparison. Missing a positive is not equal to a false alarm."
   },
   "headline_not_promoted": "The val-tuned threshold 0.660 scores 0.9062 (vs 0.8998) but catches only 285/392 of the disease against 316/392 at argmax, so the headline was left alone.",
-  "mean_confidence_note": "not recorded: the training run's evaluation pass ran under fp16 autocast and produced non-finite probabilities, so mean(max(p)) came out NaN. The same array is why this run also recorded a null test_auc, which was later recovered in fp32 on CPU. Left null rather than back-computed, because the value belongs to the fp16 pass that produced it and no measured replacement exists."
+  "mean_confidence_note": "not recorded: the training run's evaluation pass ran under fp16 autocast and produced non-finite probabilities, so mean(max(p)) came out NaN. The same array is why this run also recorded a null test_auc, which was later recovered in fp32 on CPU. Left null rather than back-computed, because the value belongs to the fp16 pass that produced it and no measured replacement exists.",
+  "test_numbers_remeasured_on": "cpu",
+  "tta_decided_on": "val",
+  "val_accuracy_no_tta": 0.8953,
+  "val_accuracy_with_tta": 0.9013,
+  "tta_correction_2026_09_07": {
+    "was": 0.8998,
+    "now": 0.8968,
+    "why": "the TTA flag had been selected on the test split, which reports the max of two test numbers; it is now selected on val"
+  },
+  "threshold_tuning_STALE": "The threshold_tuning block below was computed on 2026-09-05 from this model's NO-TTA probabilities, when argmax caught 316/392 malignant. On 2026-09-07 fix_tta_selection.py re-decided the TTA flag on val (val 0.8953 plain vs 0.9013 with TTA -> TTA on), and under the served configuration argmax now catches 310/392 at accuracy 0.8968. Every threshold, sensitivity and disease_caught figure in that block therefore describes a configuration this model is no longer served in. Re-run tune_threshold.py before quoting any of them - in particular the screening point t=0.280 / 358 of 392, which api/README.md still cites.",
+  "tta_cost_on_test": {
+    "disease_caught_no_tta": "316/392",
+    "disease_caught_with_tta": "310/392",
+    "accuracy_no_tta": 0.9002,
+    "accuracy_with_tta": 0.8968,
+    "note": "val preferred TTA by 6 images out of 1003; on test it is worse on BOTH accuracy and malignancies caught. The flag stands because it was chosen on val and changing it now on the strength of these test numbers is exactly the bug step 38 removed - but the cost is recorded, not buried."
+  }
 }
