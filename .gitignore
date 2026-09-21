@@ -51,3 +51,11 @@ desktop.ini
 
 # --- machine-local Claude Code permissions (absolute paths, not portable) ---
 .claude/settings.local.json
+
+# --- Vercel build output / CLI state --------------------------------------
+# public/index.html is a copy of "Radiology Hub.html" that scripts/build-site.mjs
+# regenerates on every build, on Vercel's machine as well as this one. Committing
+# it would put a second copy of the page in the tree - the exact drift the build
+# script exists to avoid. .vercel/ is CLI state tied to one account.
+public/
+.vercel/

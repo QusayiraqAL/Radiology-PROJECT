@@ -3421,40 +3421,98 @@
     let currentModel = 'chest';
     let modelsMeta = {};   // id -> meta (from /models)
 
-    // When the API itself served this page (main.py:490 returns it at "/"), default to the
-    // origin it came from. The hardcoded 127.0.0.1 means "the machine running the browser",
-    // which is right for a local file:// copy and wrong for every remote host — open the
-    // tunnel URL on a phone and 127.0.0.1 points the phone at itself. file:// has no origin
-    // to inherit, so that case keeps the local default untouched.
-    if (location.protocol === 'http:' || location.protocol === 'https:') {
-      apiUrlInput.value = location.origin;
+    // This page is served from three kinds of place, and each needs a different answer
+    // for "where is the API":
+    //   • the API itself (main.py returns this file at "/")  → same origin
+    //   • a static host (Vercel)                             → the API is on another machine
+    //   • a local file:// copy                               → 127.0.0.1:8000
+    // Defaulting every http(s) case to location.origin was right for the first two of the
+    // old three and wrong here: a static host has no /health, so the app reported "offline"
+    // and offered the visitor no way to say where the API actually is.
+    //
+    // Resolution order — the first candidate whose /health answers wins, and the winner is
+    // remembered so the next visit skips straight to it:
+    //   1. ?api=<url>            shareable link; also written to storage
+    //   2. stored value          what answered last time in this browser
+    //   3. window.__API_BASE__   baked in at build time (scripts/build-site.mjs)
+    //   4. location.origin       the API is serving this page
+    //   5. 127.0.0.1:8000        a local server — the file:// and dev case
+    const API_STORE_KEY = 'radhub.apiBase';
+    const LOCAL_API = 'http://127.0.0.1:8000';
+    const trimBase = v => (v || '').trim().replace(/\/+$/, '');
+
+    // Storage throws, not returns null, in a private window with site data blocked.
+    const storedApi = () => { try { return localStorage.getItem(API_STORE_KEY) || ''; } catch (e) { return ''; } };
+    const rememberApi = v => { try { localStorage.setItem(API_STORE_KEY, v); } catch (e) { /* no storage */ } };
+
+    function apiCandidates() {
+      const out = [];
+      const push = v => { v = trimBase(v); if (v && out.indexOf(v) === -1) out.push(v); };
+      push(new URLSearchParams(location.search).get('api'));
+      push(storedApi());
+      push(window.__API_BASE__);
+      if (location.protocol === 'http:' || location.protocol === 'https:') push(location.origin);
+      push(LOCAL_API);
+      return out;
     }
 
-    const apiBase = () => apiUrlInput.value.trim().replace(/\/+$/, '');
+    const apiBase = () => trimBase(apiUrlInput.value);
     const pct = v => (v == null ? '—' : (v * 100).toFixed(1) + '٪');
 
+    // Returns the /health body when `base` is a live API, null otherwise. A 404 from a
+    // static host fails at .json() on its HTML error page, which is the same "not an API"
+    // answer as a refused connection — both land in the catch.
+    async function probeApi(base, ms) {
+      try {
+        const ctrl = new AbortController();
+        const t = setTimeout(() => ctrl.abort(), ms || 4000);
+        const res = await fetch(base + '/health', { signal: ctrl.signal });
+        clearTimeout(t);
+        const j = await res.json();
+        return j && j.status === 'ok' ? j : null;
+      } catch (e) { return null; }
+    }
+
+    function showApiOnline(j) {
+      apiStatus.className = 'api-status on';
+      const ready = Object.values(j.models || {}).filter(Boolean).length;
+      apiStatusText.textContent = `متصل — ${ready} نماذج جاهزة (${(j.device || '').toUpperCase()})`;
+      loadModels();
+    }
+
+    function showApiOffline() {
+      apiStatus.className = 'api-status off';
+      // "run start_server.bat" is advice only the person sitting at the server can act on.
+      // On a static host the API is elsewhere, so point at the field they can actually use.
+      const localHost = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+      apiStatusText.textContent = (localHost || location.protocol === 'file:' || apiBase() === LOCAL_API)
+        ? 'غير متصل — شغّل start_server.bat أولاً'
+        : 'غير متصل — اكتب عنوان الخادم في الحقل أعلاه';
+    }
+
+    // Check whatever is currently in the field.
     async function checkHealth() {
       apiStatus.className = 'api-status';
       apiStatusText.textContent = 'جارٍ الفحص…';
-      try {
-        const ctrl = new AbortController();
-        const t = setTimeout(() => ctrl.abort(), 4000);
-        const res = await fetch(apiBase() + '/health', { signal: ctrl.signal });
-        clearTimeout(t);
-        const j = await res.json();
-        if (j.status === 'ok') {
-          apiStatus.className = 'api-status on';
-          const ready = Object.values(j.models || {}).filter(Boolean).length;
-          apiStatusText.textContent = `متصل — ${ready} نماذج جاهزة (${(j.device || '').toUpperCase()})`;
-          loadModels();
-          return true;
-        }
-        throw new Error();
-      } catch (e) {
-        apiStatus.className = 'api-status off';
-        apiStatusText.textContent = 'غير متصل — شغّل start_server.bat أولاً';
-        return false;
+      const base = apiBase();
+      const j = await probeApi(base);
+      if (j) { rememberApi(base); showApiOnline(j); return true; }
+      showApiOffline();
+      return false;
+    }
+
+    // Run once at load: walk the candidate list and settle on the first live API.
+    async function resolveApi() {
+      apiStatus.className = 'api-status';
+      apiStatusText.textContent = 'جارٍ الفحص…';
+      const cands = apiCandidates();
+      for (const base of cands) {
+        const j = await probeApi(base, 3500);
+        if (j) { apiUrlInput.value = base; rememberApi(base); showApiOnline(j); return true; }
       }
+      apiUrlInput.value = cands[0] || LOCAL_API;
+      showApiOffline();
+      return false;
     }
     recheckBtn.addEventListener('click', checkHealth);
     apiUrlInput.addEventListener('change', checkHealth);
@@ -4143,7 +4201,7 @@
     });
     reportNew.addEventListener('click', newReportCase);
 
-    checkHealth();
+    resolveApi();
     loadQuizModels();
     loadAtlasModels();
     loadReportModels();

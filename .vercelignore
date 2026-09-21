@@ -1,0 +1,16 @@
+# What Vercel gets is a static page, and nothing else in this repo belongs in an upload:
+# api/models alone is 3.4 GB of weights and api/venv is another 1.4 GB. This is an
+# allowlist - deny everything, then name the few files the build actually reads - so a
+# new dataset or checkpoint directory dropped in the tree later cannot silently start
+# riding along with the deploy.
+*
+
+!Radiology Hub.html
+!package.json
+!vercel.json
+!scripts
+!scripts/*
+
+# public/ is this build's own output. Vercel rebuilds it from the page on their machine;
+# uploading a locally built copy would just shadow it with whatever was there last.
+public/
