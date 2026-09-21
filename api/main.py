@@ -44,6 +44,70 @@ app = FastAPI(title="AI Radiology Hub API", version="2.0.0")
 app.add_middleware(CORSMiddleware, allow_origins=["*"],
                    allow_methods=["*"], allow_headers=["*"])
 
+
+# ---------------------------------------------------------------------------
+# Rate limit on the endpoints that cost real compute
+# ---------------------------------------------------------------------------
+# This server used to be reachable only from the machine it runs on, or through a random
+# tunnel hostname that expired within the hour. Behind a Tailscale Funnel the address is
+# permanent and public, and there is no authentication in front of it - anyone holding the
+# URL can run inference here whenever this machine is on.
+#
+# A key baked into the page would be theatre: the page is public, so the key is public. A
+# limit is not. It costs an attacker the one thing they cannot get around, and it costs a
+# real reader nothing - a person clicking through the demo makes a few requests a minute,
+# not thirty.
+#
+# Only /predict/* is limited. /health and /models are cheap, and /health in particular is
+# polled by the page on every load and by the startup script while it waits.
+#
+#   RADHUB_RATE_LIMIT=0   disables it (what the local-only setup wants)
+#   RADHUB_RATE_LIMIT=60  allows 60 requests per minute per client
+_RATE_LIMIT = int(os.environ.get("RADHUB_RATE_LIMIT", "30"))
+_RATE_WINDOW = 60.0
+_rate_hits = {}
+
+
+def _client_key(request):
+    """Who to count against.
+
+    Behind Funnel every request arrives from the local Tailscale proxy, so REMOTE_ADDR is
+    the same for everyone and counting it would rate-limit the whole world as one client.
+    Tailscale sets Tailscale-User-Login for identified users and the usual forwarding
+    headers otherwise; the first hop in X-Forwarded-For is the closest thing to a caller
+    identity available here. It is spoofable - a determined attacker rotates it and gets
+    through. That is accepted: this exists to stop casual hammering and runaway scripts,
+    not a targeted attack, and pretending otherwise would be the same theatre as the key.
+    """
+    xff = request.headers.get("x-forwarded-for")
+    if xff:
+        return xff.split(",")[0].strip()
+    return request.client.host if request.client else "unknown"
+
+
+@app.middleware("http")
+async def _rate_limit(request, call_next):
+    if _RATE_LIMIT > 0 and request.url.path.startswith("/predict"):
+        now = time.time()
+        key = _client_key(request)
+        hits = [t for t in _rate_hits.get(key, ()) if now - t < _RATE_WINDOW]
+        if len(hits) >= _RATE_LIMIT:
+            retry = int(_RATE_WINDOW - (now - hits[0])) + 1
+            return JSONResponse(
+                {"detail": f"تجاوزت الحد المسموح ({_RATE_LIMIT} طلب/دقيقة). "
+                           f"حاول بعد {retry} ثانية."},
+                status_code=429,
+                headers={"Retry-After": str(retry),
+                         "Access-Control-Allow-Origin": "*"})
+        hits.append(now)
+        _rate_hits[key] = hits
+        # Unbounded otherwise: one entry per distinct caller, forever. Cheap to bound here
+        # because a key with no hits inside the window carries no state worth keeping.
+        if len(_rate_hits) > 4096:
+            for k in [k for k, v in _rate_hits.items() if not v or now - v[-1] > _RATE_WINDOW]:
+                _rate_hits.pop(k, None)
+    return await call_next(request)
+
 REGISTRY = {}   # id -> dict(meta, predictor)
 
 
