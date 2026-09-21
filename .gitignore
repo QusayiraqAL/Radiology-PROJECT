@@ -66,3 +66,10 @@ node_modules/
 public/
 .vercel/
 .space/
+
+# --- tunnel binary (55 MB, redownloadable) --------------------------------
+# tools/cloudflared.exe is fetched by scripts/serve-and-publish.ps1 if absent.
+tools/
+
+# --- runtime logs from scripts/serve-and-publish.ps1 -----------------------
+.run/

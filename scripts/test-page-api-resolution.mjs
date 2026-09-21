@@ -67,12 +67,17 @@ const check = (name, got, want) => {
   if (!ok) fail.push(name);
 };
 
-async function run(label, url, clearStore) {
+// The "no API anywhere" scenarios cannot be simulated by hoping nothing is listening
+// on the local default - on a dev box start_server.bat usually IS listening, and then
+// the page connects, correctly, and the assertions fail for the wrong reason. Blocking
+// that port inside the browser makes these scenarios deterministic wherever this runs.
+async function run(label, url, blockLocalApi = true) {
   console.log(`\n--- ${label} ---`);
   const ctx = await browser.newContext();
   const page = await ctx.newPage();
   const errs = [];
   page.on('pageerror', e => errs.push(e.message));
+  if (blockLocalApi) await page.route('**127.0.0.1:8000**', r => r.abort());
   await page.goto(url, { waitUntil: 'load' });
   await page.waitForFunction(() =>
     !document.getElementById('apiStatusText').textContent.includes('جارٍ'), null, { timeout: 20000 });
@@ -115,7 +120,12 @@ async function run(label, url, clearStore) {
   check('B status is online', r.cls, c => c.includes('on'));
   check('B counted the ready models', r.status, s => s.includes('6') && s.includes('متصل'));
   check('B field settled on the API', r.field, `http://${LAN}:8123`);
-  check('B remembered it in localStorage', r.stored, `http://${LAN}:8123`);
+  // Stored as {v, explicit}: explicit, because it arrived on a ?api= link - the
+  // reader's own choice, which outranks a baked-in __API_BASE__ on the next visit.
+  check('B remembered it in localStorage', r.stored, v => {
+    try { const o = JSON.parse(v); return o.v === `http://${LAN}:8123` && o.explicit === true; }
+    catch (e) { return false; }
+  });
   check('B actually called /models', apiHits, h => h.includes('/models'));
 }
 

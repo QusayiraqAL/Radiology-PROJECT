@@ -3442,15 +3442,36 @@
     const trimBase = v => (v || '').trim().replace(/\/+$/, '');
 
     // Storage throws, not returns null, in a private window with site data blocked.
-    const storedApi = () => { try { return localStorage.getItem(API_STORE_KEY) || ''; } catch (e) { return ''; } };
-    const rememberApi = v => { try { localStorage.setItem(API_STORE_KEY, v); } catch (e) { /* no storage */ } };
+    // Two kinds of remembered address, and they do not rank the same:
+    //   explicit - the reader typed it, or arrived on a ?api= link. Their choice, and it
+    //              outranks anything the deployment thinks.
+    //   auto     - resolution settled on it by itself. That is a cache of an old answer,
+    //              and a freshly built __API_BASE__ is newer information than the cache.
+    // The distinction matters when the API address changes between visits, which is the
+    // normal case behind a quick tunnel: without it a returning reader spends the timeout
+    // on a dead address before reaching the live one that was baked in this morning.
+    function storedApi() {
+      try {
+        const raw = localStorage.getItem(API_STORE_KEY);
+        if (!raw) return { v: '', explicit: false };
+        if (raw[0] !== '{') return { v: trimBase(raw), explicit: true };  // pre-v2 plain string
+        const o = JSON.parse(raw);
+        return { v: trimBase(o.v), explicit: !!o.explicit };
+      } catch (e) { return { v: '', explicit: false }; }
+    }
+    const rememberApi = (v, explicit) => {
+      try { localStorage.setItem(API_STORE_KEY, JSON.stringify({ v: v, explicit: !!explicit })); }
+      catch (e) { /* no storage */ }
+    };
 
     function apiCandidates() {
       const out = [];
       const push = v => { v = trimBase(v); if (v && out.indexOf(v) === -1) out.push(v); };
+      const st = storedApi();
       push(new URLSearchParams(location.search).get('api'));
-      push(storedApi());
+      if (st.explicit) push(st.v);
       push(window.__API_BASE__);
+      if (!st.explicit) push(st.v);
       if (location.protocol === 'http:' || location.protocol === 'https:') push(location.origin);
       push(LOCAL_API);
       return out;
@@ -3515,7 +3536,7 @@
       apiStatusText.textContent = 'جارٍ الفحص…';
       const base = apiBase();
       const j = await probeApi(base);
-      if (j) { rememberApi(base); showApiOnline(j); return true; }
+      if (j) { rememberApi(base, true); showApiOnline(j); return true; }
       showApiOffline();
       return false;
     }
@@ -3524,12 +3545,18 @@
     async function resolveApi() {
       apiStatus.className = 'api-status';
       apiStatusText.textContent = 'جارٍ الفحص…';
+      const fromQuery = trimBase(new URLSearchParams(location.search).get('api'));
+      const st = storedApi();
       for (const base of apiCandidates()) {
         const j = await probeApi(base, 3500);
-        if (j) { apiUrlInput.value = base; rememberApi(base); showApiOnline(j); return true; }
+        if (j) {
+          apiUrlInput.value = base;
+          rememberApi(base, base === fromQuery || (st.explicit && base === st.v));
+          showApiOnline(j);
+          return true;
+        }
       }
-      const given = trimBase(new URLSearchParams(location.search).get('api')) ||
-                    trimBase(storedApi()) || trimBase(window.__API_BASE__);
+      const given = fromQuery || (st.explicit ? st.v : '') || trimBase(window.__API_BASE__) || st.v;
       apiUrlInput.value = given || LOCAL_API;
       showApiOffline();
       return false;
