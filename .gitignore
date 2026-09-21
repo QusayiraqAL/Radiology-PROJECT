@@ -65,3 +65,4 @@ node_modules/
 # script exists to avoid. .vercel/ is CLI state tied to one account.
 public/
 .vercel/
+.space/
