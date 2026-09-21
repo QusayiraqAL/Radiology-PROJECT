@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "build": "node scripts/build-site.mjs",
-    "test": "node scripts/test-page-api-resolution.mjs"
+    "test": "node scripts/test-page-api-resolution.mjs",
+    "test:live": "node scripts/test-live-deploy.mjs"
   },
   "engines": {
     "node": ">=18"

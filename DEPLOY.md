@@ -125,21 +125,41 @@ without noticing; only opening the page catches them.
 The test needs a non-loopback IPv4 to stand in for the remote host and skips with exit 2
 if the machine has none. Override the browser with `EDGE_PATH=/path/to/chrome`.
 
+`npm run test:live` runs the same idea against the **deployed** page rather than a local
+copy: that the site renders at all, that it throws no JS errors, that an unconfigured
+visitor is pointed at the field instead of at `start_server.bat`, that the `vercel.app`
+origin never ends up in the API box - and it is where the local-address-space message above
+was captured. Point it elsewhere with `LIVE_URL=https://...`.
+
 ## Connecting a local API to the public page
 
-The page is on `https://`, and a browser will not let an `https://` page call a plain
-`http://` server on the open internet. Two ways across:
+**Live at <https://ai-powered-radiology-hub.vercel.app>.**
+
+Pointing the deployed page straight at a local API does not work, and the reason is not the
+one you would guess. Measured against the live deployment with `npm run test:live`
+(Edge 2026-09-21), the browser's own words:
+
+```
+Access to fetch at 'http://192.168.0.106:8123/health'
+from origin 'https://ai-powered-radiology-hub.vercel.app'
+has been blocked by CORS policy:
+Permission was denied for this request to access the `local` address space.
+```
+
+That is Chrome's **local address space** rule, not mixed content. It is worth being precise
+about, because the two have different workarounds and only one of them is real here: no
+CORS header on `main.py` lifts this, and `Access-Control-Allow-Origin: *` is already being
+sent. The request never reaches the server to be allowed.
+
+So, two ways across:
 
 1. **A tunnel (works today, no certificate work).** `cloudflared tunnel --url http://localhost:8000`
-   or `ngrok http 8000` gives the local API a public `https://` address. Paste it into the
-   API field, or share `https://your-project.vercel.app/?api=https://your-tunnel.trycloudflare.com`.
+   or `ngrok http 8000` gives the local API a public `https://` address, which is in the
+   public address space and outside this rule. Paste it into the API field, or share
+   `https://ai-powered-radiology-hub.vercel.app/?api=https://your-tunnel.trycloudflare.com`.
    `main.py` already sends `Access-Control-Allow-Origin: *`, so nothing else is needed.
 2. **A real host.** Any VM or container with ~5 GB of disk and a few GB of RAM runs
    `main.py` unchanged. Set `API_BASE` at build time and the page needs no configuration.
-
-`http://127.0.0.1:8000` from the public page is **not** a reliable third option: Chrome
-gates requests from a public origin to a local address behind Private Network Access, and
-what that costs you depends on the browser and its version. Use a tunnel.
 
 ## What is live without an API
 
