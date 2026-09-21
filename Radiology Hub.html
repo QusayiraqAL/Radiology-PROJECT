@@ -2898,9 +2898,9 @@
           </h4>
           <div id="realResults">
             <p style="color:var(--ink-soft);font-size:0.93rem;">
-              ١. شغّل الخادم بالنقر المزدوج على <code
+              <span id="realStep1">١. شغّل الخادم بالنقر المزدوج على <code
                 style="background:#f0f6fb;padding:2px 8px;border-radius:6px;direction:ltr;display:inline-block;">start_server.bat</code>
-              في مجلد المشروع.<br>
+              في مجلد المشروع.</span><br>
               ٢. اختر النموذج المناسب أعلاه، ثم ارفع صورة من نفس نوع الفحص.<br>
               ٣. اضغط «حلّل الصورة» لعرض النتائج كما يحسبها النموذج فعلياً.
             </p>
@@ -3457,6 +3457,17 @@
     }
 
     const apiBase = () => trimBase(apiUrlInput.value);
+
+    // Is the browser on the same machine as the server? Only there is "double-click
+    // start_server.bat" something the reader can actually do. Everywhere else it is a
+    // dead end, and the thing they *can* do is type an address into the API bar.
+    const onServerBox = () => location.protocol === 'file:' ||
+      location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+
+    // One sentence of "so what do I do", correct for wherever this page is being served.
+    const serverHint = () => onServerBox()
+      ? 'شغّل الخادم (<code>start_server.bat</code>) ثم اضغط «إعادة فحص الاتصال».'
+      : 'اكتب عنوان الخادم في الحقل أعلاه ثم اضغط «إعادة فحص الاتصال».';
     const pct = v => (v == null ? '—' : (v * 100).toFixed(1) + '٪');
 
     // Returns the /health body when `base` is a live API, null otherwise. A 404 from a
@@ -3482,12 +3493,20 @@
 
     function showApiOffline() {
       apiStatus.className = 'api-status off';
-      // "run start_server.bat" is advice only the person sitting at the server can act on.
-      // On a static host the API is elsewhere, so point at the field they can actually use.
-      const localHost = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
-      apiStatusText.textContent = (localHost || location.protocol === 'file:' || apiBase() === LOCAL_API)
+      const local = onServerBox();
+      apiStatusText.textContent = local
         ? 'غير متصل — شغّل start_server.bat أولاً'
         : 'غير متصل — اكتب عنوان الخادم في الحقل أعلاه';
+
+      // Two instructions sit in the markup itself, so they survive an offline load and
+      // are the first thing a visitor reads. On a static host they name a file that is
+      // not on the visitor's machine - rewrite them to the step that is open to them.
+      if (!local) {
+        const step1 = document.getElementById('realStep1');
+        if (step1) step1.innerHTML = '١. اكتب عنوان الخادم في حقل «عنوان الخادم API» أعلاه حتى يصير المؤشر أخضر.';
+        const ml = document.getElementById('metricsLoading');
+        if (ml) ml.textContent = 'اكتب عنوان الخادم في قسم «تحليل فعلي» لعرض مقاييس الأداء الحقيقية للنماذج.';
+      }
     }
 
     // Check whatever is currently in the field.
@@ -3505,12 +3524,13 @@
     async function resolveApi() {
       apiStatus.className = 'api-status';
       apiStatusText.textContent = 'جارٍ الفحص…';
-      const cands = apiCandidates();
-      for (const base of cands) {
+      for (const base of apiCandidates()) {
         const j = await probeApi(base, 3500);
         if (j) { apiUrlInput.value = base; rememberApi(base); showApiOnline(j); return true; }
       }
-      apiUrlInput.value = cands[0] || LOCAL_API;
+      const given = trimBase(new URLSearchParams(location.search).get('api')) ||
+                    trimBase(storedApi()) || trimBase(window.__API_BASE__);
+      apiUrlInput.value = given || LOCAL_API;
       showApiOffline();
       return false;
     }
@@ -3730,7 +3750,7 @@
         <div class="api-error">
           <b>تعذّر إتمام التحليل.</b><br>
           ${err.message && err.message !== 'Failed to fetch' ? 'رسالة الخادم: ' + err.message + '<br>' : ''}
-          تأكد من أن الخادم يعمل: شغّل <code>start_server.bat</code> ثم اضغط «إعادة فحص الاتصال» وحاول مجدداً.
+          ${serverHint()}
         </div>`;
         checkHealth();
       } finally {
@@ -3902,7 +3922,7 @@
         symptomResults.innerHTML = `
         <div class="api-error"><b>تعذّر التحليل.</b><br>
         ${err.message && err.message !== 'Failed to fetch' ? 'رسالة الخادم: ' + err.message + '<br>' : ''}
-        تأكد أن الخادم يعمل (<code>start_server.bat</code>) وأن نظام النص مُدرَّب.</div>`;
+        ${serverHint()}</div>`;
       } finally {
         symptomBusy = false; symptomBtn.disabled = false; symptomBtnText.textContent = prev;
       }
@@ -4039,7 +4059,7 @@
         quizOptions.querySelectorAll('.quiz-opt').forEach(b =>
           b.addEventListener('click', () => answerQuiz(parseInt(b.dataset.cidx), b)));
       } catch (e) {
-        quizOptions.innerHTML = `<div class="api-error">تعذّر تحميل الحالة — تأكد أن الخادم يعمل.</div>`;
+        quizOptions.innerHTML = `<div class="api-error">تعذّر تحميل الحالة — ${serverHint()}</div>`;
       } finally { quizBusy = false; }
     }
 
@@ -4076,7 +4096,7 @@
         ${d.edu ? eduBlock(d) : ''}`;
         quizNextBtn.style.display = 'block';
       } catch (e) {
-        quizReveal.innerHTML = `<div class="api-error">تعذّر كشف الإجابة — تأكد أن الخادم يعمل.</div>`;
+        quizReveal.innerHTML = `<div class="api-error">تعذّر كشف الإجابة — ${serverHint()}</div>`;
       } finally { quizBusy = false; }
     }
     quizNextBtn.addEventListener('click', newQuizCase);
@@ -4121,7 +4141,7 @@
           </div>
         </div>`).join('');
       } catch (e) {
-        atlasGrid.innerHTML = '<div class="api-error" style="grid-column:1/-1;">تعذّر تحميل الأمثلة — تأكد أن الخادم يعمل.</div>';
+        atlasGrid.innerHTML = `<div class="api-error" style="grid-column:1/-1;">تعذّر تحميل الأمثلة — ${serverHint()}</div>`;
       }
     }
 
@@ -4196,7 +4216,7 @@
         ${d.heatmap ? heatmapBlock(d) : ''}
         ${d.edu ? eduBlock(d) : ''}`;
         rFindings.disabled = true; rImpression.disabled = true; reportSubmit.style.display = 'none'; reportNew.style.display = 'flex';
-      } catch (e) { reportResult.innerHTML = '<div class="api-error">تعذّر التقييم — تأكد أن الخادم يعمل.</div>'; }
+      } catch (e) { reportResult.innerHTML = `<div class="api-error">تعذّر التقييم — ${serverHint()}</div>`; }
       finally { reportBusy = false; reportSubmit.disabled = false; }
     });
     reportNew.addEventListener('click', newReportCase);

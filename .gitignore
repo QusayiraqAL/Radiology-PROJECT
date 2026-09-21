@@ -52,6 +52,12 @@ desktop.ini
 # --- machine-local Claude Code permissions (absolute paths, not portable) ---
 .claude/settings.local.json
 
+# --- Node (the static-site build and its browser test) --------------------
+# The build itself uses only node: builtins; node_modules is here for the
+# browser test's playwright-core. Vercel never installs it - vercel.json sets
+# installCommand to a no-op, so the deploy stays a copy of one HTML file.
+node_modules/
+
 # --- Vercel build output / CLI state --------------------------------------
 # public/index.html is a copy of "Radiology Hub.html" that scripts/build-site.mjs
 # regenerates on every build, on Vercel's machine as well as this one. Committing

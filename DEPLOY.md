@@ -98,6 +98,33 @@ cannot diagnose: `your-project.vercel.app/health` is a 404, so the bar read *"of
 start_server.bat first"* — advice that only the person sitting at the server can act on,
 shown to someone who may be on a phone in another country.
 
+## Verifying a change to the page
+
+```bash
+npm run build && npm test
+```
+
+`scripts/test-page-api-resolution.mjs` drives `public/index.html` in the Edge already
+installed on the machine (no browser download) and asserts what a reader actually sees in
+four situations:
+
+| | Scenario | What is asserted |
+|---|---|---|
+| A | remote host, no API | offline, and the advice names the **field** — not `start_server.bat`; the API field falls back to `127.0.0.1:8000`, never to the static origin |
+| B | remote host + live API via `?api=` | online, model count correct, `/models` actually fetched, address stored |
+| C | loopback host, no API | advice still names `start_server.bat`, because there it is true |
+| D | remote host, unreachable `?api=` | the supplied address stays in the field so it can be corrected |
+
+**A and D failed on the first run**, which is why they are in the file. `onServerBox()` was
+reading the API field, so a phone pointed at `127.0.0.1:8000` was classed as sitting at the
+server and told to double-click a `.bat` it does not have; and `resolveApi()` fell back to
+candidate #1, which on a static host is `location.origin` — putting the one address just
+proven not to be an API into the box that asks for an API. Syntax checks pass both bugs
+without noticing; only opening the page catches them.
+
+The test needs a non-loopback IPv4 to stand in for the remote host and skips with exit 2
+if the machine has none. Override the browser with `EDGE_PATH=/path/to/chrome`.
+
 ## Connecting a local API to the public page
 
 The page is on `https://`, and a browser will not let an `https://` page call a plain

@@ -5,9 +5,13 @@
   "description": "Static front-end deploy for the AI-Powered Radiology Hub. The API is a separate service - see DEPLOY.md.",
   "type": "module",
   "scripts": {
-    "build": "node scripts/build-site.mjs"
+    "build": "node scripts/build-site.mjs",
+    "test": "node scripts/test-page-api-resolution.mjs"
   },
   "engines": {
     "node": ">=18"
+  },
+  "devDependencies": {
+    "playwright-core": "^1.63.0"
   }
 }
