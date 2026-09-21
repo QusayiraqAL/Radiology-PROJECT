@@ -161,6 +161,36 @@ So, two ways across:
 2. **A real host.** Any VM or container with ~5 GB of disk and a few GB of RAM runs
    `main.py` unchanged. Set `API_BASE` at build time and the page needs no configuration.
 
+## Measured end to end
+
+With `start_server.bat` running and a cloudflared quick tunnel in front of it, the full
+chain was exercised in a browser against the deployed page - `npm run test:e2e -- <tunnel>`,
+which uploads `samples/brain_glioma.png` and asserts on what the network actually returned:
+
+| Step | Result |
+|---|---|
+| API bar | `متصل — 14 نماذج جاهزة (CPU)` |
+| Metric cards | real numbers, matching TRAINING_LOG: chest 0.752 AUC, pneumonia 96.3%, brain 99.0% |
+| Prediction | **glioma, 97.6%** - 0.1 s inference, 0.7 s round trip through the tunnel |
+| Grad-CAM | rendered |
+| JS errors | none |
+
+Two things that surprised the test rather than the code are worth writing down, because
+both will catch the next person:
+
+- **ngrok was refused outright** on this network: `ERR_NGROK_9040`, *"We do not allow agents
+  to connect to ngrok from your IP address"*. cloudflared had no such trouble. If the tunnel
+  will not come up, try the other one before assuming the API is at fault.
+- **A green API bar does not mean the cards have loaded.** `loadModels()` fires after the
+  health probe resolves and fetches `/models` separately, so a check that waits on the bar
+  and then reads the grid races it and finds the placeholder still there. The first run of
+  this test reported a bug that did not exist; `metricCard` renders all 14 models fine.
+  `loadModels()` swallows its exception to keep the placeholder, so a real failure here
+  looks exactly like a slow one - worth knowing before chasing it.
+
+Quick-tunnel URLs are new on every start and die with the process, so nothing about that
+address is worth saving anywhere.
+
 ## What is live without an API
 
 The page itself: the whole site, the model descriptions, the disclaimers, the navigation.
