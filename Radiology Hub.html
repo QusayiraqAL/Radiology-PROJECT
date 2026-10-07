@@ -3479,6 +3479,19 @@
 
     const apiBase = () => trimBase(apiUrlInput.value);
 
+    // Every call to the API goes through here, for one reason: some tunnels put an
+    // interstitial in front of whatever they forward. localtunnel answers a browser-looking
+    // request with HTTP 511 and a "click to continue" page until it sees this header -
+    // measured: 511 without it, 200 with it, and its CORS preflight passes too. The header
+    // is meaningless to every other host, so it costs nothing to send always.
+    //
+    // It also means a future header (an API key, a version) has one place to be added
+    // rather than twelve.
+    const apiFetch = (path, opts) => fetch(apiBase() + path, {
+      ...(opts || {}),
+      headers: { 'bypass-tunnel-reminder': 'true', ...((opts || {}).headers || {}) },
+    });
+
     // Is the browser on the same machine as the server? Only there is "double-click
     // start_server.bat" something the reader can actually do. Everywhere else it is a
     // dead end, and the thing they *can* do is type an address into the API bar.
@@ -3498,7 +3511,8 @@
       try {
         const ctrl = new AbortController();
         const t = setTimeout(() => ctrl.abort(), ms || 4000);
-        const res = await fetch(base + '/health', { signal: ctrl.signal });
+        const res = await fetch(base + '/health',
+          { signal: ctrl.signal, headers: { 'bypass-tunnel-reminder': 'true' } });
         clearTimeout(t);
         const j = await res.json();
         return j && j.status === 'ok' ? j : null;
@@ -3567,7 +3581,7 @@
     // -------- تحميل بطاقات الأداء والإحصاءات من /models --------
     async function loadModels() {
       try {
-        const res = await fetch(apiBase() + '/models');
+        const res = await apiFetch('/models');
         const j = await res.json();
         modelsMeta = {};
         (j.models || []).forEach(m => { modelsMeta[m.id] = m; });
@@ -3764,7 +3778,7 @@
       try {
         const fd = new FormData();
         fd.append('file', selectedFile, selectedFile.name);
-        const res = await fetch(apiBase() + '/predict/' + currentModel, { method: 'POST', body: fd });
+        const res = await apiFetch('/predict/' + currentModel, { method: 'POST', body: fd });
         if (!res.ok) {
           let msg = 'HTTP ' + res.status;
           try { msg = (await res.json()).detail || msg; } catch (_) { }
@@ -3935,7 +3949,7 @@
       const prev = symptomBtnText.textContent; symptomBtnText.textContent = 'جارٍ التحليل…';
       symptomResults.innerHTML = '<p style="color:var(--ink-soft);font-size:0.93rem;">⏳ يُحلّل النظام وصف الأعراض…</p>';
       try {
-        const res = await fetch(apiBase() + '/predict/symptoms', {
+        const res = await apiFetch('/predict/symptoms', {
           method: 'POST', headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ text })
         });
@@ -4047,7 +4061,7 @@
 
     async function loadQuizModels() {
       try {
-        const res = await fetch(apiBase() + '/quiz/models');
+        const res = await apiFetch('/quiz/models');
         const j = await res.json();
         if (!j.models || !j.models.length) return;
         quizModelsEl.innerHTML = j.models.map(m =>
@@ -4075,7 +4089,7 @@
       quizOptions.innerHTML = '<p style="color:var(--ink-soft)">⏳ جارٍ تحميل حالة…</p>';
       quizImg.removeAttribute('src');
       try {
-        const res = await fetch(apiBase() + '/quiz/' + quizModel);
+        const res = await apiFetch('/quiz/' + quizModel);
         if (!res.ok) throw new Error('HTTP ' + res.status);
         quizCase = await res.json();
         quizImg.src = quizCase.image;
@@ -4096,7 +4110,7 @@
       quizOptions.querySelectorAll('.quiz-opt').forEach(b => b.disabled = true);
       quizOptions.innerHTML && (quizReveal.innerHTML = '<p style="color:var(--ink-soft)">⏳ يكشف النموذج…</p>');
       try {
-        const res = await fetch(apiBase() + '/quiz/reveal', {
+        const res = await apiFetch('/quiz/reveal', {
           method: 'POST', headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ model: quizModel, index: quizCase.index, chosen_class_idx: chosenIdx })
         });
@@ -4138,7 +4152,7 @@
 
     async function loadAtlasModels() {
       try {
-        const j = await (await fetch(apiBase() + '/quiz/models')).json();
+        const j = await (await apiFetch('/quiz/models')).json();
         if (!j.models || !j.models.length) return;
         atlasModelsEl.innerHTML = j.models.map(m =>
           `<button class="quiz-model-btn" data-amodel="${m.id}">${m.emoji} ${m.title_ar}</button>`).join('');
@@ -4153,7 +4167,7 @@
       atlasGrid.innerHTML = '<p style="color:var(--ink-soft);grid-column:1/-1;text-align:center;">⏳ جارٍ تحضير الأمثلة…</p>';
       atlasEdu.style.display = 'none';
       try {
-        const d = await (await fetch(apiBase() + '/cases/' + mid)).json();
+        const d = await (await apiFetch('/cases/' + mid)).json();
         if (d.edu) { atlasEdu.innerHTML = `<b>🎓 ${d.title_ar}:</b> ${d.edu}`; atlasEdu.style.display = 'block'; }
         atlasGrid.innerHTML = d.cases.map(c => `
         <div class="atlas-card">
@@ -4189,7 +4203,7 @@
 
     async function loadReportModels() {
       try {
-        const j = await (await fetch(apiBase() + '/quiz/models')).json();
+        const j = await (await apiFetch('/quiz/models')).json();
         if (!j.models || !j.models.length) return;
         reportModelsEl.innerHTML = j.models.map(m =>
           `<button class="quiz-model-btn" data-rmodel="${m.id}">${m.emoji} ${m.title_ar}</button>`).join('');
@@ -4210,7 +4224,7 @@
       reportSubmit.style.display = 'flex';
       reportImg.removeAttribute('src');
       try {
-        reportCase = await (await fetch(apiBase() + '/report/' + reportModel)).json();
+        reportCase = await (await apiFetch('/report/' + reportModel)).json();
         reportImg.src = reportCase.image;
         reportModality.textContent = reportCase.title_ar + ' · ' + reportCase.modality;
       } catch (e) { reportResult.innerHTML = '<div class="api-error">تعذّر تحميل الحالة.</div>'; }
@@ -4222,7 +4236,7 @@
       reportBusy = true; reportSubmit.disabled = true;
       reportResult.innerHTML = '<p style="color:var(--ink-soft)">⏳ يُقيّم تقريرك…</p>';
       try {
-        const d = await (await fetch(apiBase() + '/report/grade', {
+        const d = await (await apiFetch('/report/grade', {
           method: 'POST', headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ model: reportModel, index: reportCase.index, findings: rFindings.value, impression: rImpression.value })
         })).json();

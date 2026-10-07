@@ -33,6 +33,12 @@ let apiHits = [];
 const api = createServer((req, res) => {
   apiHits.push(req.url);
   res.setHeader('access-control-allow-origin', '*');
+  // The page sends a custom header (bypass-tunnel-reminder), which makes the browser send
+  // a preflight first. main.py answers it via CORSMiddleware with allow_headers=["*"];
+  // a stub that does not is a stub that fails a request the real server would allow.
+  res.setHeader('access-control-allow-headers', '*');
+  res.setHeader('access-control-allow-methods', 'GET, POST, OPTIONS');
+  if (req.method === 'OPTIONS') { res.writeHead(204); return res.end(); }
   if (req.url === '/health') {
     res.writeHead(200, {'content-type':'application/json'});
     return res.end(JSON.stringify({ status:'ok', device:'cpu',

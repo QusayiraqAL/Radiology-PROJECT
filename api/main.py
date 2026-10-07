@@ -87,7 +87,11 @@ def _client_key(request):
 
 @app.middleware("http")
 async def _rate_limit(request, call_next):
-    if _RATE_LIMIT > 0 and request.url.path.startswith("/predict"):
+    # OPTIONS is the browser asking whether it may send the real request. The page
+    # sends a custom header now, so every predict is preceded by one - billing them
+    # would halve the limit and reject readers at 15 predictions, not 30.
+    if (_RATE_LIMIT > 0 and request.method != "OPTIONS"
+            and request.url.path.startswith("/predict")):
         now = time.time()
         key = _client_key(request)
         hits = [t for t in _rate_hits.get(key, ()) if now - t < _RATE_WINDOW]

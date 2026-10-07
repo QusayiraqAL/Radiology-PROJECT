@@ -1,0 +1,70 @@
+{
+  "retina": {
+    "key": "retina",
+    "arch": "efficientnet_b0",
+    "n_val": 120,
+    "n_test": 400,
+    "rules": {
+      "argmax": {
+        "val_accuracy": 0.7,
+        "val_qwk": 0.7828,
+        "test_accuracy": 0.67,
+        "test_qwk": 0.7888
+      },
+      "expected_grade_default": {
+        "val_accuracy": 0.6083,
+        "val_qwk": 0.7597,
+        "test_accuracy": 0.4925,
+        "test_qwk": 0.7609
+      },
+      "expected_grade_fit_acc": {
+        "val_accuracy": 0.6083,
+        "val_qwk": 0.7597,
+        "test_accuracy": 0.4925,
+        "test_qwk": 0.7609,
+        "cuts": [
+          0.5,
+          1.5,
+          2.5,
+          3.5
+        ]
+      },
+      "expected_grade_fit_qwk": {
+        "val_accuracy": 0.6167,
+        "val_qwk": 0.7635,
+        "test_accuracy": 0.4875,
+        "test_qwk": 0.7556,
+        "cuts": [
+          0.5157,
+          1.4952,
+          2.5217,
+          3.5227
+        ]
+      },
+      "expected_grade_grid_acc": {
+        "val_accuracy": 0.725,
+        "val_qwk": 0.766,
+        "test_accuracy": 0.6575,
+        "test_qwk": 0.7756,
+        "cuts": [
+          1.159,
+          1.259,
+          2.459,
+          3.359
+        ]
+      },
+      "expected_grade_grid_qwk": {
+        "val_accuracy": 0.6083,
+        "val_qwk": 0.8066,
+        "test_accuracy": 0.6025,
+        "test_qwk": 0.8116,
+        "cuts": [
+          0.859,
+          1.559,
+          2.059,
+          3.959
+        ]
+      }
+    }
+  }
+}

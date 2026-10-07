@@ -65,8 +65,29 @@ def served_checkpoints(key):
 
 
 def served_metrics(key, is_ens):
-    for name in ([f"{key}_ens_metrics.json"] if is_ens else []) + \
-                [f"{key}_v2_metrics.json", f"{key}_metrics.json"]:
+    """The metrics file for the model actually served, named by the manifest where one exists.
+
+    This used to guess `{key}_ens_metrics.json` for an ensemble. That is a FILENAME PATTERN,
+    and the manifest already carries the answer in its `metrics` field - so when derma_bin was
+    re-ensembled from three members to a different three (step 63), the guess kept resolving to
+    the superseded derma_bin_ens_metrics.json, and this checker reported
+    "API=0.9342 published=0.9237 MISMATCH" against a model that was serving perfectly.
+
+    Third time in this project that reading a name pattern lost to reading the manifest:
+    session 1 step 7, the hand-written status table that caught retina_ens (0.635) instead of
+    the served retina_v2 (0.6700), and now the tool built to catch this very class of drift.
+    """
+    names = []
+    if is_ens:
+        man = os.path.join(MODEL_DIR, f"{key}_ensemble.json")
+        if os.path.exists(man):
+            with open(man, encoding="utf-8") as f:
+                declared = json.load(f).get("metrics")
+            if declared:
+                names.append(declared)
+        # Manifests written before the `metrics` field existed still resolve by pattern.
+        names.append(f"{key}_ens_metrics.json")
+    for name in names + [f"{key}_v2_metrics.json", f"{key}_metrics.json"]:
         p = os.path.join(MODEL_DIR, name)
         if os.path.exists(p):
             with open(p, encoding="utf-8") as f:

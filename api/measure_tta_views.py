@@ -102,6 +102,25 @@ def probs_for(net, X, y, size, views):
     return np.concatenate(out)
 
 
+
+
+def _flush_report(report):
+    """Write what has been measured so far. Called after every model.
+
+    The first run of this script spent 14.4 hours of wall clock and left nothing on disk:
+    results accumulated in a dict behind a single write at the end, and it had to be killed
+    before reaching it. One json dump per model removes that failure mode entirely.
+    TRAINING_LOG step 100.
+    """
+    out = os.path.join(MODEL_DIR, "_tta_views.json")
+    prev = {}
+    if os.path.exists(out):
+        with open(out, encoding="utf-8") as f:
+            prev = json.load(f)
+    prev.update(report)
+    with open(out, "w", encoding="utf-8") as f:
+        json.dump(prev, f, ensure_ascii=False, indent=2)
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--write", action="store_true", help="store the val-chosen set in the checkpoint")
@@ -114,17 +133,17 @@ def main():
             continue
         man = os.path.join(MODEL_DIR, f"{key}_ensemble.json")
         if os.path.exists(man):
-            print("%-11s SKIP - served as an ensemble; each member keeps its own view set" % key)
+            print("%-11s SKIP - served as an ensemble; each member keeps its own view set" % key, flush=True)
             continue
         v2 = os.path.join(MODEL_DIR, f"{key}_v2.pt")
         cp = v2 if os.path.exists(v2) else os.path.join(MODEL_DIR, f"{key}.pt")
         if not os.path.exists(cp):
-            print("%-11s SKIP - no checkpoint" % key)
+            print("%-11s SKIP - no checkpoint" % key, flush=True)
             continue
         ck = torch.load(cp, map_location=DEVICE, weights_only=False)
         arch = ck.get("arch", "resnet18")
         if arch not in MEDMNIST_ARCHS:
-            print("%-11s SKIP - arch %s" % (key, arch))
+            print("%-11s SKIP - arch %s" % (key, arch), flush=True)
             continue
         size, classes = ck.get("size", 64), ck["classes"]
         net, _ = build_medmnist_backbone(arch, num_classes=len(classes), pretrained=False,
@@ -159,12 +178,12 @@ def main():
 
         print("\n%s  (arch=%s, currently '%s', n_val=%d capped, n_test=%d)"
               % (key, arch, cur_name, min(VAL_MAX, INFO[dataset]["n_samples"]["val"]),
-                 INFO[dataset]["n_samples"]["test"]))
+                 INFO[dataset]["n_samples"]["test"]), flush=True)
         for c in cands:
             mark = "  <- val pick" if c == best else ("  (current)" if c == cur_name else "")
             cc = ("  caught %d/%d" % caught[c]) if c in caught else ""
             print("   %-6s %d views  val=%.4f  test=%.4f%s%s"
-                  % (c, len(preproc.TTA_VIEWS[c]), val[c], test[c], cc, mark))
+                  % (c, len(preproc.TTA_VIEWS[c]), val[c], test[c], cc, mark), flush=True)
 
         gain = test[best] - test.get(cur_name, test[best])
         verdict = "unchanged" if best == cur_name else "val prefers %s (test %+0.4f)" % (best, gain)
@@ -175,13 +194,14 @@ def main():
                        % (best, caught[best][0], caught[best][1],
                           caught[cur_name][0], caught[cur_name][1]))
             best = cur_name
-        print("   -> %s" % verdict)
+        print("   -> %s" % verdict, flush=True)
 
         report[key] = {"arch": arch, "current": cur_name, "val_pick": best,
                        "val": {c: round(float(v), 4) for c, v in val.items()},
                        "test": {c: round(float(v), 4) for c, v in test.items()},
                        "disease_caught": {c: "%d/%d" % v for c, v in caught.items()},
                        "verdict": verdict}
+        _flush_report(report)
 
         if args.write and best != cur_name and "REFUSED" not in verdict:
             ck["tta_views"] = best
@@ -195,17 +215,10 @@ def main():
                           "tta_decided_on": "val", "test_accuracy": round(float(test[best]), 4)})
                 with open(mp, "w", encoding="utf-8") as f:
                     json.dump(m, f, ensure_ascii=False, indent=2)
-            print("   [written] %s -> tta_views=%s" % (os.path.basename(cp), best))
+            print("   [written] %s -> tta_views=%s" % (os.path.basename(cp), best), flush=True)
 
-    out = os.path.join(MODEL_DIR, "_tta_views.json")
-    prev = {}
-    if os.path.exists(out):
-        with open(out, encoding="utf-8") as f:
-            prev = json.load(f)
-    prev.update(report)
-    with open(out, "w", encoding="utf-8") as f:
-        json.dump(prev, f, ensure_ascii=False, indent=2)
-    print("\nwrote", out)
+    print("", flush=True)
+    print("all done - each model was written as it finished", flush=True)
 
 
 if __name__ == "__main__":

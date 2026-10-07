@@ -85,8 +85,19 @@ def split_of(dataset, split, size, binary_positive, pre=None):
 
 @torch.no_grad()
 def member_probs(key, split):
-    """Probabilities from one checkpoint on one split, in the configuration it is served in."""
-    cp = os.path.join(MODEL_DIR, key + ".pt")
+    """Probabilities from ONE named checkpoint file, in the configuration that file records.
+
+    `key` names a file: models/<key>.pt, or a path if one is given. That is what an ensemble
+    member is - the manifest lists member filenames - so this is the right resolution here.
+
+    It is NOT the same thing as "the model served under this id". main.py prefers <id>_v2.pt
+    where one exists, which is true for 7 of the 10 served ids, so member_probs("retina") loads
+    the retired v1 resnet18 @64 and not the served efficientnet_b0 @224. Callers that mean the
+    served model must resolve the path first - check_serving_path.served_checkpoints() does it,
+    and ordinal_rounding.py uses that. This docstring used to claim the served configuration and
+    was wrong about it (TRAINING_LOG step 101).
+    """
+    cp = key if str(key).endswith(".pt") else os.path.join(MODEL_DIR, key + ".pt")
     ck = torch.load(cp, map_location=DEVICE, weights_only=False)
     arch = ck.get("arch", "resnet18")
     if arch not in MEDMNIST_ARCHS:
